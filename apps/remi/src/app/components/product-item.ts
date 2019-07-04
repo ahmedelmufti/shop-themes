@@ -10,7 +10,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
 import { html, LitElement, css, property, customElement } from 'lit-element';
 import '@polymer/iron-image';
-import '@polymer/iron-icon';
 
 @customElement('remi-product-item')
 class ProductItem extends LitElement {

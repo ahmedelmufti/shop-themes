@@ -1,6 +1,7 @@
-export const useLightDom = _base =>
-  class extends _base {
-    createRenderRoot() {
-      return this;
-    }
-  };
+import { LitElement } from 'lit-element';
+
+export const useLightDom = class extends LitElement {
+  createRenderRoot() {
+    return this;
+  }
+};

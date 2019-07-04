@@ -23,7 +23,7 @@ import { Observable } from 'rxjs';
 import { filter } from 'rxjs/operators';
 
 @customElement('remi-home')
-export class Home extends useLightDom(LitElement) {
+export class Home extends useLightDom {
   @property({ type: Boolean })
   active = false;
 
@@ -49,7 +49,7 @@ export class Home extends useLightDom(LitElement) {
               </p>
               <div class="call-action-wrapper center">
                 <a href="/shop">
-                  <mwc-button outlined>
+                  <mwc-button outlined class="accent-btn">
                     <biness-text>Shop Now </biness-text>
                   </mwc-button>
                 </a>
@@ -105,7 +105,7 @@ export class Home extends useLightDom(LitElement) {
               >
             </p>
             <a href="/shop">
-              <mwc-button style="margin: 2em 0" outlined>
+              <mwc-button style="margin: 2em 0" outlined class="accent-btn">
                 <biness-text>Shop Now</biness-text>
               </mwc-button>
             </a>
@@ -176,10 +176,14 @@ export class Home extends useLightDom(LitElement) {
     `;
   }
 
-  protected firstUpdated() {
+  constructor() {
+    super();
     this.latestProducts$ = Shop.products()
       .latest(5)
       .pipe(filter(products => products.length > 0));
+  }
+
+  protected firstUpdated() {
     this.latestProducts$.subscribe(products => {
       this.latest = products.slice(0, 6);
       this.requestUpdate();

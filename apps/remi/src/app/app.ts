@@ -32,7 +32,7 @@ import { Shop } from '@shop-themes/core';
 import { environment } from '../environments/environment';
 
 @customElement('remi-app')
-export class App extends useLightDom(LitElement) {
+export class App extends useLightDom {
   @property({ type: String })
   appTitle = '';
 
@@ -213,12 +213,41 @@ export class App extends useLightDom(LitElement) {
           ?active="${this._page === 'view404'}"
         ></my-view404>
       </main>
-      <footer>
-        <p>Made with &hearts; by the Polymer team.</p>
+      <footer class="app-footer">
+        <div class="content layout horizontal center">
+          <div class="flex">
+            <h3>What we do?</h3>
+            <p>
+              Reminisce by Ro is all about women empowerment. Bringing the
+              beauty in every individual. It might take that one Reminisce
+              product to bring out the confidence in you.
+            </p>
+          </div>
+          <div class="flex"></div>
+          <div class="flex">
+            <h4>Contact</h4>
+            <ul class="contact-info">
+              <li class="location">
+                <iron-icon icon="bn-icons:location"></iron-icon> 123 East 3rd
+                Street, New York City 10010
+              </li>
+              <li class="email">
+                <iron-icon icon="bn-icons:email"></iron-icon>
+                <a href="mailto:sales@reminiscebyro.com"
+                  >sales@reminiscebyro.com</a
+                >
+              </li>
+              <li class="phone">
+                <iron-icon icon="bn-icons:phone"></iron-icon> 555 - 478 - 951
+              </li>
+              <li class="website">
+                <iron-icon icon="bn-icons:globe"></iron-icon>
+                <a href="https://reminiscebyro.com">www.reminiscebyro.com</a>
+              </li>
+            </ul>
+          </div>
+        </div>
       </footer>
-      <snack-bar ?active="${this._snackbarOpened}">
-        You are now ${this._offline ? 'offline' : 'online'}.
-      </snack-bar>
     `;
   }
 

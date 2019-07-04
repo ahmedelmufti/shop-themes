@@ -1,6 +1,7 @@
 import { collectionData, docData } from 'rxfire/firestore';
 import { tap } from 'rxjs/operators';
-import firebase from 'firebase/app';
+
+import * as firebase from 'firebase/app';
 import 'firebase/firestore';
 
 export const Shop = new class {
