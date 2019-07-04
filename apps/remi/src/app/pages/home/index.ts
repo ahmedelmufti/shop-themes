@@ -15,10 +15,12 @@ import { useLightDom } from '../../use-lightdom';
 import '@polymer/iron-image';
 import '@material/mwc-button';
 import '@shop-themes/editable-text';
+import '../../components/product-item';
 
 import './style.scss';
 import { Shop } from '@shop-themes/core';
 import { Observable } from 'rxjs';
+import { filter } from 'rxjs/operators';
 
 @customElement('remi-home')
 export class Home extends useLightDom(LitElement) {
@@ -26,6 +28,8 @@ export class Home extends useLightDom(LitElement) {
   active = false;
 
   private latestProducts$: Observable<any>;
+
+  latest = [];
 
   protected render() {
     return html`
@@ -107,54 +111,37 @@ export class Home extends useLightDom(LitElement) {
             </a>
           </div>
         </section>
-        <!-- <section class="app-section feature" style="padding-bottom: 4em;">
-        <div class="content">
-            <div class="center heading-wrapper pad">
-                <h1 class="mdc-typography--headline5">Featured</h1>
-            </div>
-            <div class="feature-grid">
-                <template is="dom-repeat" items="[[bestSellers]]" as="product">
-                    <a href$="/product/[[product.slug]]"
-                        class="feature-item"
-                        on-click="_view">
-                        <remi-product-item featured forAdmin$="[[_userIsAdmin(user)]]" data="[[product]]"></remi-product-item>
-                    </a>
-                </template>
-            </div>
-        </div>
-    </section> -->
+
         <section class="app-section feature" style="padding-bottom: 4em;">
           <div class="content">
             <div class="center heading-wrapper pad">
               <h1 class="mdc-typography--headline5">Latest</h1>
             </div>
             <div class="feature-grid">
-              <template is="dom-repeat" items="[[latest]]" as="product">
-                <!-- prettier-ignore  -->
-                <a
-            href$="/product/[[product.id]]"
-            class="feature-item"
-          >
-            <remi-product-item
-              featured
-              forAdmin$="[[_userIsAdmin(user)]]"
-              data="[[product]]"
-            ></remi-product-item>
-          </a>
-              </template>
-              <template is="dom-repeat" items="[[_loaders(latest)]]">
-                <div class="remi-product-item-placeholder feature-item">
-                  <div class="remi-product-item-placeholder--image"></div>
-                  <div class="remi-product-item-footer pad">
-                    <div
-                      class="remi-product-item-placeholder--title placeholder-shimmer"
-                    ></div>
-                    <div
-                      class="remi-product-item-placeholder--price placeholder-shimmer"
-                    ></div>
-                  </div>
+              ${this.latest.map(
+                product => html`
+                  <a href="/product/${product.id}" class="feature-item">
+                    <remi-product-item
+                      featured
+                      .data=${product}
+                    ></remi-product-item>
+                  </a>
+                `
+              )}
+
+              <!-- Loader -->
+              <div class="remi-product-item-placeholder feature-item">
+                <div class="remi-product-item-placeholder--image"></div>
+                <div class="remi-product-item-footer pad">
+                  <div
+                    class="remi-product-item-placeholder--title placeholder-shimmer"
+                  ></div>
+                  <div
+                    class="remi-product-item-placeholder--price placeholder-shimmer"
+                  ></div>
                 </div>
-              </template>
+              </div>
+              <!-- Loader ends -->
             </div>
           </div>
         </section>
@@ -190,6 +177,12 @@ export class Home extends useLightDom(LitElement) {
   }
 
   protected firstUpdated() {
-    this.latestProducts$ = Shop.products().latest(5);
+    this.latestProducts$ = Shop.products()
+      .latest(5)
+      .pipe(filter(products => products.length > 0));
+    this.latestProducts$.subscribe(products => {
+      this.latest = products.slice(0, 6);
+      this.requestUpdate();
+    });
   }
 }

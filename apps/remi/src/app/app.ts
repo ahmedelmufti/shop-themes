@@ -28,6 +28,8 @@ import { useLightDom } from './use-lightdom';
 import './app.scss';
 import './pages/home';
 import '../../src/assets/styles/iron-flex.scss';
+import { Shop } from '@shop-themes/core';
+import { environment } from '../environments/environment';
 
 @customElement('remi-app')
 export class App extends useLightDom(LitElement) {
@@ -225,6 +227,7 @@ export class App extends useLightDom(LitElement) {
     // To force all event listeners for gestures to be passive.
     // See https://www.polymer-project.org/3.0/docs/devguide/settings#setting-passive-touch-gestures
     setPassiveTouchGestures(true);
+    Shop.bootstrap(environment.firebaseConfig);
   }
 
   protected firstUpdated() {

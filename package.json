@@ -30,8 +30,10 @@
   "dependencies": {
     "@material/mwc-button": "^0.6.0",
     "@polymer/app-layout": "^3.0.2",
+    "@polymer/iron-icon": "^3.0.1",
     "@polymer/iron-image": "^3.0.2",
     "document-register-element": "1.13.1",
+    "firebase": "^6.2.4",
     "lit-element": "^2.2.0",
     "pwa-helpers": "^0.9.1",
     "rxfire": "^3.6.4",
