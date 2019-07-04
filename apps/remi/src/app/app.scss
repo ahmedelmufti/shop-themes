@@ -1,0 +1,371 @@
+* {
+  box-sizing: border-box;
+}
+
+:root {
+  --app-primary-color: #393433;
+  --app-secondary-color: #f51681;
+  --app-dark-text-color: black;
+  --app-light-text-color: #f6f6f6;
+  --app-section-even-color: #f7f7f7;
+  --app-section-odd-color: white;
+
+  --app-header-background-color: var(--app-primary-color);
+  --app-header-text-color: var(--app-light-text-color);
+  --app-header-selected-color: var(--app-secondary-color);
+
+  --app-drawer-background-color: var(--app-primary-color);
+  --app-drawer-text-color: var(--app-light-text-color);
+  --app-drawer-selected-color: #78909c;
+
+  --mdc-theme-primary: var(--app-primary-color);
+  --mdc-theme-secondary: var(--app-secondary-color);
+}
+
+body {
+  font-family: 'Montserrat', 'Segoe UI', Helvetica, Arial, sans-serif,
+    'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol';
+  line-height: 1.5;
+  text-rendering: geometricPrecision;
+  -webkit-font-smoothing: antialiased;
+  margin: 0;
+  height: 100%;
+  background-color: var(--app-light-text-color);
+}
+
+remi-app {
+  --app-drawer-width: 256px;
+  display: block;
+}
+
+app-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  text-align: center;
+  background-color: var(--app-header-background-color);
+  color: var(--app-header-text-color);
+  z-index: 3;
+}
+
+app-drawer {
+  z-index: 4;
+}
+
+remi-app[hide-nav] .toolbar-list {
+  display: none;
+}
+
+remi-app[hide-nav] #menu-btn {
+  display: none !important;
+}
+
+remi-app[hide-nav] #back-btn {
+  display: block;
+}
+
+#back-btn {
+  display: none;
+}
+
+.toolbar-top {
+  background-color: var(--app-header-background-color);
+}
+
+[main-title] {
+  font-family: 'Pacifico', cursive;
+  text-transform: lowercase;
+  font-size: 30px;
+  /* In the narrow layout, the toolbar is offset by the width of the
+  drawer button, and the text looks not centered. Add a padding to
+  match that button */
+  padding-right: 44px;
+  pointer-events: auto !important;
+  color: var(--app-light-text-color);
+}
+
+.toolbar-list {
+  display: none;
+  padding-bottom: 16px;
+}
+
+.toolbar-list > a {
+  display: inline-block;
+  color: var(--app-light-text-color);
+  text-decoration: none;
+  line-height: 30px;
+  padding: 4px 24px;
+}
+
+.toolbar-list > a[selected] {
+  color: #fdfefe;
+  background: #f51681;
+  border-radius: 26px;
+}
+
+.menu-btn {
+  background: none;
+  border: none;
+  fill: var(--app-header-text-color);
+  cursor: pointer;
+  height: 44px;
+  width: 44px;
+}
+
+.drawer-list {
+  box-sizing: border-box;
+  width: 100%;
+  height: 100%;
+  padding: 24px;
+  background: var(--app-drawer-background-color);
+  position: relative;
+}
+
+.drawer-list > a {
+  display: block;
+  text-decoration: none;
+  color: var(--app-drawer-text-color);
+  line-height: 40px;
+  padding: 0 24px;
+}
+
+.drawer-list > a[selected] {
+  color: var(--app-drawer-selected-color);
+}
+
+.main-content {
+  padding-top: 64px;
+  min-height: 100vh;
+  background: white;
+}
+
+#pages [page] {
+  display: none;
+  min-height: 100vh;
+}
+
+#pages [page][active] {
+  display: block;
+}
+
+[cart-btn] {
+  position: relative;
+}
+
+.cart-badge {
+  font-size: 12px;
+  height: 16px;
+  width: 16px;
+  background: #ff0057;
+  position: absolute;
+  top: 0px;
+  right: 4px;
+  color: white;
+  border-radius: 8px;
+}
+.app-footer {
+  padding: 16px;
+  background-color: var(--app-primary-color);
+  color: white;
+}
+.app-footer > div {
+  height: 100%;
+  min-height: 400px;
+}
+
+paper-progress {
+  width: 100%;
+  --paper-progress-active-color: var(--app-secondary-color);
+}
+
+/* Wide layout: when the viewport width is bigger than 460px, layout
+changes to a wide layout. */
+
+@media (min-width: 460px) {
+  .toolbar-list {
+    display: block;
+  }
+
+  .main-content {
+    padding-top: 118px;
+  }
+
+  /* The drawer button isn't shown in the wide layout, so we don't
+  need to offset the title */
+  [main-title] {
+    padding-right: 0px;
+  }
+}
+.text-center {
+  text-align: center;
+}
+.pad {
+  padding: 16px;
+}
+.content {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+a {
+  text-decoration: none;
+  color: inherit;
+}
+.app-section {
+  min-height: 10vh;
+}
+.mdc-typography--headline4 {
+  font-weight: 400;
+}
+.mdc-typography--body2 {
+  font-size: 0.9rem;
+  font-weight: 400;
+}
+.mdc-typography--headline5 {
+  font-size: 1.2rem;
+  font-weight: 400;
+  letter-spacing: normal;
+}
+button.accent-btn {
+  --mdc-theme-primary: white;
+  background: #f51681 !important;
+  min-width: 125px;
+  padding: 0 16px;
+  height: 43px;
+  border-radius: 4px;
+}
+button.btn-responsive {
+  --mdc-theme-primary: white;
+  background: #ff0057 !important;
+  min-width: 125px;
+  padding: 0 35px;
+  height: 43px;
+  border-radius: 4px;
+}
+
+.card-with--shadow {
+  background-color: white;
+  box-shadow: 0 8px 16px 0 rgba(40, 40, 90, 0.09),
+    0 3px 6px 0 rgba(0, 0, 0, 0.065);
+}
+.switch {
+  font-size: 15px;
+  color: #393433;
+}
+.switch mwc-switch {
+  margin: 0 12px;
+}
+@media only screen and (max-device-width: 480px) and (min-device-width: 320px) {
+  .hidden-on-small {
+    display: none;
+  }
+  button.btn-responsive {
+    width: 100%;
+    height: 63px;
+    border-radius: 0px !important;
+  }
+  .app-footer > div {
+    display: block !important;
+  }
+}
+
+body.fullbleed {
+  margin: 0;
+  height: 100vh;
+}
+
+/* Hide these components until they are loaded */
+remi-home,
+remi-product {
+  visibility: hidden;
+}
+
+iron-image {
+  width: 100%;
+  height: 100%;
+}
+
+@-webkit-keyframes placeHolderShimmer {
+  0% {
+    background-position: -468px 0;
+  }
+
+  100% {
+    background-position: 468px 0;
+  }
+}
+
+@keyframes placeHolderShimmer {
+  0% {
+    background-position: -468px 0;
+  }
+
+  100% {
+    background-position: 468px 0;
+  }
+}
+
+.placeholder-shimmer {
+  -webkit-animation-duration: 1s;
+  animation-duration: 1s;
+  -webkit-animation-fill-mode: forwards;
+  animation-fill-mode: forwards;
+  -webkit-animation-iteration-count: infinite;
+  animation-iteration-count: infinite;
+  -webkit-animation-name: placeHolderShimmer;
+  animation-name: placeHolderShimmer;
+  -webkit-animation-timing-function: linear;
+  animation-timing-function: linear;
+  background: #f7f7f7;
+  background: -webkit-gradient(
+    linear,
+    left top,
+    right top,
+    color-stop(8%, #f7f7f7),
+    color-stop(18%, #dee3e5),
+    color-stop(33%, #f7f7f7)
+  );
+  background: linear-gradient(to right, #f7f7f7 8%, #dee3e5 18%, #f7f7f7 33%);
+  background-size: 900px 4px;
+  position: relative;
+  overflow: hidden;
+}
+
+.remi-product-item-placeholder {
+  grid-column-end: span 2;
+}
+
+.remi-product-item-placeholder--image {
+  background-color: #eee;
+  height: 300px;
+  width: 100%;
+}
+
+.remi-product-item-placeholder--title {
+  height: 14px;
+  width: 188px;
+}
+
+.remi-product-item-placeholder--price {
+  margin-top: 8px;
+  height: 14px;
+  width: 90px;
+}
+
+ul {
+  list-style: none;
+}
+.contact-info > * {
+  margin-bottom: 8px;
+  font-size: 0.9rem;
+  color: #ffffffb8;
+}
+
+.contact-info > * iron-icon {
+  margin-right: 8px;
+}
+
+footer p {
+  font-size: 0.9rem;
+  color: #ffffffc7;
+}

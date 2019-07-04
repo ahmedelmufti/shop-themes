@@ -7,10 +7,11 @@ import {
   customElement
 } from 'lit-element';
 import { setPassiveTouchGestures } from '@polymer/polymer/lib/utils/settings.js';
+import { Router } from './router';
 import { connect } from 'pwa-helpers/connect-mixin.js';
 import { installMediaQueryWatcher } from 'pwa-helpers/media-query.js';
 import { installOfflineWatcher } from 'pwa-helpers/network.js';
-import { installRouter } from 'pwa-helpers/router.js';
+
 import { updateMetadata } from 'pwa-helpers/metadata.js';
 
 // The following line imports the type only - it will be removed by tsc so
@@ -23,8 +24,11 @@ import '@polymer/app-layout/app-header/app-header.js';
 import '@polymer/app-layout/app-scroll-effects/effects/waterfall.js';
 import '@polymer/app-layout/app-toolbar/app-toolbar.js';
 
+import './app.scss';
+import { useLightDom } from './use-lightdom';
+
 @customElement('remi-app')
-export class App extends LitElement {
+export class App extends useLightDom(LitElement) {
   @property({ type: String })
   appTitle = '';
 
@@ -221,9 +225,6 @@ export class App extends LitElement {
   }
 
   protected firstUpdated() {
-    // installRouter(location =>
-    //   store.dispatch(navigate(decodeURIComponent(location.pathname)))
-    // );
     // installOfflineWatcher(offline => store.dispatch(updateOffline(offline)));
     // installMediaQueryWatcher(`(min-width: 460px)`, () =>
     //   // store.dispatch(updateDrawerState(false))
@@ -233,11 +234,11 @@ export class App extends LitElement {
   protected updated(changedProps: PropertyValues) {
     if (changedProps.has('_page')) {
       const pageTitle = this.appTitle + ' - ' + this._page;
-      updateMetadata({
-        title: pageTitle,
-        description: pageTitle
-        // This object also takes an image property, that points to an img src.
-      });
+      // updateMetadata({
+      //   title: pageTitle,
+      //   description: pageTitle
+      //   // This object also takes an image property, that points to an img src.
+      // });
     }
   }
 
