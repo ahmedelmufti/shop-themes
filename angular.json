@@ -10,6 +10,7 @@
       "schematics": {},
       "architect": {
         "build": {
+          "aot": true,
           "builder": "@nrwl/web:build",
           "options": {
             "outputPath": "dist/apps/remi",
@@ -29,18 +30,19 @@
                   "with": "apps/remi/src/environments/environment.prod.ts"
                 }
               ],
+              "aot": true,
               "optimization": true,
               "outputHashing": "all",
               "sourceMap": false,
               "extractCss": true,
-              "namedChunks": false,
+              "namedChunks": true,
               "extractLicenses": true,
-              "vendorChunk": false,
+              "vendorChunk": true,
               "budgets": [
                 {
-                  "type": "initial",
-                  "maximumWarning": "2mb",
-                  "maximumError": "5mb"
+                  "type": "bundle",
+                  "maximumWarning": "250kb",
+                  "maximumError": "750kb"
                 }
               ]
             }
