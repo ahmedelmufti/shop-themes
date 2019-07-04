@@ -34,8 +34,8 @@ class AppRouter {
    */
   whenLocationChanges(location) {
     const path = decodeURIComponent(location.pathname);
-    const page = path === '/' ? 'default' : path.slice(1);
     const params = path.split('/');
+    const page = path === '/' ? 'default' : params[1];
     const data: RouteData = {
       params,
       page,

@@ -29,6 +29,7 @@
   "private": true,
   "dependencies": {
     "@material/mwc-button": "^0.6.0",
+    "@material/mwc-icon": "^0.6.0",
     "@polymer/app-layout": "^3.0.2",
     "@polymer/iron-icon": "^3.0.1",
     "@polymer/iron-image": "^3.0.2",

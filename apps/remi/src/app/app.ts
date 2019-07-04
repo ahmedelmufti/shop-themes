@@ -1,30 +1,16 @@
-import {
-  LitElement,
-  html,
-  css,
-  property,
-  PropertyValues,
-  customElement
-} from 'lit-element';
+import { html, property, PropertyValues, customElement } from 'lit-element';
 import { setPassiveTouchGestures } from '@polymer/polymer/lib/utils/settings.js';
 import { Router, RouteData } from '@shop-themes/router';
-import { connect } from 'pwa-helpers/connect-mixin.js';
 import { installMediaQueryWatcher } from 'pwa-helpers/media-query.js';
 import { installOfflineWatcher } from 'pwa-helpers/network.js';
-
 import { updateMetadata } from 'pwa-helpers/metadata.js';
-
-// The following line imports the type only - it will be removed by tsc so
-// another import for app-drawer.js is required below.
-import { AppDrawerElement } from '@polymer/app-layout/app-drawer/app-drawer.js';
+import { useLightDom } from './use-lightdom';
 
 // These are the elements needed by this element.
-import '@polymer/app-layout/app-drawer/app-drawer.js';
 import '@polymer/app-layout/app-header/app-header.js';
 import '@polymer/app-layout/app-scroll-effects/effects/waterfall.js';
 import '@polymer/app-layout/app-toolbar/app-toolbar.js';
 
-import { useLightDom } from './use-lightdom';
 import './app.scss';
 import './pages/home';
 import '../../src/assets/styles/iron-flex.scss';
@@ -34,10 +20,10 @@ import { environment } from '../environments/environment';
 @customElement('remi-app')
 export class App extends useLightDom {
   @property({ type: String })
-  appTitle = '';
+  appTitle = 'Reminiscebyro';
 
   @property({ type: String })
-  private _page = '';
+  private page = '';
 
   @property({ type: Boolean })
   private _drawerOpened = false;
@@ -48,169 +34,37 @@ export class App extends useLightDom {
   @property({ type: Boolean })
   private _offline = false;
 
-  static get styles() {
-    return [
-      css`
-        :host {
-          display: block;
-          --app-drawer-width: 256px;
-          --app-primary-color: #e91e63;
-          --app-secondary-color: #293237;
-          --app-dark-text-color: var(--app-secondary-color);
-          --app-light-text-color: white;
-          --app-section-even-color: #f7f7f7;
-          --app-section-odd-color: white;
-          --app-header-background-color: white;
-          --app-header-text-color: var(--app-dark-text-color);
-          --app-header-selected-color: var(--app-primary-color);
-          --app-drawer-background-color: var(--app-secondary-color);
-          --app-drawer-text-color: var(--app-light-text-color);
-          --app-drawer-selected-color: #78909c;
-        }
-        app-header {
-          position: fixed;
-          top: 0;
-          left: 0;
-          width: 100%;
-          text-align: center;
-          background-color: var(--app-header-background-color);
-          color: var(--app-header-text-color);
-          border-bottom: 1px solid #eee;
-        }
-        .toolbar-top {
-          background-color: var(--app-header-background-color);
-        }
-        [main-title] {
-          font-family: 'Pacifico';
-          text-transform: lowercase;
-          font-size: 30px;
-          /* In the narrow layout, the toolbar is offset by the width of the
-          drawer button, and the text looks not centered. Add a padding to
-          match that button */
-          padding-right: 44px;
-        }
-        .toolbar-list {
-          display: none;
-        }
-        .toolbar-list > a {
-          display: inline-block;
-          color: var(--app-header-text-color);
-          text-decoration: none;
-          line-height: 30px;
-          padding: 4px 24px;
-        }
-        .toolbar-list > a[selected] {
-          color: var(--app-header-selected-color);
-          border-bottom: 4px solid var(--app-header-selected-color);
-        }
-        .menu-btn {
-          background: none;
-          border: none;
-          fill: var(--app-header-text-color);
-          cursor: pointer;
-          height: 44px;
-          width: 44px;
-        }
-        .drawer-list {
-          box-sizing: border-box;
-          width: 100%;
-          height: 100%;
-          padding: 24px;
-          background: var(--app-drawer-background-color);
-          position: relative;
-        }
-        .drawer-list > a {
-          display: block;
-          text-decoration: none;
-          color: var(--app-drawer-text-color);
-          line-height: 40px;
-          padding: 0 24px;
-        }
-        .drawer-list > a[selected] {
-          color: var(--app-drawer-selected-color);
-        }
-        /* Workaround for IE11 displaying <main> as inline */
-        main {
-          display: block;
-        }
-        .main-content {
-          padding-top: 64px;
-          min-height: 100vh;
-        }
-        .page {
-          display: none;
-        }
-        .page[active] {
-          display: block;
-        }
-        footer {
-          padding: 24px;
-          background: var(--app-drawer-background-color);
-          color: var(--app-drawer-text-color);
-          text-align: center;
-        }
-        /* Wide layout: when the viewport width is bigger than 460px, layout
-        changes to a wide layout */
-        @media (min-width: 460px) {
-          .toolbar-list {
-            display: block;
-          }
-          .menu-btn {
-            display: none;
-          }
-          .main-content {
-            padding-top: 107px;
-          }
-          /* The drawer button isn't shown in the wide layout, so we don't
-          need to offset the title */
-          [main-title] {
-            padding-right: 0px;
-          }
-        }
-      `
-    ];
-  }
-
   protected render() {
     // Anything that's related to rendering should be done in here.
     return html`
       <!-- Header -->
       <app-header condenses reveals effects="waterfall">
         <app-toolbar class="toolbar-top">
-          <button
-            class="menu-btn"
-            title="Menu"
-            @click="${this._menuButtonClicked}"
-          ></button>
           <div main-title>${this.appTitle}</div>
+          <a href="/cart">
+            <mwc-button cart-btn>
+              <mwc-icon>shopping_cart</mwc-icon>
+              <span class="cart-badge">3</span>
+            </mwc-button>
+          </a>
         </app-toolbar>
         <!-- This gets hidden on a small screen-->
         <nav class="toolbar-list">
-          <a ?selected="${this._page === 'view1'}" href="/view1">View One</a>
-          <a ?selected="${this._page === 'view2'}" href="/view2">View Two</a>
-          <a ?selected="${this._page === 'view3'}" href="/view3">View Three</a>
+          <a ?selected="${this.page === 'home'}" href="/home">Home</a>
+          <a ?selected="${this.page === 'shop'}" href="/shop">Shop</a>
+          <a ?selected="${this.page === 'about'}" href="/about">About</a>
         </nav>
       </app-header>
-      <!-- Drawer content -->
-      <app-drawer
-        .opened="${this._drawerOpened}"
-        @opened-changed="${this._drawerOpenedChanged}"
-      >
-        <nav class="drawer-list">
-          <a ?selected="${this._page === 'view1'}" href="/view1">View One</a>
-          <a ?selected="${this._page === 'view2'}" href="/view2">View Two</a>
-          <a ?selected="${this._page === 'view3'}" href="/view3">View Three</a>
-        </nav>
-      </app-drawer>
       <!-- Main content -->
       <main role="main" class="main-content">
-        <remi-home page="home" active></remi-home>
-        <my-view1 class="page" ?active="${this._page === 'view1'}"></my-view1>
-        <my-view2 class="page" ?active="${this._page === 'view2'}"></my-view2>
-        <my-view3 class="page" ?active="${this._page === 'view3'}"></my-view3>
+        <remi-home class="page" ?active="${this.page === 'home'}"></remi-home>
+        <remi-product-detail
+          class="page"
+          ?active="${this.page === 'product'}"
+        ></remi-product-detail>
         <my-view404
           class="page"
-          ?active="${this._page === 'view404'}"
+          ?active="${this.page === 'view404'}"
         ></my-view404>
       </main>
       <footer class="app-footer">
@@ -261,19 +115,22 @@ export class App extends useLightDom {
 
   protected firstUpdated() {
     Router.data$.subscribe((route: RouteData) => this.routeChanged(route));
+    import('./lazy').then(module => {});
     // installOfflineWatcher(offline => store.dispatch(updateOffline(offline)));
     // installMediaQueryWatcher(`(min-width: 460px)`, () =>
     //   // store.dispatch(updateDrawerState(false))
     // );
   }
 
-  protected routeChanged(route: RouteData) {
+  protected async routeChanged(route: RouteData) {
     // load the page
+    await this.load(route.page);
+    this.requestUpdate();
   }
 
   protected updated(changedProps: PropertyValues) {
-    if (changedProps.has('_page')) {
-      const pageTitle = this.appTitle + ' - ' + this._page;
+    if (changedProps.has('page')) {
+      // const pageTitle = this.appTitle + ' - ' + this._page;
       // updateMetadata({
       //   title: pageTitle,
       //   description: pageTitle
@@ -282,11 +139,26 @@ export class App extends useLightDom {
     }
   }
 
-  private _menuButtonClicked() {
-    // store.dispatch(updateDrawerState(true));
-  }
+  private async load(page) {
+    if (page === 'default') {
+      page = 'home';
+    }
+    switch (page) {
+      case 'home':
+      case 'default':
+        import('./pages/home/').then(module => {
+          // Put code in here that you want to run every time when
+          // navigating to view1 after my-view1.js is loaded.
+        });
+        break;
+      case 'product':
+        await import('./pages/product/');
+        break;
+      default:
+        page = 'view404';
+      //import('../components/my-view404.js');
+    }
 
-  private _drawerOpenedChanged(e: Event) {
-    // store.dispatch(updateDrawerState((e.target as AppDrawerElement).opened));
+    this.page = page;
   }
 }

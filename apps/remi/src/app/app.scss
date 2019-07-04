@@ -118,18 +118,20 @@ remi-app[hide-nav] #back-btn {
   min-height: 100vh;
   background: white;
 }
-
-#pages [page] {
+.page {
   display: none;
-  min-height: 100vh;
 }
-
-#pages [page][active] {
+.page[active] {
   display: block;
 }
 
 [cart-btn] {
+  color: white;
   position: relative;
+
+  mwc-icon {
+    color: white;
+  }
 }
 
 .cart-badge {
@@ -151,11 +153,6 @@ remi-app[hide-nav] #back-btn {
 .app-footer > div {
   height: 100%;
   min-height: 400px;
-}
-
-paper-progress {
-  width: 100%;
-  --paper-progress-active-color: var(--app-secondary-color);
 }
 
 /* Wide layout: when the viewport width is bigger than 460px, layout

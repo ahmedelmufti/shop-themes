@@ -8,6 +8,14 @@ export const Shop = new class {
   private isInitialized: Boolean = false;
   private firebase;
 
+  getProduct(slug) {
+    const productRef = this.firebase
+      .firestore()
+      .collection('products')
+      .doc(slug);
+    return docData(productRef, 'id');
+  }
+
   constructor() {
     console.log('howdy i am shop module from core');
   }

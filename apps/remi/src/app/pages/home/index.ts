@@ -128,20 +128,8 @@ export class Home extends useLightDom {
                   </a>
                 `
               )}
-
-              <!-- Loader -->
-              <div class="remi-product-item-placeholder feature-item">
-                <div class="remi-product-item-placeholder--image"></div>
-                <div class="remi-product-item-footer pad">
-                  <div
-                    class="remi-product-item-placeholder--title placeholder-shimmer"
-                  ></div>
-                  <div
-                    class="remi-product-item-placeholder--price placeholder-shimmer"
-                  ></div>
-                </div>
-              </div>
-              <!-- Loader ends -->
+              <!-- Show loaders -->
+              ${this.latest.length < 1 ? this.renderLoaders() : ''}
             </div>
           </div>
         </section>
@@ -174,6 +162,23 @@ export class Home extends useLightDom {
         </section>
       </div>
     `;
+  }
+  renderLoaders() {
+    return [1, 2, 3].map(
+      _ => html`
+        <div class="remi-product-item-placeholder feature-item">
+          <div class="remi-product-item-placeholder--image"></div>
+          <div class="remi-product-item-footer pad">
+            <div
+              class="remi-product-item-placeholder--title placeholder-shimmer"
+            ></div>
+            <div
+              class="remi-product-item-placeholder--price placeholder-shimmer"
+            ></div>
+          </div>
+        </div>
+      `
+    );
   }
 
   constructor() {
