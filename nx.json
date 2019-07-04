@@ -16,6 +16,15 @@
     },
     "router": {
       "tags": []
+    },
+    "biness-text": {
+      "tags": []
+    },
+    "editable-text": {
+      "tags": []
+    },
+    "core": {
+      "tags": []
     }
   }
 }

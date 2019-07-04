@@ -16,7 +16,10 @@
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
     "paths": {
-      "@shop-themes/router": ["libs/router/src/index.ts"]
+      "@shop-themes/router": ["libs/router/src/index.ts"],
+      "@shop-themes/biness-text": ["libs/biness-text/src/index.ts"],
+      "@shop-themes/editable-text": ["libs/editable-text/src/index.ts"],
+      "@shop-themes/core": ["libs/core/src/index.ts"]
     }
   },
   "exclude": ["node_modules", "tmp"]

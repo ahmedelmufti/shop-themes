@@ -274,12 +274,6 @@ body.fullbleed {
   height: 100vh;
 }
 
-/* Hide these components until they are loaded */
-remi-home,
-remi-product {
-  visibility: hidden;
-}
-
 iron-image {
   width: 100%;
   height: 100%;

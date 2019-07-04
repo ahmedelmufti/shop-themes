@@ -24,8 +24,10 @@ import '@polymer/app-layout/app-header/app-header.js';
 import '@polymer/app-layout/app-scroll-effects/effects/waterfall.js';
 import '@polymer/app-layout/app-toolbar/app-toolbar.js';
 
-import './app.scss';
 import { useLightDom } from './use-lightdom';
+import './app.scss';
+import './pages/home';
+import '../../src/assets/styles/iron-flex.scss';
 
 @customElement('remi-app')
 export class App extends useLightDom(LitElement) {
@@ -200,6 +202,7 @@ export class App extends useLightDom(LitElement) {
       </app-drawer>
       <!-- Main content -->
       <main role="main" class="main-content">
+        <remi-home page="home" active></remi-home>
         <my-view1 class="page" ?active="${this._page === 'view1'}"></my-view1>
         <my-view2 class="page" ?active="${this._page === 'view2'}"></my-view2>
         <my-view3 class="page" ?active="${this._page === 'view3'}"></my-view3>
