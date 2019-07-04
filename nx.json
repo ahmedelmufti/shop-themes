@@ -7,5 +7,12 @@
     "tslint.json": "*",
     "nx.json": "*"
   },
-  "projects": {}
+  "projects": {
+    "remi": {
+      "tags": []
+    },
+    "remi-e2e": {
+      "tags": []
+    }
+  }
 }
