@@ -103,6 +103,31 @@
           }
         }
       }
+    },
+    "router": {
+      "root": "libs/router",
+      "sourceRoot": "libs/router/src",
+      "projectType": "library",
+      "schematics": {},
+      "architect": {
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "libs/router/tsconfig.lib.json",
+              "libs/router/tsconfig.spec.json"
+            ],
+            "exclude": ["**/node_modules/**", "!libs/router/**"]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "options": {
+            "jestConfig": "libs/router/jest.config.js",
+            "tsConfig": "libs/router/tsconfig.spec.json"
+          }
+        }
+      }
     }
   },
   "cli": {

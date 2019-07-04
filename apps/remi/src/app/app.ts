@@ -7,7 +7,7 @@ import {
   customElement
 } from 'lit-element';
 import { setPassiveTouchGestures } from '@polymer/polymer/lib/utils/settings.js';
-import { Router } from './router';
+import { Router, RouteData } from '@shop-themes/router';
 import { connect } from 'pwa-helpers/connect-mixin.js';
 import { installMediaQueryWatcher } from 'pwa-helpers/media-query.js';
 import { installOfflineWatcher } from 'pwa-helpers/network.js';
@@ -225,10 +225,15 @@ export class App extends useLightDom(LitElement) {
   }
 
   protected firstUpdated() {
+    Router.data$.subscribe((route: RouteData) => this.routeChanged(route));
     // installOfflineWatcher(offline => store.dispatch(updateOffline(offline)));
     // installMediaQueryWatcher(`(min-width: 460px)`, () =>
     //   // store.dispatch(updateDrawerState(false))
     // );
+  }
+
+  protected routeChanged(route: RouteData) {
+    // load the page
   }
 
   protected updated(changedProps: PropertyValues) {

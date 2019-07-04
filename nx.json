@@ -13,6 +13,9 @@
     },
     "remi-e2e": {
       "tags": []
+    },
+    "router": {
+      "tags": []
     }
   }
 }
