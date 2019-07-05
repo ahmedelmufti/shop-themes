@@ -30,38 +30,39 @@ export class ProductDetail extends useLightDom {
   protected render() {
     return html`
       <section class="page-wrapper">
-        ${this.data
-          ? html`<div class="content layout horizontal main-section">
+        <div class="content layout horizontal main-section">
           <div style="
               height: 34px;
               background: #393433;
           "></div>
             <div class="product-media layout horizontal">
               <ul class="thumbnails no-carousel">
-                ${this.data.media.map(
-                  (item, index) => html`
-                    <li>
-                      <img
-                        class="thumbnail-image"
-                        .src=${item.downloadURL}
-                        on-click="_swipeTo"
-                        ?index=${index}
-                      />
-                    </li>
-                  `
-                )}
+                ${this.data &&
+                  this.data.media.map(
+                    (item, index) => html`
+                      <li>
+                        <img
+                          class="thumbnail-image"
+                          .src=${item.downloadURL}
+                          on-click="_swipeTo"
+                          ?index=${index}
+                        />
+                      </li>
+                    `
+                  )}
               </ul>
               <!-- Slider main container -->
                 <div class="swiper-container">
                   <!-- Additional required wrapper -->
                   <ul class="swiper-wrapper" id="swipe">
-                  ${this.data.media.map(
-                    (item, index) => html`
-                      <li class="swiper-slide">
-                        <img class="product-image" .src=${item.downloadURL} />
-                      </li>
-                    `
-                  )}
+                  ${this.data &&
+                    this.data.media.map(
+                      (item, index) => html`
+                        <li class="swiper-slide">
+                          <img class="product-image" .src=${item.downloadURL} />
+                        </li>
+                      `
+                    )}
                   </ul>
                   <!-- If we need pagination -->
                   <!-- <div class="swiper-pagination"></div> -->
@@ -75,10 +76,10 @@ export class ProductDetail extends useLightDom {
                 </div>
             </div>
             <div class="detail layout vertical flex">
-                <h1 class="mdc-typography--headline4">${this.data.name}</h1>
-                <div class="price mdc-typography--headline6">$${
-                  this.data.price.value
-                }</div>
+                <h1 class="mdc-typography--headline4">${this.data &&
+                  this.data.name}</h1>
+                <div class="price mdc-typography--headline6">$${this.data &&
+                  this.data.price.value}</div>
                 <div class="pickers">
                     <!-- Color -->
                     <div class="colors-wrapper">
@@ -97,12 +98,13 @@ export class ProductDetail extends useLightDom {
                 </div>
                 <div class="description">
                     <h2 class="mdc-typography--headline5">Description</h2>
-                    <p class="mdc-typography--body2">${this.data.description}
+                    <p class="mdc-typography--body2">${this.data &&
+                      this.data.description}
                         <div>
                             <br>
                         </div>
                         <div class="mdc-typography--headline5" ?hidden="${!this
-                          .data.features}">Features:</div>
+                          .data || !this.data.features}">Features:</div>
                         <div>
                             <ul>
                               ${this.getFeatures().map(
@@ -121,14 +123,15 @@ export class ProductDetail extends useLightDom {
                     <button aria-label="Add this item to cart">Add to Cart</button>
                 </shop-button> -->
             </div>
-        </div> `
-          : ''}
+        </div>
       </section>
     `;
   }
 
   getFeatures(): Array<String> {
-    return this.data.features ? this.data.features.split('\n') : [];
+    return this.data && this.data.features
+      ? this.data.features.split('\n')
+      : [];
   }
   /**
    *
@@ -143,7 +146,7 @@ export class ProductDetail extends useLightDom {
         )
         .subscribe(val => {
           this.data = val;
-          this.requestUpdate();
+          this.requestUpdate().then(_ => this.swiper.update());
         });
     });
 
@@ -151,8 +154,8 @@ export class ProductDetail extends useLightDom {
   }
 
   loadSwiper() {
-    import('swiper').then(Swiper => {
-      this.swiper = new Swiper('swiper-container', {
+    import('swiper').then(({ default: Swiper }) => {
+      this.swiper = new Swiper(this.querySelector('.swiper-container'), {
         slidesPerView: 1,
         loop: false,
         navigation: {
@@ -160,6 +163,8 @@ export class ProductDetail extends useLightDom {
           prevEl: '.swiper-button-prev'
         }
       });
+
+      this.updateComplete.then(_ => this.swiper.update());
     });
   }
 

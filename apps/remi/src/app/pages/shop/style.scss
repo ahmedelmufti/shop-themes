@@ -1,0 +1,32 @@
+remi-shop {
+  remi-product-item {
+    height: 435px;
+  }
+  .feature-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    grid-gap: 16px;
+  }
+
+  .toolbar {
+    padding: 16px 0;
+  }
+
+  @media only screen and (max-device-width: 480px) and (min-device-width: 320px) {
+    remi-product-item {
+      height: 370px;
+    }
+    .feature-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @media only screen and (max-device-width: 768px) and (min-device-width: 480px) {
+    remi-product-item {
+      height: 380px;
+    }
+    .feature-item {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+}
