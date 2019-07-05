@@ -9,9 +9,11 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 */
 
 import { LitElement, html, css, property, customElement } from 'lit-element';
+import Swiper from 'swiper';
 import { useLightDom } from '../../use-lightdom';
 
 import './style.scss';
+import 'swiper/dist/css/swiper.min.css';
 import { Router, RouteData } from '@shop-themes/router';
 import { filter, switchMap, map, tap } from 'rxjs/operators';
 import { Shop } from '@shop-themes/core';
@@ -24,6 +26,8 @@ export class ProductDetail extends useLightDom {
   @property({ type: Object })
   data = null;
 
+  private swiper: Swiper;
+
   protected render() {
     return html`
       <section class="page-wrapper">
@@ -35,23 +39,30 @@ export class ProductDetail extends useLightDom {
           "></div>
             <div class="product-media layout horizontal">
               <ul class="thumbnails no-carousel">
-                <!-- <dom-repeat items="[[data.media]]" as="item" >
-                  <template>
+                ${this.data.media.map(
+                  (item, index) => html`
                     <li>
-                      <img class="thumbnail-image" src$="[[item.downloadURL]]" on-click="_swipeTo" index="[[index]]">
+                      <img
+                        class="thumbnail-image"
+                        .src=${item.downloadURL}
+                        on-click="_swipeTo"
+                        ?index=${index}
+                      />
                     </li>
-                  </template>
-                </dom-repeat> -->
+                  `
+                )}
               </ul>
               <!-- Slider main container -->
                 <div class="swiper-container">
                   <!-- Additional required wrapper -->
                   <ul class="swiper-wrapper" id="swipe">
-                    <template is="dom-repeat" items="[[data.media]]" as="item" on-dom-change="initSlider" notify-dom-change="true">
+                  ${this.data.media.map(
+                    (item, index) => html`
                       <li class="swiper-slide">
-                        <img class="product-image" src="[[item.downloadURL]]">
+                        <img class="product-image" .src=${item.downloadURL} />
                       </li>
-                    </template>
+                    `
+                  )}
                   </ul>
                   <!-- If we need pagination -->
                   <!-- <div class="swiper-pagination"></div> -->
@@ -134,5 +145,21 @@ export class ProductDetail extends useLightDom {
         this.data = val;
         this.requestUpdate();
       });
+
+    this.swiper = new Swiper('swiper-container', {
+      slidesPerView: 1,
+      loop: false,
+      navigation: {
+        nextEl: '.swiper-button-next',
+        prevEl: '.swiper-button-prev'
+      }
+    });
+    console.log(this.swiper);
+  }
+
+  initSlider() {
+    if (this.swiper && this.swiper.destroy) {
+      this.swiper.update();
+    }
   }
 }

@@ -41,7 +41,8 @@
     "lit-element": "^2.2.0",
     "pwa-helpers": "^0.9.1",
     "rxfire": "^3.6.4",
-    "rxjs": "^6.5.2"
+    "rxjs": "^6.5.2",
+    "swiper": "^4.5.0"
   },
   "devDependencies": {
     "@nrwl/web": "8.2.0",
