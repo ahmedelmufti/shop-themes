@@ -13,7 +13,7 @@
           "aot": true,
           "builder": "@nrwl/web:build",
           "options": {
-            "outputPath": "dist/apps/remi",
+            "outputPath": "apps/remi/dist/remi",
             "index": "apps/remi/src/index.html",
             "main": "apps/remi/src/main.ts",
             "polyfills": "apps/remi/src/polyfills.ts",
