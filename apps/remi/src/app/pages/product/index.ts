@@ -93,13 +93,18 @@ export class ProductDetail extends useLightDom {
                         </div>
                         <div class="mdc-typography--headline5" ?hidden="${!this
                           .data.features}">Features:</div>
-                        <!-- <div>
+                        <div>
                             <ul>
+                              ${this.getFeatures().map(
+                                feature => html`
+                                  <li>${feature}</li>
+                                `
+                              )}
                                 <template is="dom-repeat" items="[[_getFeatures(data.features)]]">
-                                    <li>[[item]]</li>
+
                                 </template>
                             </ul>
-                        </div> -->
+                        </div>
                     </p>
                 </div>
                 <!-- <shop-button responsive="">
@@ -112,6 +117,9 @@ export class ProductDetail extends useLightDom {
     `;
   }
 
+  getFeatures(): Array<String> {
+    return this.data.features ? this.data.features.split('\n') : [];
+  }
   /**
    *
    */
