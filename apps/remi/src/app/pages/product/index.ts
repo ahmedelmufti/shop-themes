@@ -134,27 +134,30 @@ export class ProductDetail extends useLightDom {
   /**
    *
    */
-  protected firstUpdated() {
-    Router.data$
-      .pipe(
-        filter(({ params }) => params[1] === 'product'),
-        map((data: RouteData) => data.params[2]),
-        switchMap(_slug => Shop.getProduct(_slug))
-      )
-      .subscribe(val => {
-        this.data = val;
-        this.requestUpdate();
-      });
-
-    this.swiper = new Swiper('swiper-container', {
-      slidesPerView: 1,
-      loop: false,
-      navigation: {
-        nextEl: '.swiper-button-next',
-        prevEl: '.swiper-button-prev'
-      }
+  protected async firstUpdated() {
+    import('firebase/firestore').then(module => {
+      Router.data$
+        .pipe(
+          filter(({ params }) => params[1] === 'product'),
+          map((data: RouteData) => data.params[2]),
+          switchMap(_slug => Shop.getProduct(_slug))
+        )
+        .subscribe(val => {
+          this.data = val;
+          this.requestUpdate();
+        });
     });
-    console.log(this.swiper);
+
+    import('swiper').then(swiper => {
+      this.swiper = new Swiper('swiper-container', {
+        slidesPerView: 1,
+        loop: false,
+        navigation: {
+          nextEl: '.swiper-button-next',
+          prevEl: '.swiper-button-prev'
+        }
+      });
+    });
   }
 
   initSlider() {

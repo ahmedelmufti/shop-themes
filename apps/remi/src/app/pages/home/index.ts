@@ -184,12 +184,13 @@ export class Home extends useLightDom {
 
   constructor() {
     super();
+  }
+
+  protected async firstUpdated() {
+    await import('firebase/firestore');
     this.latestProducts$ = Shop.products()
       .latest(5)
       .pipe(filter(products => products.length > 0));
-  }
-
-  protected firstUpdated() {
     this.latestProducts$.subscribe(products => {
       this.latest = products.slice(0, 6);
       this.requestUpdate();
