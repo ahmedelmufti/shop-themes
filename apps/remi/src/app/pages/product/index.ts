@@ -9,7 +9,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 */
 
 import { LitElement, html, css, property, customElement } from 'lit-element';
-import Swiper from 'swiper';
 import { useLightDom } from '../../use-lightdom';
 
 import './style.scss';
@@ -26,7 +25,7 @@ export class ProductDetail extends useLightDom {
   @property({ type: Object })
   data = null;
 
-  private swiper: Swiper;
+  private swiper;
 
   protected render() {
     return html`
@@ -148,7 +147,11 @@ export class ProductDetail extends useLightDom {
         });
     });
 
-    import('swiper').then(swiper => {
+    this.loadSwiper();
+  }
+
+  loadSwiper() {
+    import('swiper').then(Swiper => {
       this.swiper = new Swiper('swiper-container', {
         slidesPerView: 1,
         loop: false,
