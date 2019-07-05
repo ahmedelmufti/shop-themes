@@ -12,7 +12,6 @@ import '@polymer/app-layout/app-scroll-effects/effects/waterfall.js';
 import '@polymer/app-layout/app-toolbar/app-toolbar.js';
 
 import './app.scss';
-import './pages/home';
 import '../../src/assets/styles/iron-flex.scss';
 import { Shop } from '@shop-themes/core';
 import { environment } from '../environments/environment';
@@ -23,7 +22,7 @@ export class App extends useLightDom {
   appTitle = 'Reminiscebyro';
 
   @property({ type: String })
-  private page = '';
+  private page;
 
   @property({ type: Boolean })
   private _drawerOpened = false;
@@ -139,7 +138,7 @@ export class App extends useLightDom {
     }
   }
 
-  private async load(page) {
+  private async load(page: String) {
     if (page === 'default') {
       page = 'home';
     }

@@ -8,6 +8,10 @@ export const Shop = new class {
   private isInitialized: Boolean = false;
   private firebase;
 
+  /**
+   *
+   * @param slug
+   */
   getProduct(slug) {
     const productRef = this.firebase
       .firestore()
@@ -16,23 +20,32 @@ export const Shop = new class {
     return docData(productRef, 'id');
   }
 
-  constructor() {
-    console.log('howdy i am shop module from core');
-  }
+  constructor() {}
 
+  /**
+   *
+   */
   products() {
     return this;
   }
 
+  /**
+   *
+   * @param number
+   */
+  latest(number: Number) {
+    const productsRef = this.firebase.firestore().collection('products');
+    return collectionData(productsRef, 'id');
+  }
+
+  /**
+   *
+   * @param config
+   */
   bootstrap(config) {
     if (this.isInitialized) {
       throw new Error('app cannot be initialized more than once.');
     }
     this.firebase = firebase.initializeApp(config);
-  }
-
-  latest(number: Number) {
-    const productsRef = this.firebase.firestore().collection('products');
-    return collectionData(productsRef, 'id');
   }
 }();

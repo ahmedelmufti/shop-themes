@@ -3,6 +3,7 @@
   "version": "0.0.0",
   "license": "MIT",
   "scripts": {
+    "build:remi": "ng build remi --configuration=production --sourceMap=true --statsJson",
     "ng": "ng",
     "start": "ng serve",
     "build": "ng build",

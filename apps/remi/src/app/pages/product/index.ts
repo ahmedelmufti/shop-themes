@@ -35,13 +35,13 @@ export class ProductDetail extends useLightDom {
           "></div>
             <div class="product-media layout horizontal">
               <ul class="thumbnails no-carousel">
-                <dom-repeat items="[[data.media]]" as="item" >
+                <!-- <dom-repeat items="[[data.media]]" as="item" >
                   <template>
                     <li>
                       <img class="thumbnail-image" src$="[[item.downloadURL]]" on-click="_swipeTo" index="[[index]]">
                     </li>
                   </template>
-                </dom-repeat>
+                </dom-repeat> -->
               </ul>
               <!-- Slider main container -->
                 <div class="swiper-container">

@@ -163,6 +163,7 @@ export class Home extends useLightDom {
       </div>
     `;
   }
+
   renderLoaders() {
     return [1, 2, 3].map(
       _ => html`
