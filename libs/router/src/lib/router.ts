@@ -10,6 +10,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
 import { installRouter } from 'pwa-helpers/router.js';
 import { Observable } from 'rxjs';
+import { share } from 'rxjs/operators';
 
 export interface RouteData {
   params: Array<String>;
@@ -25,7 +26,7 @@ class AppRouter {
     this.data$ = Observable.create(observer => {
       this._dataObserver = observer;
       installRouter(this.whenLocationChanges.bind(this));
-    });
+    }).pipe(share());
   }
 
   /**

@@ -91,14 +91,15 @@ export class ProductDetail extends useLightDom {
                         <div>
                             <br>
                         </div>
-                        <div class="mdc-typography--headline5" hidden$="[[!data.features]]">Features:</div>
-                        <div>
+                        <div class="mdc-typography--headline5" ?hidden="${!this
+                          .data.features}">Features:</div>
+                        <!-- <div>
                             <ul>
                                 <template is="dom-repeat" items="[[_getFeatures(data.features)]]">
                                     <li>[[item]]</li>
                                 </template>
                             </ul>
-                        </div>
+                        </div> -->
                     </p>
                 </div>
                 <!-- <shop-button responsive="">
