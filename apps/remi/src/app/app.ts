@@ -25,12 +25,6 @@ export class App extends useLightDom {
   private page;
 
   @property({ type: Boolean })
-  private _drawerOpened = false;
-
-  @property({ type: Boolean })
-  private _snackbarOpened = false;
-
-  @property({ type: Boolean })
   private _offline = false;
 
   protected render() {
@@ -43,7 +37,7 @@ export class App extends useLightDom {
           <a href="/cart">
             <mwc-button cart-btn>
               <mwc-icon>shopping_cart</mwc-icon>
-              <span class="cart-badge">3</span>
+              <span class="cart-badge">0</span>
             </mwc-button>
           </a>
         </app-toolbar>
@@ -58,6 +52,7 @@ export class App extends useLightDom {
       <main role="main" class="main-content">
         <remi-home class="page" ?active="${this.page === 'home'}"></remi-home>
         <remi-shop class="page" ?active="${this.page === 'shop'}"></remi-shop>
+        <remi-cart class="page" ?active="${this.page === 'cart'}"></remi-cart>
         <remi-product-detail
           class="page"
           ?active="${this.page === 'product'}"
@@ -156,6 +151,9 @@ export class App extends useLightDom {
         break;
       case 'shop':
         await import('./pages/shop/');
+        break;
+      case 'cart':
+        await import('./pages/cart/');
         break;
       default:
         page = 'view404';
