@@ -18,7 +18,16 @@
             "main": "apps/remi/src/main.ts",
             "polyfills": "apps/remi/src/polyfills.ts",
             "tsConfig": "apps/remi/tsconfig.app.json",
-            "assets": ["apps/remi/src/favicon.ico", "apps/remi/src/assets"],
+            "assets": [
+              "apps/remi/src/favicon.ico",
+              "apps/remi/src/assets",
+              "apps/remi/src/service-worker.js",
+              {
+                "glob": "**/*.js",
+                "input": "./node_modules/workbox-sw/build/",
+                "output": "/workbox/"
+              }
+            ],
             "styles": ["apps/remi/src/styles.scss"],
             "scripts": []
           },
