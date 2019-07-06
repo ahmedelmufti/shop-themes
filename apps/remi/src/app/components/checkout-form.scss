@@ -1,0 +1,44 @@
+remi-checkout-form {
+  .mdc-dialog {
+    justify-content: flex-end;
+
+    .mdc-dialog__title .sub-title {
+      margin: 0;
+      font-size: 0.9rem;
+      font-weight: 400;
+    }
+  }
+
+  .mdc-dialog__container {
+    width: 60vw;
+    max-width: 900px;
+    transform: translateX(100%) !important;
+  }
+  .mdc-dialog--open .mdc-dialog__container,
+  .mdc-dialog--open .mdc-dialog__surface {
+    transform: translateX(0) !important;
+  }
+  .mdc-dialog__surface {
+    width: 100%;
+    max-width: none !important;
+    height: 100vh;
+    max-height: none !important;
+    transform: translateX(100%) !important;
+  }
+
+  .mdc-dialog__actions > * {
+    flex: 1;
+  }
+
+  .mdc-button--raised {
+    box-shadow: none;
+  }
+
+  .pages > * {
+    display: none;
+
+    &.page--active {
+      display: block;
+    }
+  }
+}

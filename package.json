@@ -31,6 +31,7 @@
   },
   "private": true,
   "dependencies": {
+    "@material/dialog": "^3.0.0",
     "@material/mwc-button": "^0.6.0",
     "@material/mwc-icon": "^0.6.0",
     "@polymer/app-layout": "^3.0.2",
