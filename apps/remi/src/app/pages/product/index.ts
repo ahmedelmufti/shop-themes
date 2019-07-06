@@ -205,6 +205,7 @@ export class ProductDetail extends useLightDom {
   public addToCart() {
     try {
       Cart.add({
+        $key: this.data.$key,
         product: this.data,
         quantity: 1,
         price: this.data.price.value

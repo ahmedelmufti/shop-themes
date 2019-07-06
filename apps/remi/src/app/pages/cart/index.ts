@@ -15,10 +15,10 @@ import { useLightDom } from '../../use-lightdom';
 import '@polymer/iron-image';
 import '@material/mwc-button';
 import '@shop-themes/editable-text';
-import '../../components/product-item';
+import '../../components/cart-item';
 
 import './style.scss';
-import { Shop } from '@shop-themes/core';
+import { Shop, Cart, ICart } from '@shop-themes/core';
 import { Observable } from 'rxjs';
 import { filter } from 'rxjs/operators';
 
@@ -27,42 +27,40 @@ export class CartPage extends useLightDom {
   @property({ type: Boolean })
   active = false;
 
-  private latestProducts$: Observable<any>;
+  @property({ type: Boolean })
+  isLoading: Boolean = true;
 
-  latest = [];
+  data: ICart;
 
+  get items() {
+    return this.data ? this.data.items : [];
+  }
+
+  get isEmpty() {
+    return this.items.length < 1;
+  }
   protected render() {
     return html`
-      <section class="content">
-        <header class="pad">
-          <!-- <div>
-            <h1>Your Shopping Cart</h1>
-            <p>Review of <span>[[numItems]]</span> items <span>$[[total]]</span></p>
-            <div class="spacer"></div> -->
-          </div>
-        </header>
-        <div class="grid">
-          <template is="dom-repeat" items="[[items]]">
-            <remi-cart-item
-              data="[[item]]"
-              on-delete="_delete"
-              on-quantity-changed="(_quantity - changed)"
-            ></remi-cart-item>
-          </template>
+      <!-- <header class="pad"></header> -->
+      <section class="page-wrapper content">
+        <div class="cart-items">
+          ${!this.isLoading
+            ? this.items.map(
+                item => html`
+                  <remi-cart-item
+                    .data=${item}
+                    class="cart-items--item"
+                  ></remi-cart-item>
+                `
+              )
+            : this.renderLoaders()}
         </div>
-        <footer hidden$="[[!numItems]]">
-          <div class="footer-inner">
-            <button class="mdc-button mdc-button--raised" on-click="(_checkout)">
-              Checkout
-            </button>
-          </div>
-        </footer>
       </section>
     `;
   }
 
   renderLoaders() {
-    return [1, 2, 3].map(
+    return [1, 2].map(
       _ => html`
         <div class="remi-product-item-placeholder feature-item">
           <div class="remi-product-item-placeholder--image"></div>
@@ -85,11 +83,10 @@ export class CartPage extends useLightDom {
 
   protected async firstUpdated() {
     await import('firebase/firestore');
-    this.latestProducts$ = Shop.products()
-      .latest(5)
-      .pipe(filter(products => products.length > 0));
-    this.latestProducts$.subscribe(products => {
-      this.latest = products;
+    Cart.data$.pipe(filter(cart => cart != null)).subscribe(cart => {
+      console.log(cart);
+      this.isLoading = false;
+      this.data = cart;
       this.requestUpdate();
     });
   }
