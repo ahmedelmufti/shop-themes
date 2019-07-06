@@ -82,7 +82,9 @@ export const Cart = new class {
    */
   async remove(item: ICartItem) {
     this.guard();
-    this.items.filter(element => element.$key === item.$key);
+    this.items = this.items.filter(
+      element => element.product.$key !== item.product.$key
+    );
     this.quantity = this.computeQuantity(this.items);
     this.total = this.computeTotal(this.items);
     return await this.update(this.data);
@@ -95,7 +97,7 @@ export const Cart = new class {
   private computeTotal(items: Array<ICartItem>): Number {
     let total: number = 0;
 
-    items.forEach(item => {
+    items.forEach((item: any) => {
       total = total + item.price * item.quantity;
     });
     return total;

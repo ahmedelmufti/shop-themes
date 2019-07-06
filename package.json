@@ -26,7 +26,8 @@
     "workspace-schematic": "nx workspace-schematic",
     "dep-graph": "nx dep-graph",
     "help": "nx help",
-    "report:remi": "webpack-bundle-analyzer dist/apps/remi/stats-es2015.json"
+    "report:remi": "webpack-bundle-analyzer dist/apps/remi/stats-es2015.json",
+    "sync": "browser-sync start -p http://localhost:4200"
   },
   "private": true,
   "dependencies": {
