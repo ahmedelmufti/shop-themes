@@ -120,7 +120,7 @@ export class Home extends useLightDom {
             <div class="feature-grid">
               ${this.latest.map(
                 product => html`
-                  <a href="/product/${product.id}" class="feature-item">
+                  <a href="/product/${product.$key}" class="feature-item">
                     <remi-product-item
                       featured
                       .data=${product}

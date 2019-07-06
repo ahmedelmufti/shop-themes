@@ -2,7 +2,20 @@ import * as firebase from 'firebase/app';
 
 import { collectionData, docData } from 'rxfire/firestore';
 
-export interface IProduct {}
+export interface IProductMedia {
+  downloadURL: String;
+  path: String;
+}
+
+export interface IProduct {
+  $key?: String;
+  name: String;
+  media: Array<IProductMedia>;
+  price: {
+    value: String;
+    compare?: String;
+  };
+}
 
 export const Shop = new class {
   /**
@@ -14,7 +27,7 @@ export const Shop = new class {
       .firestore()
       .collection('products')
       .doc(slug);
-    return docData(productRef, 'id');
+    return docData(productRef, '$key');
   }
 
   constructor() {}
@@ -32,6 +45,6 @@ export const Shop = new class {
    */
   latest(number: Number) {
     const productsRef = firebase.firestore().collection('products');
-    return collectionData(productsRef, 'id');
+    return collectionData(productsRef, '$key');
   }
 }();

@@ -35,7 +35,13 @@ export const Cart = new class {
     };
   }
 
-  add(item: ICartItem) {}
+  add(item: ICartItem) {
+    // check user is logged in
+    // if yes, we want to push this to the server
+    // else just login with anonymously
+    //
+    console.log('add to cart:', item);
+  }
 
   remove(item: ICartItem) {}
 }();

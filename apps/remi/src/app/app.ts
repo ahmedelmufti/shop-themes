@@ -13,7 +13,7 @@ import '@polymer/app-layout/app-toolbar/app-toolbar.js';
 
 import './app.scss';
 import '../../src/assets/styles/iron-flex.scss';
-import { Bootstrap } from '@shop-themes/core';
+import { Bootstrap, Auth } from '@shop-themes/core';
 import { environment } from '../environments/environment';
 
 @customElement('remi-app')
@@ -111,10 +111,22 @@ export class App extends useLightDom {
   protected firstUpdated() {
     Router.data$.subscribe((route: RouteData) => this.routeChanged(route));
     import('./lazy').then(module => {});
+    this.listenToAuth();
     // installOfflineWatcher(offline => store.dispatch(updateOffline(offline)));
     // installMediaQueryWatcher(`(min-width: 460px)`, () =>
     //   // store.dispatch(updateDrawerState(false))
     // );
+  }
+
+  protected listenToAuth() {
+    Auth.user$.subscribe(user => {
+      console.log(user);
+    });
+    import('firebase/auth').then(_ => Auth.bootstrap());
+  }
+
+  protected loginAnonymously() {
+    return Auth.loginAnonymously();
   }
 
   protected async routeChanged(route: RouteData) {

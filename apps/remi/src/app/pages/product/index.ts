@@ -23,7 +23,7 @@ import './style.scss';
 import 'swiper/dist/css/swiper.min.css';
 import { Router, RouteData } from '@shop-themes/router';
 import { filter, switchMap, map, tap } from 'rxjs/operators';
-import { Shop } from '@shop-themes/core';
+import { Shop, Cart } from '@shop-themes/core';
 
 @customElement('remi-product-detail')
 export class ProductDetail extends useLightDom {
@@ -92,7 +92,8 @@ export class ProductDetail extends useLightDom {
                     <div class="layout horizontal center">
                         <quantity-input min="1" max="7" value="{{quantity}}"></quantity-input>
                         <div class="flex">
-                            <mwc-button class="mdc-button mdc-button--unelevated btn-add-cart" on-click="_addToCart">
+                            <mwc-button class="mdc-button mdc-button--unelevated btn-add-cart" @click=${e =>
+                              this.addToCart()}>
                                 Add to Cart
                             </mwc-button>
                         </div>
@@ -178,7 +179,7 @@ export class ProductDetail extends useLightDom {
   }
 
   get isEmpty(): Boolean {
-    return this.product.id;
+    return this.product.$key;
   }
 
   /**
@@ -199,6 +200,12 @@ export class ProductDetail extends useLightDom {
     });
 
     this.loadSwiper();
+  }
+
+  public addToCart() {
+    try {
+      Cart.add({ product: this.data, quantity: 1, price: { value: 4 } });
+    } catch (error) {}
   }
 
   /**
