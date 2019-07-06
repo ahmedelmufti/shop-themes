@@ -12,6 +12,7 @@ import {
   LitElement,
   html,
   css,
+  PropertyValues,
   property,
   customElement,
   TemplateResult
@@ -37,13 +38,11 @@ export class ProductDetail extends useLightDom {
   protected render() {
     return html`
       <section class="page-wrapper">
-        ${this.product
-          ? html`
         <div class="content layout horizontal main-section" ?hidden=${!this
-          .product}>
+          .isEmpty}>
             <div class="product-media layout horizontal">
               <ul class="thumbnails no-carousel">
-                ${this.data.media.map(
+                ${this.product.media.map(
                   (item, index) => html`
                     <li>
                       <img
@@ -60,7 +59,7 @@ export class ProductDetail extends useLightDom {
                 <div class="swiper-container">
                   <!-- Additional required wrapper -->
                   <ul class="swiper-wrapper" id="swipe">
-                  ${this.data.media.map(
+                  ${this.product.media.map(
                     (item, index) => html`
                       <li class="swiper-slide">
                         <img class="product-image" .src=${item.downloadURL} />
@@ -80,9 +79,9 @@ export class ProductDetail extends useLightDom {
                 </div>
             </div>
             <div class="detail layout vertical flex">
-                <h1 class="mdc-typography--headline4">${this.data.name}</h1>
+                <h1 class="mdc-typography--headline4">${this.product.name}</h1>
                 <div class="price mdc-typography--headline6">$${
-                  this.data.price.value
+                  this.product.price.value
                 }</div>
                 <div class="pickers">
                     <!-- Color -->
@@ -101,12 +100,12 @@ export class ProductDetail extends useLightDom {
                 </div>
                 <div class="description">
                     <h2 class="mdc-typography--headline5">Description</h2>
-                    <p class="mdc-typography--body2">${this.data.description}
+                    <p class="mdc-typography--body2">${this.product.description}
                         <div>
                             <br>
                         </div>
                         <div class="mdc-typography--headline5" ?hidden="${!this
-                          .data.features}">Features:</div>
+                          .product.features}">Features:</div>
                         <div>
                             <ul>
                               ${this.getFeatures().map(
@@ -118,16 +117,14 @@ export class ProductDetail extends useLightDom {
                         </div>
                     </p>
                 </div>
-                <!-- <shop-button responsive="">
-                    <button aria-label="Add this item to cart">Add to Cart</button>
-                </shop-button> -->
             </div>
-        </div>`
-          : html`
-              <div class="content layout loader horizontal main-section">
-                ${this.loaderTemplate()}
-              </div>
-            `};
+        </div>
+        <!-- Will render loader here -->
+        <div class="content layout loader horizontal main-section" ?hidden=${
+          this.isEmpty
+        }>
+          ${this.loaderTemplate()}
+        </div>
       </section>
     `;
   }
@@ -172,7 +169,16 @@ export class ProductDetail extends useLightDom {
   }
 
   get product() {
-    return this.data;
+    return (
+      this.data || {
+        media: [],
+        price: {}
+      }
+    );
+  }
+
+  get isEmpty(): Boolean {
+    return this.product.id;
   }
 
   /**
@@ -203,6 +209,18 @@ export class ProductDetail extends useLightDom {
       this.loadSwiper();
     } else {
       this.requestUpdate().then(_ => this.swiper.update());
+    }
+  }
+
+  protected updated(changedProps: PropertyValues) {
+    if (changedProps.has('active')) {
+      this.activeChanged(this.active);
+    }
+  }
+
+  private activeChanged(active) {
+    if (!active) {
+      this.data = null;
     }
   }
 
