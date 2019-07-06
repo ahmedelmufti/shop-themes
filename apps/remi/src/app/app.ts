@@ -33,7 +33,7 @@ export class App extends useLightDom {
       <!-- Header -->
       <app-header condenses reveals effects="waterfall">
         <app-toolbar class="toolbar-top">
-          <div main-title>${this.appTitle}</div>
+          <a href="/" main-title>${this.appTitle}</a>
           <a href="/cart">
             <mwc-button cart-btn>
               <mwc-icon>shopping_cart</mwc-icon>

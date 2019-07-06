@@ -2,6 +2,8 @@ import * as firebase from 'firebase/app';
 
 import { collectionData, docData } from 'rxfire/firestore';
 
+export interface IProduct {}
+
 export const Shop = new class {
   /**
    *

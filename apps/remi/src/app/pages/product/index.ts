@@ -8,7 +8,14 @@ Code distributed by Google as part of the polymer project is also
 subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
 */
 
-import { LitElement, html, css, property, customElement } from 'lit-element';
+import {
+  LitElement,
+  html,
+  css,
+  property,
+  customElement,
+  TemplateResult
+} from 'lit-element';
 import { useLightDom } from '../../use-lightdom';
 
 import './style.scss';
@@ -30,39 +37,36 @@ export class ProductDetail extends useLightDom {
   protected render() {
     return html`
       <section class="page-wrapper">
-        <div class="content layout horizontal main-section">
-          <div style="
-              height: 34px;
-              background: #393433;
-          "></div>
+        ${this.product
+          ? html`
+        <div class="content layout horizontal main-section" ?hidden=${!this
+          .product}>
             <div class="product-media layout horizontal">
               <ul class="thumbnails no-carousel">
-                ${this.data &&
-                  this.data.media.map(
-                    (item, index) => html`
-                      <li>
-                        <img
-                          class="thumbnail-image"
-                          .src=${item.downloadURL}
-                          on-click="_swipeTo"
-                          ?index=${index}
-                        />
-                      </li>
-                    `
-                  )}
+                ${this.data.media.map(
+                  (item, index) => html`
+                    <li>
+                      <img
+                        class="thumbnail-image"
+                        .src=${item.downloadURL}
+                        on-click="_swipeTo"
+                        ?index=${index}
+                      />
+                    </li>
+                  `
+                )}
               </ul>
               <!-- Slider main container -->
                 <div class="swiper-container">
                   <!-- Additional required wrapper -->
                   <ul class="swiper-wrapper" id="swipe">
-                  ${this.data &&
-                    this.data.media.map(
-                      (item, index) => html`
-                        <li class="swiper-slide">
-                          <img class="product-image" .src=${item.downloadURL} />
-                        </li>
-                      `
-                    )}
+                  ${this.data.media.map(
+                    (item, index) => html`
+                      <li class="swiper-slide">
+                        <img class="product-image" .src=${item.downloadURL} />
+                      </li>
+                    `
+                  )}
                   </ul>
                   <!-- If we need pagination -->
                   <!-- <div class="swiper-pagination"></div> -->
@@ -76,10 +80,10 @@ export class ProductDetail extends useLightDom {
                 </div>
             </div>
             <div class="detail layout vertical flex">
-                <h1 class="mdc-typography--headline4">${this.data &&
-                  this.data.name}</h1>
-                <div class="price mdc-typography--headline6">$${this.data &&
-                  this.data.price.value}</div>
+                <h1 class="mdc-typography--headline4">${this.data.name}</h1>
+                <div class="price mdc-typography--headline6">$${
+                  this.data.price.value
+                }</div>
                 <div class="pickers">
                     <!-- Color -->
                     <div class="colors-wrapper">
@@ -94,17 +98,15 @@ export class ProductDetail extends useLightDom {
                             </mwc-button>
                         </div>
                     </div>
-
                 </div>
                 <div class="description">
                     <h2 class="mdc-typography--headline5">Description</h2>
-                    <p class="mdc-typography--body2">${this.data &&
-                      this.data.description}
+                    <p class="mdc-typography--body2">${this.data.description}
                         <div>
                             <br>
                         </div>
                         <div class="mdc-typography--headline5" ?hidden="${!this
-                          .data || !this.data.features}">Features:</div>
+                          .data.features}">Features:</div>
                         <div>
                             <ul>
                               ${this.getFeatures().map(
@@ -112,9 +114,6 @@ export class ProductDetail extends useLightDom {
                                   <li>${feature}</li>
                                 `
                               )}
-                                <template is="dom-repeat" items="[[_getFeatures(data.features)]]">
-
-                                </template>
                             </ul>
                         </div>
                     </p>
@@ -123,8 +122,46 @@ export class ProductDetail extends useLightDom {
                     <button aria-label="Add this item to cart">Add to Cart</button>
                 </shop-button> -->
             </div>
-        </div>
+        </div>`
+          : html`
+              <div class="content layout loader horizontal main-section">
+                ${this.loaderTemplate()}
+              </div>
+            `};
       </section>
+    `;
+  }
+
+  protected loaderTemplate(): TemplateResult {
+    return html`
+      <div class="product-media">
+        <div class="remi-product-item-placeholder--image"></div>
+        <div class="remi-product-item-footer pad"></div>
+      </div>
+      <div class="detail layout vertical flex">
+        <div
+          class="remi-product-item-placeholder--title placeholder-shimmer"
+        ></div>
+        <div
+          class="remi-product-item-placeholder--price placeholder-shimmer"
+        ></div>
+        <div class="description">
+          <div
+            class="remi-product-item-placeholder--title placeholder-shimmer"
+          ></div>
+          <div
+            class="remi-product-item-placeholder--price placeholder-shimmer"
+          ></div>
+        </div>
+        <div class="description">
+          <div
+            class="remi-product-item-placeholder--title placeholder-shimmer"
+          ></div>
+          <div
+            class="remi-product-item-placeholder--price placeholder-shimmer"
+          ></div>
+        </div>
+      </div>
     `;
   }
 
@@ -133,6 +170,11 @@ export class ProductDetail extends useLightDom {
       ? this.data.features.split('\n')
       : [];
   }
+
+  get product() {
+    return this.data;
+  }
+
   /**
    *
    */
@@ -146,14 +188,29 @@ export class ProductDetail extends useLightDom {
         )
         .subscribe(val => {
           this.data = val;
-          this.requestUpdate().then(_ => this.swiper.update());
+          this.requestSwiperUpdate();
         });
     });
 
     this.loadSwiper();
   }
 
+  /**
+   *
+   */
+  private requestSwiperUpdate() {
+    if (!this.swiper) {
+      this.loadSwiper();
+    } else {
+      this.requestUpdate().then(_ => this.swiper.update());
+    }
+  }
+
+  /**
+   *
+   */
   loadSwiper() {
+    if (!this.product) return;
     import('swiper').then(({ default: Swiper }) => {
       this.swiper = new Swiper(this.querySelector('.swiper-container'), {
         slidesPerView: 1,
@@ -166,11 +223,5 @@ export class ProductDetail extends useLightDom {
 
       this.updateComplete.then(_ => this.swiper.update());
     });
-  }
-
-  initSlider() {
-    if (this.swiper && this.swiper.destroy) {
-      this.swiper.update();
-    }
   }
 }
