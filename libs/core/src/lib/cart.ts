@@ -3,7 +3,8 @@ import * as firebase from 'firebase/app';
 import { collectionData, docData } from 'rxfire/firestore';
 import { BehaviorSubject } from 'rxjs';
 
-import { IProduct } from '@shop-themes/core';
+import { Auth, User } from './auth';
+import { IProduct } from './shop';
 
 export interface ICart {
   items: Array<any>;
@@ -15,19 +16,40 @@ export interface ICartItem {
   quantity: Number;
   price: Number;
   product: IProduct;
+  $key: String;
 }
+
+export const EMPTY_CART = {
+  items: [],
+  quantity: 0,
+  total: 0
+};
 export const Cart = new class {
   items: Array<any> = [];
   quantity: Number = 0;
   total: Number = 0;
 
-  public data$: BehaviorSubject<ICart>;
+  private readonly _cart = new BehaviorSubject<ICart>({
+    items: this.items,
+    quantity: this.quantity,
+    total: this.total
+  });
 
-  constructor() {
-    this.data$ = new BehaviorSubject(this.getData());
+  bootstrap() {
+    Auth.user$.subscribe((user: User) => {
+      if (user) {
+        this.data = user.cart;
+      } else {
+        this.data = EMPTY_CART;
+      }
+    });
   }
 
-  getData(): ICart {
+  // Expose the observable$ part of the _todos subject (read only stream)
+  readonly data$ = this._cart.asObservable();
+
+  // the getter will return the last value emitted in _todos subject
+  get data(): ICart {
     return {
       items: this.items,
       quantity: this.quantity,
@@ -35,13 +57,61 @@ export const Cart = new class {
     };
   }
 
-  add(item: ICartItem) {
-    // check user is logged in
-    // if yes, we want to push this to the server
-    // else just login with anonymously
-    //
-    console.log('add to cart:', item);
+  set data(val: ICart) {
+    this.items = val.items;
+    this.quantity = val.quantity;
+    this.total = val.total;
+    this._cart.next(val);
   }
 
-  remove(item: ICartItem) {}
+  /**
+   *
+   * @param item
+   */
+  async add(item: ICartItem) {
+    this.guard();
+    this.items.push(item);
+    this.quantity = this.computeQuantity(this.items);
+    this.total = this.computeTotal(this.items);
+    return await this.update(this.data);
+  }
+
+  /**
+   *
+   * @param item
+   */
+  async remove(item: ICartItem) {
+    this.guard();
+    this.items.filter(element => element.$key === item.$key);
+    this.quantity = this.computeQuantity(this.items);
+    this.total = this.computeTotal(this.items);
+    return await this.update(this.data);
+  }
+
+  private computeQuantity(items) {
+    return items.length;
+  }
+
+  private computeTotal(items: Array<ICartItem>): Number {
+    let total: number = 0;
+
+    items.forEach(item => {
+      total = total + item.price * item.quantity;
+    });
+    return total;
+  }
+
+  async update(cart: ICart) {
+    return firebase
+      .firestore()
+      .collection('users')
+      .doc(Auth.auth.uid as string)
+      .update({ cart });
+  }
+
+  guard() {
+    if (!Auth.auth) {
+      throw new Error('please login before performing this action');
+    }
+  }
 }();

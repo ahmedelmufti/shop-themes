@@ -204,7 +204,11 @@ export class ProductDetail extends useLightDom {
 
   public addToCart() {
     try {
-      Cart.add({ product: this.data, quantity: 1, price: { value: 4 } });
+      Cart.add({
+        product: this.data,
+        quantity: 1,
+        price: this.data.price.value
+      });
     } catch (error) {}
   }
 

@@ -13,7 +13,14 @@ import '@polymer/app-layout/app-toolbar/app-toolbar.js';
 
 import './app.scss';
 import '../../src/assets/styles/iron-flex.scss';
-import { Bootstrap, Auth } from '@shop-themes/core';
+import {
+  Bootstrap,
+  Auth,
+  User,
+  ICart,
+  EMPTY_CART,
+  Cart
+} from '@shop-themes/core';
 import { environment } from '../environments/environment';
 
 @customElement('remi-app')
@@ -24,8 +31,13 @@ export class App extends useLightDom {
   @property({ type: String })
   private page;
 
+  @property({ type: Object })
+  private cart: ICart = EMPTY_CART;
+
   @property({ type: Boolean })
   private _offline = false;
+
+  private user: User;
 
   protected render() {
     // Anything that's related to rendering should be done in here.
@@ -37,7 +49,7 @@ export class App extends useLightDom {
           <a href="/cart">
             <mwc-button cart-btn>
               <mwc-icon>shopping_cart</mwc-icon>
-              <span class="cart-badge">0</span>
+              <span class="cart-badge">${this.cart.quantity}</span>
             </mwc-button>
           </a>
         </app-toolbar>
@@ -119,14 +131,23 @@ export class App extends useLightDom {
   }
 
   protected listenToAuth() {
-    Auth.user$.subscribe(user => {
-      console.log(user);
+    import('firebase/auth')
+      .then(_ => import('firebase/firestore'))
+      .then(_ => {
+        Auth.bootstrap();
+        Cart.bootstrap();
+      });
+    Auth.user$.subscribe((user: User) => {
+      this.user = user;
+      if (user) {
+        this.cart = user.cart;
+      }
+      this.requestUpdate();
     });
-    import('firebase/auth').then(_ => Auth.bootstrap());
   }
 
-  protected loginAnonymously() {
-    return Auth.loginAnonymously();
+  protected async loginAnonymously() {
+    await Auth.loginAnonymously();
   }
 
   protected async routeChanged(route: RouteData) {

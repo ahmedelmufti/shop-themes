@@ -1,10 +1,14 @@
 import * as firebase from 'firebase/app';
 import { BehaviorSubject, Observable } from 'rxjs';
-import { filter, switchMap } from 'rxjs/operators';
+import { filter, switchMap, tap } from 'rxjs/operators';
 import { authState, user } from 'rxfire/auth';
 import { collectionData, docData } from 'rxfire/firestore';
+import { ICart } from './cart';
 
-export interface User {}
+export interface User {
+  uid: String;
+  cart: ICart;
+}
 
 export const Auth = new class {
   items: Array<any> = [];
@@ -16,6 +20,8 @@ export const Auth = new class {
   // Expose the observable$ part of the _todos subject (read only stream)
   readonly user$ = this._user.asObservable();
 
+  public auth: { uid: String };
+
   // the getter will return the last value emitted in _todos subject
   get user(): User {
     return this._user.getValue();
@@ -24,6 +30,7 @@ export const Auth = new class {
   bootstrap() {
     this.authState$
       .pipe(
+        tap(auth => (this.auth = auth)),
         filter(auth => auth !== null),
         switchMap(auth =>
           docData(
@@ -34,7 +41,7 @@ export const Auth = new class {
           )
         )
       )
-      .subscribe(val => (this.user = val));
+      .subscribe((val: User) => (this.user = val));
   }
 
   get authState$() {
@@ -47,8 +54,13 @@ export const Auth = new class {
     this._user.next(val);
   }
 
-  loginAnonymously() {
-    return firebase.auth().signInAnonymously();
+  async loginAnonymously() {
+    const { user } = await firebase.auth().signInAnonymously();
+    return firebase
+      .firestore()
+      .collection('users')
+      .doc(user.uid)
+      .set({ isAnonymous: true, uid: user.uid });
   }
 
   login() {}
