@@ -48,6 +48,7 @@ export class CartPage extends useLightDom {
             ? this.items.map(
                 item => html`
                   <remi-cart-item
+                    @delete=${this.removeItem}
                     .data=${item}
                     class="cart-items--item"
                   ></remi-cart-item>
@@ -81,10 +82,12 @@ export class CartPage extends useLightDom {
     super();
   }
 
+  removeItem({ detail: item }) {
+    Cart.remove(item);
+  }
   protected async firstUpdated() {
     await import('firebase/firestore');
     Cart.data$.pipe(filter(cart => cart != null)).subscribe(cart => {
-      console.log(cart);
       this.isLoading = false;
       this.data = cart;
       this.requestUpdate();

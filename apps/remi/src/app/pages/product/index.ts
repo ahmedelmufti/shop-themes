@@ -23,7 +23,7 @@ import './style.scss';
 import 'swiper/dist/css/swiper.min.css';
 import { Router, RouteData } from '@shop-themes/router';
 import { filter, switchMap, map, tap } from 'rxjs/operators';
-import { Shop, Cart } from '@shop-themes/core';
+import { Shop, Cart, Auth } from '@shop-themes/core';
 
 @customElement('remi-product-detail')
 export class ProductDetail extends useLightDom {
@@ -202,7 +202,10 @@ export class ProductDetail extends useLightDom {
     this.loadSwiper();
   }
 
-  public addToCart() {
+  public async addToCart() {
+    if (!Auth.user) {
+      await Auth.loginAnonymously();
+    }
     try {
       Cart.add({
         $key: this.data.$key,
