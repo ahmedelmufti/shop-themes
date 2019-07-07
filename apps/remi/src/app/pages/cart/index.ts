@@ -42,8 +42,11 @@ export class CartPage extends useLightDom {
   protected render() {
     return html`
       <header class="pad layout horizontal">
+        <div>
+          Your Cart
+        </div>
         <span class="flex"></span>
-        <mwc-button ?hidden=${this.isEmpty} @click=${this.checkout}
+        <mwc-button ?hidden=${this.isEmpty} raised @click=${this.checkout}
           >Checkout</mwc-button
         >
       </header>
@@ -62,7 +65,7 @@ export class CartPage extends useLightDom {
             : this.renderLoaders()}
         </div>
       </section>
-      <remi-checkout-form id="checkout"></remi-checkout-form>
+      <remi-checkout-overview id="checkout"></remi-checkout-overview>
     `;
   }
 
@@ -97,7 +100,7 @@ export class CartPage extends useLightDom {
     Cart.remove(item);
   }
   protected async firstUpdated() {
-    import('../../components/checkout-form').then(_ => {});
+    import('../../components/checkout-overview').then(_ => {});
     await import('firebase/firestore');
     Cart.data$.pipe(filter(cart => cart != null)).subscribe(cart => {
       this.isLoading = false;
