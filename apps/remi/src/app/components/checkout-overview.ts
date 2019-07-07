@@ -41,7 +41,6 @@ export class CheckoutOverview extends useLightDom {
     this.dialog.listen('MDCDialog:closing', () => {
       // this.reset();
     });
-    this.open();
     this.querySelectorAll('.mdc-text-field').forEach(
       item => new MDCTextField(item)
     );

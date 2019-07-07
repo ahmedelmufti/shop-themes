@@ -66,6 +66,12 @@ remi-app[page='shop'] {
   #back-btn {
     display: none;
   }
+
+  @media (min-width: 460px) {
+    .main-content {
+      padding-top: 118px;
+    }
+  }
 }
 
 [main-title] {
@@ -159,7 +165,7 @@ changes to a wide layout. */
   }
 
   .main-content {
-    padding-top: 118px;
+    padding-top: 60px;
   }
 
   /* The drawer button isn't shown in the wide layout, so we don't

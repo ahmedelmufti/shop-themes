@@ -38,6 +38,10 @@ export class ProductDetail extends useLightDom {
   protected render() {
     return html`
       <section class="page-wrapper">
+        <div style="
+          height: 34px;
+          background: #393433;
+      "></div>
         <div class="content layout horizontal main-section" ?hidden=${!this
           .isEmpty}>
             <div class="product-media layout horizontal">
