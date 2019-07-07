@@ -126,6 +126,7 @@ export class CheckoutOverview extends useLightDom {
                 </section>
 
                 <h2>Shipping Address</h2>
+                <div class="grid"></div>
                 <!-- Show addresses here list here -->
 
                 <section class="actions layout horizontal center-center">
