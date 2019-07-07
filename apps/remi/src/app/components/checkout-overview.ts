@@ -17,19 +17,28 @@ import { useLightDom } from '../use-lightdom';
 import '@material/dialog/dist/mdc.dialog.min.css';
 import '@material/textfield/dist/mdc.textfield.css';
 import './checkout-overview.scss';
-import './address-form';
 
 import { backIcon } from '../icons';
 
+enum Pages {
+  OVERVIEW = 'overview-page',
+  ADDRESS_FORM = 'address-form',
+  PAYMENT_FORM = 'payment-form'
+}
 @customElement('remi-checkout-overview')
 export class CheckoutOverview extends useLightDom {
   @property({ type: Boolean })
   active = false;
 
+  @property({ type: String })
+  page = 'overview-page';
+
   @property({ type: Boolean })
   isLoading = true;
 
   private dialog: MDCDialog;
+
+  private readonly pages = Pages;
 
   open() {
     this.dialog.open();
@@ -44,7 +53,8 @@ export class CheckoutOverview extends useLightDom {
     this.querySelectorAll('.mdc-text-field').forEach(
       item => new MDCTextField(item)
     );
-    import('./payment-form').then(_ => {});
+
+    import('./lazy-checkout').then(_ => {});
   }
 
   protected render() {
@@ -73,65 +83,94 @@ export class CheckoutOverview extends useLightDom {
               <span class="flex"></span>
             </header>
             <main class="mdc-dialog__content">
-              <div class="layout horizontal center">
-                <p>If you have any troubles please contact our support.</p>
-                <span class="flex"></span>
-                <div>
-                  <iron-icon icon="bn-icons:phone"></iron-icon>
-                  8 800 505 04 83
-                </div>
-              </div>
-              <div class="wrapper">
-                <h2>General Information</h2>
-                <section class="row">
-                  <div
-                    class="mdc-text-field text-field mdc-text-field--dense mdc-text-field--box mdc-text-field--with-leading-icon"
-                  >
-                    <iron-icon
-                      class="mdc-text-field__icon"
-                      icon="bn-icons:email"
-                    ></iron-icon>
-                    <input
-                      id="name"
-                      name="name"
-                      type="name"
-                      required
-                      value=""
-                      class="mdc-text-field__input"
-                    />
-                    <label class="mdc-floating-label" for="name">Email</label>
-                    <div class="mdc-line-ripple"></div>
+              <div class="pages">
+                <!-- Overview -->
+                <section
+                  class="overview-page"
+                  ?active=${this.page === 'overview-page'}
+                >
+                  <div class="layout horizontal center">
+                    <p>If you have any troubles please contact our support.</p>
+                    <span class="flex"></span>
+                    <div>
+                      <iron-icon icon="bn-icons:phone"></iron-icon>
+                      8 800 505 04 83
+                    </div>
                   </div>
-                  <div
-                    class="mdc-text-field text-field mdc-text-field--dense mdc-text-field--box mdc-text-field--with-leading-icon"
-                  >
-                    <iron-icon
-                      class="mdc-text-field__icon"
-                      icon="bn-icons:email"
-                    ></iron-icon>
-                    <input
-                      id="name"
-                      name="name"
-                      type="name"
-                      required
-                      value=""
-                      class="mdc-text-field__input"
-                    />
-                    <label class="mdc-floating-label" for="name"
-                      >Phone Number</label
-                    >
-                    <div class="mdc-line-ripple"></div>
+                  <div class="wrapper">
+                    <h2>General Information</h2>
+                    <section class="row">
+                      <div
+                        class="mdc-text-field text-field mdc-text-field--dense mdc-text-field--box mdc-text-field--with-leading-icon"
+                      >
+                        <iron-icon
+                          class="mdc-text-field__icon"
+                          icon="bn-icons:email"
+                        ></iron-icon>
+                        <input
+                          id="name"
+                          name="name"
+                          type="name"
+                          required
+                          value=""
+                          class="mdc-text-field__input"
+                        />
+                        <label class="mdc-floating-label" for="name"
+                          >Email</label
+                        >
+                        <div class="mdc-line-ripple"></div>
+                      </div>
+                      <div
+                        class="mdc-text-field text-field mdc-text-field--dense mdc-text-field--box mdc-text-field--with-leading-icon"
+                      >
+                        <iron-icon
+                          class="mdc-text-field__icon"
+                          icon="bn-icons:email"
+                        ></iron-icon>
+                        <input
+                          id="name"
+                          name="name"
+                          type="name"
+                          required
+                          value=""
+                          class="mdc-text-field__input"
+                        />
+                        <label class="mdc-floating-label" for="name"
+                          >Phone Number</label
+                        >
+                        <div class="mdc-line-ripple"></div>
+                      </div>
+                    </section>
+
+                    <!-- Show addresses here list here -->
+                    <h2>Shipping Address</h2>
+                    <div class="grid">
+                      <remi-address-item></remi-address-item>
+                      <mwc-button @click=${e => this.show('address-form')}
+                        >Add</mwc-button
+                      >
+                    </div>
+
+                    <section class="actions layout horizontal center-center">
+                      <mwc-button raised disabled id="submit-button">
+                        Place Order
+                      </mwc-button>
+                    </section>
                   </div>
                 </section>
-
-                <h2>Shipping Address</h2>
-                <div class="grid"></div>
-                <!-- Show addresses here list here -->
-
-                <section class="actions layout horizontal center-center">
-                  <mwc-button raised disabled id="submit-button">
-                    Place Order
-                  </mwc-button>
+                <section
+                  class="address-form"
+                  ?active=${this.page === 'address-form'}
+                >
+                  <remi-address-form
+                    @submit=${this.addressAdd}
+                  ></remi-address-form>
+                </section>
+                <section
+                  class="payment-form"
+                  ?active=${this.page === 'payment-form'}
+                >
+                  <remi-payment-form></remi-payment-form>
                 </section>
               </div>
             </main>
@@ -140,5 +179,14 @@ export class CheckoutOverview extends useLightDom {
         <div class="mdc-dialog__scrim"></div>
       </div>
     `;
+  }
+
+  show(page) {
+    this.setAttribute('page', page);
+    this.requestUpdate();
+  }
+
+  addressAdd(e) {
+    this.show(this.pages.OVERVIEW);
   }
 }

@@ -39,6 +39,7 @@ export class CartPage extends useLightDom {
   get isEmpty() {
     return this.items.length < 1;
   }
+
   protected render() {
     return html`
       <header class="pad layout horizontal">
@@ -74,6 +75,9 @@ export class CartPage extends useLightDom {
     checkout$.open();
   }
 
+  /**
+   *
+   */
   renderLoaders() {
     return [1, 2].map(
       _ => html`
@@ -99,13 +103,15 @@ export class CartPage extends useLightDom {
   removeItem({ detail: item }) {
     Cart.remove(item);
   }
-  protected async firstUpdated() {
+
+  protected firstUpdated() {
     import('../../components/checkout-overview').then(_ => {});
-    await import('firebase/firestore');
-    Cart.data$.pipe(filter(cart => cart != null)).subscribe(cart => {
-      this.isLoading = false;
-      this.data = cart;
-      this.requestUpdate();
-    });
+    import('firebase/firestore').then(_ =>
+      Cart.data$.pipe(filter(cart => cart != null)).subscribe(cart => {
+        this.isLoading = false;
+        this.data = cart;
+        this.requestUpdate();
+      })
+    );
   }
 }

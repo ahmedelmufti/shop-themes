@@ -30,6 +30,14 @@ remi-checkout-overview {
     flex: 1;
   }
 
+  .pages > * {
+    display: none;
+  }
+
+  .pages > [active] {
+    display: block;
+  }
+
   h2 {
     font-size: 0.9rem;
   }

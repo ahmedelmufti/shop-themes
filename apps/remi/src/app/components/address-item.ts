@@ -9,16 +9,22 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 */
 
 import { LitElement, html, css, property, customElement } from 'lit-element';
-import { useLightDom } from '../use-lightdom';
 
-@customElement('remi-payment-form')
-export class PaymentForm extends useLightDom {
+@customElement('remi-address-item')
+export class AddressItem extends LitElement {
   @property({ type: Boolean })
   active = false;
 
+  static get styles() {
+    return css`
+      :host {
+      }
+    `;
+  }
+
   protected render() {
     return html`
-      <div></div>
+      <div>I am an address</div>
     `;
   }
 }

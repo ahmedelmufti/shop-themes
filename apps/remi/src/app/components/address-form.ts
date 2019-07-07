@@ -12,8 +12,8 @@ import { LitElement, html, css, property, customElement } from 'lit-element';
 import { MDCTextField } from '@material/textfield';
 import { useLightDom } from '../use-lightdom';
 
-@customElement('remi-shipping-form')
-export class ShippingForm extends useLightDom {
+@customElement('remi-address-form')
+export class AddressForm extends useLightDom {
   @property({ type: Boolean })
   active = false;
 
@@ -95,6 +95,9 @@ export class ShippingForm extends useLightDom {
           <div class="mdc-line-ripple"></div>
         </div>
       </section>
+      <footer>
+        <mwc-button @click=${this.submit}>Save</mwc-button>
+      </footer>
     `;
   }
 
@@ -102,5 +105,9 @@ export class ShippingForm extends useLightDom {
     this.querySelectorAll('.mdc-text-field').forEach(
       item => new MDCTextField(item)
     );
+  }
+
+  protected submit(e) {
+    this.dispatchEvent(new CustomEvent('submit', { detail: {} }));
   }
 }
