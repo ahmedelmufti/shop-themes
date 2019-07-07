@@ -22,6 +22,7 @@ import {
   Cart
 } from '@shop-themes/core';
 import { environment } from '../environments/environment';
+import { backIcon, cartIcon } from './icons';
 
 @customElement('remi-app')
 export class App extends useLightDom {
@@ -45,10 +46,13 @@ export class App extends useLightDom {
       <!-- Header -->
       <app-header condenses reveals effects="waterfall">
         <app-toolbar class="toolbar-top">
+          <mwc-button id="back-btn" @click=${this.goBack}>
+            ${backIcon}
+          </mwc-button>
           <a href="/" main-title>${this.appTitle}</a>
           <a href="/cart">
             <mwc-button cart-btn>
-              <mwc-icon>shopping_cart</mwc-icon>
+              <span>${cartIcon}</span>
               <span class="cart-badge">${this.cart.quantity}</span>
             </mwc-button>
           </a>
@@ -192,7 +196,11 @@ export class App extends useLightDom {
         page = 'view404';
       //import('../components/my-view404.js');
     }
-
+    this.setAttribute('page', page as string);
     this.page = page;
+  }
+
+  goBack() {
+    window.history.back();
   }
 }

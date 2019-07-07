@@ -49,28 +49,23 @@ app-header {
   z-index: 3;
 }
 
-app-drawer {
-  z-index: 4;
-}
-
-remi-app[hide-nav] .toolbar-list {
-  display: none;
-}
-
-remi-app[hide-nav] #menu-btn {
-  display: none !important;
-}
-
-remi-app[hide-nav] #back-btn {
-  display: block;
-}
-
-#back-btn {
+remi-app[page='cart'] .toolbar-list,
+remi-app[page='product'] .toolbar-list {
   display: none;
 }
 
 .toolbar-top {
   background-color: var(--app-header-background-color);
+  svg {
+    color: white;
+  }
+}
+
+remi-app[page='home'],
+remi-app[page='shop'] {
+  #back-btn {
+    display: none;
+  }
 }
 
 [main-title] {
@@ -236,6 +231,10 @@ body.fullbleed {
 iron-image {
   width: 100%;
   height: 100%;
+}
+
+svg {
+  fill: currentColor;
 }
 
 @-webkit-keyframes placeHolderShimmer {
