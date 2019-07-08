@@ -4,6 +4,7 @@ import { filter, switchMap, tap } from 'rxjs/operators';
 import { authState, user } from 'rxfire/auth';
 import { collectionData, docData } from 'rxfire/firestore';
 import { ICart } from './cart';
+import { IAddress } from './types';
 
 export interface User {
   uid: String;
@@ -52,6 +53,10 @@ export const Auth = new class {
   // and down to all of its subsribers (ex: this.todos = [])
   set user(val: User) {
     this._user.next(val);
+  }
+
+  async addAdress(address: IAddress) {
+    throw new Error('Method not implemented.');
   }
 
   async loginAnonymously() {

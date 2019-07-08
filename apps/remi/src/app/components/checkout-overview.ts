@@ -19,6 +19,7 @@ import '@material/textfield/dist/mdc.textfield.css';
 import './checkout-overview.scss';
 
 import { backIcon } from '../icons';
+import { IAddress, Auth } from '@shop-themes/core';
 
 enum Pages {
   OVERVIEW = 'overview-page',
@@ -87,7 +88,7 @@ export class CheckoutOverview extends useLightDom {
                 <!-- Overview -->
                 <section
                   class="overview-page"
-                  ?active=${this.page === 'overview-page'}
+                  ?active=${this.page === this.pages.OVERVIEW}
                 >
                   <div class="layout horizontal center">
                     <p>If you have any troubles please contact our support.</p>
@@ -146,13 +147,18 @@ export class CheckoutOverview extends useLightDom {
                     <h2>Shipping Address</h2>
                     <div class="grid">
                       <remi-address-item></remi-address-item>
-                      <mwc-button @click=${e => this.show('address-form')}
+                      <mwc-button
+                        @click=${e => this.show(this.pages.ADDRESS_FORM)}
                         >Add</mwc-button
                       >
                     </div>
 
                     <section class="actions layout horizontal center-center">
-                      <mwc-button raised disabled id="submit-button">
+                      <mwc-button
+                        raised
+                        id="submit-button"
+                        @click=${e => this.show(this.pages.PAYMENT_FORM)}
+                      >
                         Place Order
                       </mwc-button>
                     </section>
@@ -160,15 +166,17 @@ export class CheckoutOverview extends useLightDom {
                 </section>
                 <section
                   class="address-form"
-                  ?active=${this.page === 'address-form'}
+                  ?active=${this.page === this.pages.ADDRESS_FORM}
                 >
                   <remi-address-form
                     @submit=${this.addressAdd}
                   ></remi-address-form>
                 </section>
+                <!-- Show addresses here list here -->
+                <h2>Payment Method</h2>
                 <section
                   class="payment-form"
-                  ?active=${this.page === 'payment-form'}
+                  ?active=${this.page === this.pages.PAYMENT_FORM}
                 >
                   <remi-payment-form></remi-payment-form>
                 </section>
@@ -186,7 +194,8 @@ export class CheckoutOverview extends useLightDom {
     this.requestUpdate();
   }
 
-  addressAdd(e) {
+  async addressAdd(address: IAddress) {
+    Auth.addAdress(address);
     this.show(this.pages.OVERVIEW);
   }
 }
