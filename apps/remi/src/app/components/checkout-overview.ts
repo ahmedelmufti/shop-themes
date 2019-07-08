@@ -14,8 +14,8 @@ import { MDCTextField } from '@material/textfield';
 
 import { useLightDom } from '../use-lightdom';
 
-import '@material/dialog/dist/mdc.dialog.min.css';
-import '@material/textfield/dist/mdc.textfield.css';
+import '../../assets/styles/textfield.scss';
+import '../../assets/styles/dialog.scss';
 import './checkout-overview.scss';
 
 import { backIcon } from '../icons';
