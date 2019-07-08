@@ -227,7 +227,7 @@ export class ProductDetail extends useLightDom {
     if (!this.swiper) {
       this.loadSwiper();
     } else {
-      this.requestUpdate().then(_ => this.swiper.update());
+      this.updateComplete.then(_ => this.swiper.update());
     }
   }
 

@@ -146,7 +146,6 @@ export class App extends useLightDom {
       if (user) {
         this.cart = user.cart;
       }
-      this.requestUpdate();
     });
   }
 
@@ -157,7 +156,6 @@ export class App extends useLightDom {
   protected async routeChanged(route: RouteData) {
     // load the page
     await this.load(route.page);
-    this.requestUpdate();
   }
 
   protected updated(changedProps: PropertyValues) {

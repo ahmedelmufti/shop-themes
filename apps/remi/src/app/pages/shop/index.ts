@@ -29,6 +29,7 @@ export class ShopPage extends useLightDom {
 
   private latestProducts$: Observable<any>;
 
+  @property({ type: Array })
   latest = [];
 
   protected render() {
@@ -87,7 +88,6 @@ export class ShopPage extends useLightDom {
       .pipe(filter(products => products.length > 0));
     this.latestProducts$.subscribe(products => {
       this.latest = products;
-      this.requestUpdate();
     });
   }
 }

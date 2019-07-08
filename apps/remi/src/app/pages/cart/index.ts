@@ -30,6 +30,7 @@ export class CartPage extends useLightDom {
   @property({ type: Boolean })
   isLoading: Boolean = true;
 
+  @property({ type: Object })
   data: ICart;
 
   get items() {
@@ -110,7 +111,6 @@ export class CartPage extends useLightDom {
       Cart.data$.pipe(filter(cart => cart != null)).subscribe(cart => {
         this.isLoading = false;
         this.data = cart;
-        this.requestUpdate();
       })
     );
   }

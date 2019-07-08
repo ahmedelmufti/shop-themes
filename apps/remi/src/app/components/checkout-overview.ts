@@ -191,7 +191,6 @@ export class CheckoutOverview extends useLightDom {
 
   show(page) {
     this.setAttribute('page', page);
-    this.requestUpdate();
   }
 
   async addressAdd(address: IAddress) {
