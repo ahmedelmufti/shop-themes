@@ -20,16 +20,12 @@ export interface RouteData {
 class AppRouter {
   private readonly _data = new BehaviorSubject<RouteData>(null);
 
-  // Expose the observable$ part of the _todos subject (read only stream)
   readonly data$ = this._data.asObservable();
 
-  // the getter will return the last value emitted in _todos subject
   get user(): RouteData {
     return this._data.getValue();
   }
 
-  // assigning a value to this.todos will push it onto the observable
-  // and down to all of its subsribers (ex: this.todos = [])
   set data(val: RouteData) {
     this._data.next(val);
   }

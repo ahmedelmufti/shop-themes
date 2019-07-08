@@ -45,10 +45,8 @@ export const Cart = new class {
     });
   }
 
-  // Expose the observable$ part of the _todos subject (read only stream)
   readonly data$ = this._cart.asObservable();
 
-  // the getter will return the last value emitted in _todos subject
   get data(): ICart {
     return {
       items: this.items,

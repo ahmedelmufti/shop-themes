@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "license": "MIT",
   "scripts": {
-    "build:remi": "ng build remi --configuration=production --sourceMap=true --statsJson",
+    "build:remi": "node --max-old-space-size=9902 node_modules/@angular/cli/bin/ng build remi --configuration=production --sourceMap=true --statsJson",
     "ng": "ng",
     "start": "ng serve",
     "build": "ng build",
@@ -50,7 +50,7 @@
     "workbox-sw": "^4.3.1"
   },
   "devDependencies": {
-    "@angular/cli": "8.0.0",
+    "@angular/cli": "^8.1.0",
     "@nrwl/cypress": "8.2.0",
     "@nrwl/jest": "8.2.0",
     "@nrwl/web": "8.2.0",

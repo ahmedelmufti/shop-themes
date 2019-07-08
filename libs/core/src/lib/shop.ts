@@ -1,6 +1,7 @@
 import * as firebase from 'firebase/app';
 
 import { collectionData, docData } from 'rxfire/firestore';
+import { ICart } from './cart';
 
 export interface IProductMedia {
   downloadURL: String;
@@ -37,6 +38,12 @@ export const Shop = new class {
    */
   products() {
     return this;
+  }
+
+  // TODO:
+  checkout(cart: ICart) {
+    // means create checkout
+    // but there has to be a user that is logged in
   }
 
   /**
