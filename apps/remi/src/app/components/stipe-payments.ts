@@ -338,6 +338,8 @@ export class StripePayments extends LitElement {
 
     this.paymentRequest = this.createPayment();
     this.afterPaymentCreated();
+
+    console.log(this.paymentIntent);
   }
 
   /**

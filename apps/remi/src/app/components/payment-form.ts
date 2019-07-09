@@ -17,13 +17,13 @@ export class PaymentForm extends useLightDom {
   @property({ type: Boolean })
   active = false;
 
-  private intent;
+  private intent = null;
 
   protected render() {
     return html`
       <div>
         <remi-stripe-payments
-          paymentIntent=${this.intent}
+          .paymentIntent=${this.intent}
         ></remi-stripe-payments>
       </div>
     `;
@@ -31,10 +31,9 @@ export class PaymentForm extends useLightDom {
 
   protected async firstUpdated() {
     this.intent = await Shop.createPaymentIntent(Cart.data);
+    this.requestUpdate();
     const node = document.createElement('script');
-    node.onload = async e => {
-      await import('./stipe-payments');
-    };
+    node.onload = async e => await import('./stipe-payments');
     node.src = 'https://js.stripe.com/v3/';
     document.body.appendChild(node);
   }

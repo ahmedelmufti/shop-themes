@@ -48,6 +48,7 @@ export const Shop = new class {
 
   async createPaymentIntent(data: ICart) {
     // throw new Error('Method not implemented.');
+    return {};
   }
 
   /**
