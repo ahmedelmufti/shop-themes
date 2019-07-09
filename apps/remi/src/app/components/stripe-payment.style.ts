@@ -20,13 +20,6 @@ export const style = css`
     color: #525f7f;
   }
 
-  body {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    background: #f8fbfd;
-  }
-
   /* Overall Container */
 
   #main {
@@ -77,14 +70,14 @@ export const style = css`
   #checkout {
     max-width: 480px;
     margin: 0 auto;
-    padding: 30px 0;
-    visibility: hidden;
-    opacity: 0;
+    padding: 0;
+    /* visibility: hidden;
+    opacity: 0; */
     transition: visibility 0s, opacity 0.5s linear 0.5s;
   }
 
   #main.checkout #checkout {
-    visibility: visible;
+    /* visibility: visible; */
     opacity: 1;
   }
 
@@ -115,8 +108,7 @@ export const style = css`
   #payment-request {
     visibility: hidden;
     opacity: 0;
-    min-height: 100px;
-    padding: 20px 0;
+    padding: 0;
     transition: visibility 0s, opacity 0.3s ease-in;
   }
 
@@ -162,7 +154,7 @@ export const style = css`
 
   fieldset label.state {
     display: inline-flex;
-    width: 75%;
+    width: 70%;
   }
 
   fieldset:not(.with-state) label.state {
@@ -172,7 +164,7 @@ export const style = css`
   fieldset label.zip {
     display: inline-flex;
     width: 25%;
-    padding-right: 60px;
+    padding: 0;
   }
 
   fieldset:not(.with-state) label.zip {
@@ -180,7 +172,7 @@ export const style = css`
   }
 
   fieldset label span {
-    min-width: 125px;
+    min-width: 120px;
     padding: 0 15px;
     text-align: right;
   }
@@ -843,7 +835,7 @@ export const style = css`
     }
     #payment-form {
       margin: 0;
-      padding: 0 15px;
+      padding: 0;
       border-width: 2px 0 0 0;
       border-radius: 0;
     }
@@ -856,8 +848,8 @@ export const style = css`
     fieldset label.state,
     fieldset label.zip {
       display: flex;
-      width: inherit;
       padding: 10px 0;
+      width: auto;
     }
     p.instruction {
       margin-top: -12px;

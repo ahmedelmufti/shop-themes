@@ -10,6 +10,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
 import { LitElement, html, css, property, customElement } from 'lit-element';
 import { style } from './stripe-payment.style';
+import { environment } from '../../environments/environment';
+import { Payment } from '@shop-themes/core';
 
 declare global {
   interface Window {
@@ -23,6 +25,29 @@ const Stripe = window.Stripe('pk_test_TYooMQauvdEDq54NiTphI7jx');
 export class StripePayments extends LitElement {
   @property({ type: Boolean })
   active = false;
+
+  form: HTMLFormElement;
+
+  submitButton: HTMLElement;
+
+  paymentRequest;
+  stripeStyle = {
+    base: {
+      iconColor: '#666ee8',
+      color: '#31325f',
+      fontWeight: 400,
+      fontFamily:
+        '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif',
+      fontSmoothing: 'antialiased',
+      fontSize: '15px',
+      '::placeholder': {
+        color: '#aab7c4'
+      },
+      ':-webkit-autofill': {
+        color: '#666ee8'
+      }
+    }
+  };
 
   static get styles() {
     return [style];
@@ -217,7 +242,7 @@ export class StripePayments extends LitElement {
   </div>
 
   <!-- Summary might not be needed -->
-  <div id="summary">
+  <!-- <div id="summary">
     <header>
       <h1>Order Summary</h1>
     </header>
@@ -256,36 +281,17 @@ export class StripePayments extends LitElement {
         <p class="price" data-total></p>
       </div>
     </div>
-  </div>
+  </div> -->
     `;
   }
 
   protected firstUpdated() {
     // Create references to the main form and its submit button.
-    const form = this.shadowRoot.querySelector('#payment-form');
-    const submitButton = this.shadowRoot.querySelector('button[type=submit]');
+    this.form = this.shadowRoot.querySelector('#payment-form');
+    this.submitButton = this.shadowRoot.querySelector('button[type=submit]');
 
     // Create an instance of Elements.
     const elements = Stripe.elements();
-
-    // Prepare the styles for Elements.
-    const style = {
-      base: {
-        iconColor: '#666ee8',
-        color: '#31325f',
-        fontWeight: 400,
-        fontFamily:
-          '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif',
-        fontSmoothing: 'antialiased',
-        fontSize: '15px',
-        '::placeholder': {
-          color: '#aab7c4'
-        },
-        ':-webkit-autofill': {
-          color: '#666ee8'
-        }
-      }
-    };
 
     /**
      * Implement a Stripe Card Element that matches the look-and-feel of the app.
@@ -294,9 +300,104 @@ export class StripePayments extends LitElement {
      */
 
     // Create a Card Element and pass some custom styles to it.
-    const card = elements.create('card', { style });
+    const card = elements.create('card', { style: this.stripeStyle });
 
     // Mount the Card Element on the page.
     card.mount(this.shadowRoot.querySelector('#card-element'));
+
+    this.monitor(card);
+    this.paymentRequest = this.createPayment();
+    this.afterPaymentCreated();
+  }
+
+  monitor(card) {
+    // Monitor change events on the Card Element to display any errors.
+    card.on('change', ({ error }) => {
+      const cardErrors = document.getElementById('card-errors');
+      if (error) {
+        cardErrors.textContent = error.message;
+        cardErrors.classList.add('visible');
+      } else {
+        cardErrors.classList.remove('visible');
+      }
+      // Re-enable the Pay button.
+      this.submitButton.removeAttribute('disabled');
+    });
+  }
+
+  createPayment() {
+    return Stripe.paymentRequest({
+      country: Payment.stripe.country,
+      currency: Payment.stripe.currency,
+      total: {
+        label: 'Total',
+        amount: 200
+      },
+      requestShipping: true,
+      requestPayerEmail: true,
+      shippingOptions: Payment.stripe.shippingOptions
+    });
+  }
+
+  protected afterPaymentCreated() {
+    this.paymentRequest.on('paymentmethod', this.paymentMethodChange);
+    this.paymentRequest.on('shippingoptionchange', this.paymentMethodChange);
+    this.paymentRequest.on('paymentRequestButton', this.paymentMethodChange);
+  }
+
+  protected async paymentMethodChange(e) {
+    // Confirm the PaymentIntent with the payment method returned from the payment request.
+    // const { error } = await stripe.confirmPaymentIntent(
+    //   paymentIntent.client_secret,
+    //   {
+    //     payment_method: event.paymentMethod.id,
+    //     shipping: {
+    //       name: event.shippingAddress.recipient,
+    //       phone: event.shippingAddress.phone,
+    //       address: {
+    //         line1: event.shippingAddress.addressLine[0],
+    //         city: event.shippingAddress.city,
+    //         postal_code: event.shippingAddress.postalCode,
+    //         state: event.shippingAddress.region,
+    //         country: event.shippingAddress.country,
+    //       },
+    //     },
+    //   }
+    // );
+    // if (error) {
+    //   // Report to the browser that the payment failed.
+    //   event.complete('fail');
+    //   handlePayment({ error });
+    // } else {
+    //   // Report to the browser that the confirmation was successful, prompting
+    //   // it to close the browser payment method collection interface.
+    //   event.complete('success');
+    //   // Let Stripe.js handle the rest of the payment flow, including 3D Secure if needed.
+    //   const response = await stripe.handleCardPayment(
+    //     paymentIntent.client_secret
+    //   );
+    //   handlePayment(response);
+    //}
+  }
+
+  protected async shippingChange(e) {
+    // Update the PaymentIntent to reflect the shipping cost.
+    // const response = await store.updatePaymentIntentWithShippingCost(
+    //   paymentIntent.id,
+    //   store.getLineItems(),
+    //   event.shippingOption
+    // );
+    // event.updateWith({
+    //   total: {
+    //     label: 'Total',
+    //     amount: response.paymentIntent.amount,
+    //   },
+    //   status: 'success',
+    // });
+    // const amount = store.formatPrice(
+    //   response.paymentIntent.amount,
+    //   config.currency
+    // );
+    // submitButton.innerText = `Pay ${amount}`;
   }
 }

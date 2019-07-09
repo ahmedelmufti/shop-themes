@@ -18,9 +18,10 @@ import '@shop-themes/editable-text';
 import '../../components/cart-item';
 
 import './style.scss';
-import { Shop, Cart, ICart } from '@shop-themes/core';
+import { Shop, Cart, ICart, Payment } from '@shop-themes/core';
 import { Observable } from 'rxjs';
 import { filter } from 'rxjs/operators';
+import { environment } from '../../../environments/environment';
 
 @customElement('remi-cart')
 export class CartPage extends useLightDom {
@@ -99,6 +100,13 @@ export class CartPage extends useLightDom {
 
   constructor() {
     super();
+
+    Payment.bootstrap({
+      token: '',
+      country: environment.payment.country,
+      currency: environment.payment.currency,
+      shippingOptions: environment.shop.shippingOptions
+    });
   }
 
   removeItem({ detail: item }) {
