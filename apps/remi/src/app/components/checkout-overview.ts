@@ -41,23 +41,6 @@ export class CheckoutOverview extends useLightDom {
 
   private readonly pages = Pages;
 
-  open() {
-    this.dialog.open();
-  }
-
-  protected firstUpdated() {
-    this.dialog = new MDCDialog(this.querySelector('.mdc-dialog'));
-
-    this.dialog.listen('MDCDialog:closing', () => {
-      // this.reset();
-    });
-    this.querySelectorAll('.mdc-text-field').forEach(
-      item => new MDCTextField(item)
-    );
-
-    import('./lazy-checkout').then(_ => {});
-  }
-
   protected render() {
     return html`
       <div
@@ -117,6 +100,28 @@ export class CheckoutOverview extends useLightDom {
                           class="mdc-text-field__input"
                         />
                         <label class="mdc-floating-label" for="name"
+                          >Your Name</label
+                        >
+                        <div class="mdc-line-ripple"></div>
+                      </div>
+                    </section>
+                    <section class="row">
+                      <div
+                        class="mdc-text-field text-field mdc-text-field--dense mdc-text-field--box mdc-text-field--with-leading-icon"
+                      >
+                        <iron-icon
+                          class="mdc-text-field__icon"
+                          icon="bn-icons:email"
+                        ></iron-icon>
+                        <input
+                          id="email"
+                          name="email"
+                          type="email"
+                          required
+                          value=""
+                          class="mdc-text-field__input"
+                        />
+                        <label class="mdc-floating-label" for="email"
                           >Email</label
                         >
                         <div class="mdc-line-ripple"></div>
@@ -129,14 +134,14 @@ export class CheckoutOverview extends useLightDom {
                           icon="bn-icons:email"
                         ></iron-icon>
                         <input
-                          id="name"
-                          name="name"
-                          type="name"
+                          id="phone"
+                          name="phone"
+                          type="text"
                           required
                           value=""
                           class="mdc-text-field__input"
                         />
-                        <label class="mdc-floating-label" for="name"
+                        <label class="mdc-floating-label" for="phone"
                           >Phone Number</label
                         >
                         <div class="mdc-line-ripple"></div>
@@ -189,11 +194,26 @@ export class CheckoutOverview extends useLightDom {
     `;
   }
 
+  open() {
+    this.dialog.open();
+  }
+
+  protected firstUpdated() {
+    import('./lazy-checkout').then(_ => {});
+    this.dialog = new MDCDialog(this.querySelector('.mdc-dialog'));
+    this.querySelectorAll('.mdc-text-field').forEach(
+      item => new MDCTextField(item)
+    );
+    this.dialog.listen('MDCDialog:closing', () => {
+      // this.reset();
+    });
+  }
+
   show(page) {
     this.setAttribute('page', page);
   }
 
-  async addressAdd(address: IAddress) {
+  async addressAdd({ detail: address }: { detail: IAddress}) {
     Auth.addAdress(address);
     this.show(this.pages.OVERVIEW);
   }
