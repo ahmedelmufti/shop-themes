@@ -18,7 +18,18 @@ export class PaymentForm extends useLightDom {
 
   protected render() {
     return html`
-      <div></div>
+      <div>
+        <remi-stripe-payments></remi-stripe-payments>
+      </div>
     `;
+  }
+
+  firstUpdated() {
+    const node = document.createElement('script');
+    node.onload = async e => {
+      await import('./stipe-payments');
+    };
+    node.src = 'https://js.stripe.com/v3/';
+    document.body.appendChild(node);
   }
 }

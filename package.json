@@ -5,7 +5,7 @@
   "scripts": {
     "build:remi": "node --max-old-space-size=9902 node_modules/@angular/cli/bin/ng build remi --configuration=production --sourceMap=true --statsJson",
     "ng": "ng",
-    "start": "ng serve",
+    "start": "ng serve remi",
     "build": "ng build",
     "test": "ng test",
     "lint": "nx lint && ng lint",
@@ -38,6 +38,7 @@
     "@polymer/app-layout": "^3.0.2",
     "@polymer/iron-icon": "^3.0.1",
     "@polymer/iron-image": "^3.0.2",
+    "@types/stripe-v3": "^3.1.4",
     "@webcomponents/custom-elements": "^1.2.4",
     "@webcomponents/webcomponentsjs": "^2.2.10",
     "document-register-element": "1.13.1",

@@ -18,14 +18,26 @@ export interface RouteData {
   page: String;
 }
 class AppRouter {
+  /**
+   * 
+   */
   private readonly _data = new BehaviorSubject<RouteData>(null);
 
+  /**
+   * 
+   */
   readonly data$ = this._data.asObservable();
 
+  /**
+   * 
+   */
   get user(): RouteData {
     return this._data.getValue();
   }
 
+  /**
+   * 
+   */
   set data(val: RouteData) {
     this._data.next(val);
   }

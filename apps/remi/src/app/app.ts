@@ -16,7 +16,7 @@ import '../../src/assets/styles/iron-flex.scss';
 import {
   Bootstrap,
   Auth,
-  User,
+  IUser,
   ICart,
   EMPTY_CART,
   Cart
@@ -38,7 +38,7 @@ export class App extends useLightDom {
   @property({ type: Boolean })
   private _offline = false;
 
-  private user: User;
+  private user: IUser;
 
   protected render() {
     // Anything that's related to rendering should be done in here.
@@ -141,7 +141,7 @@ export class App extends useLightDom {
         Auth.bootstrap();
         Cart.bootstrap();
       });
-    Auth.user$.subscribe((user: User) => {
+    Auth.user$.subscribe((user: IUser) => {
       this.user = user;
       if (user) {
         this.cart = user.cart;

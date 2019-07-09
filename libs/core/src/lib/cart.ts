@@ -3,8 +3,9 @@ import * as firebase from 'firebase/app';
 import { collectionData, docData } from 'rxfire/firestore';
 import { BehaviorSubject } from 'rxjs';
 
-import { Auth, User } from './auth';
+import { Auth } from './auth';
 import { IProduct } from './shop';
+import { IUser } from './types';
 
 export interface ICart {
   items: Array<any>;
@@ -36,7 +37,7 @@ export const Cart = new class {
   });
 
   bootstrap() {
-    Auth.user$.subscribe((user: User) => {
+    Auth.user$.subscribe((user: IUser) => {
       if (user) {
         this.data = user.cart;
       } else {
