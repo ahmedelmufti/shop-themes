@@ -41,6 +41,8 @@ export class CheckoutOverview extends useLightDom {
 
   private readonly pages = Pages;
 
+  private userShowsIntent: Boolean;
+
   protected render() {
     return html`
       <div
@@ -183,7 +185,11 @@ export class CheckoutOverview extends useLightDom {
                   class="payment-form"
                   ?active=${this.page === this.pages.PAYMENT_FORM}
                 >
-                  <remi-payment-form></remi-payment-form>
+                  ${this.userShowsIntent
+                    ? html`
+                        <remi-payment-form></remi-payment-form>
+                      `
+                    : ''}
                 </section>
               </div>
             </main>
@@ -196,6 +202,9 @@ export class CheckoutOverview extends useLightDom {
 
   open() {
     this.dialog.open();
+    if (!this.userShowsIntent) {
+      this.userShowsIntent = true;
+    }
   }
 
   protected firstUpdated() {
@@ -205,7 +214,8 @@ export class CheckoutOverview extends useLightDom {
       item => new MDCTextField(item)
     );
     this.dialog.listen('MDCDialog:closing', () => {
-      // this.reset();
+      // Will destroy checkout if created
+      this.userShowsIntent = false;
     });
   }
 
@@ -213,8 +223,10 @@ export class CheckoutOverview extends useLightDom {
     this.setAttribute('page', page);
   }
 
-  async addressAdd({ detail: address }: { detail: IAddress}) {
+  async addressAdd({ detail: address }: { detail: IAddress }) {
     Auth.addAdress(address);
     this.show(this.pages.OVERVIEW);
   }
+
+  createCheckout() {}
 }

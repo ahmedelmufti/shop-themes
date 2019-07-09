@@ -10,21 +10,27 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
 import { LitElement, html, css, property, customElement } from 'lit-element';
 import { useLightDom } from '../use-lightdom';
+import { Shop, Cart } from '@shop-themes/core';
 
 @customElement('remi-payment-form')
 export class PaymentForm extends useLightDom {
   @property({ type: Boolean })
   active = false;
 
+  private intent;
+
   protected render() {
     return html`
       <div>
-        <remi-stripe-payments></remi-stripe-payments>
+        <remi-stripe-payments
+          paymentIntent=${this.intent}
+        ></remi-stripe-payments>
       </div>
     `;
   }
 
-  firstUpdated() {
+  protected async firstUpdated() {
+    this.intent = await Shop.createPaymentIntent(Cart.data);
     const node = document.createElement('script');
     node.onload = async e => {
       await import('./stipe-payments');

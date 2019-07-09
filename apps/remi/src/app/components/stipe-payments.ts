@@ -19,18 +19,28 @@ declare global {
   }
 }
 
+// Create an instance of Stripe and Elements.
 const Stripe = window.Stripe('pk_test_TYooMQauvdEDq54NiTphI7jx');
+const elements = Stripe.elements();
 
 @customElement('remi-stripe-payments')
 export class StripePayments extends LitElement {
   @property({ type: Boolean })
   active = false;
 
+  @property({ type: Object })
+  paymentIntent;
+
   form: HTMLFormElement;
 
   submitButton: HTMLElement;
 
   paymentRequest;
+
+  card;
+
+  error;
+
   stripeStyle = {
     base: {
       iconColor: '#666ee8',
@@ -55,11 +65,35 @@ export class StripePayments extends LitElement {
 
   protected render() {
     return html`
+
+    <div id="confirmation">
+        <div class="status processing">
+          <h1>Completing your order…</h1>
+          <p>We’re just waiting for the confirmation from your bank… This might take a moment but feel free to close this page.</p>
+          <p>We’ll send your receipt via email shortly.</p>
+        </div>
+        <div class="status success">
+          <h1>Thanks for your order!</h1>
+          <p>Woot! You successfully made a payment with Stripe.</p>
+          <p class="note">We just sent your receipt to your email address, and your items will be on their way shortly.</p>
+        </div>
+        <div class="status receiver">
+          <h1>Thanks! One last step!</h1>
+          <p>Please make a payment using the details below to complete your order.</p>
+          <div class="info"></div>
+        </div>
+        <div class="status error">
+          <h1>Oops, payment failed.</h1>
+          <p>It looks like your order could not be paid at this time. Please try again or select a different payment option.</p>
+          <p class="error-message"></p>
+        </div>
+    </div>
+    </div>
       <div id="checkout">
       <div id="payment-request">
         <div id="payment-request-button"></div>
       </div>
-      <form id="payment-form" method="POST" action="/orders">
+      <form id="payment-form" @submit=${this.submit}>
         <p class="instruction">Complete your shipping and payment details below</p>
         <section>
           <h2>Shipping &amp; Billing Information</h2>
@@ -91,7 +125,7 @@ export class StripePayments extends LitElement {
             <label class="select">
               <span>Country</span>
               <div id="country" class="field US">
-                <select name="country">
+                <select name="country" @change=${this.countryChange}>
                   <option value="AU">Australia</option>
                   <option value="AT">Austria</option>
                   <option value="BE">Belgium</option>
@@ -285,31 +319,31 @@ export class StripePayments extends LitElement {
     `;
   }
 
+  /**
+   * Implement a Stripe Card Element that matches the look-and-feel of the app.
+   *
+   * This makes it easy to collect debit and credit card payments information.
+   */
   protected firstUpdated() {
     // Create references to the main form and its submit button.
     this.form = this.shadowRoot.querySelector('#payment-form');
     this.submitButton = this.shadowRoot.querySelector('button[type=submit]');
 
-    // Create an instance of Elements.
-    const elements = Stripe.elements();
-
-    /**
-     * Implement a Stripe Card Element that matches the look-and-feel of the app.
-     *
-     * This makes it easy to collect debit and credit card payments information.
-     */
-
     // Create a Card Element and pass some custom styles to it.
-    const card = elements.create('card', { style: this.stripeStyle });
+    this.card = elements.create('card', { style: this.stripeStyle });
 
     // Mount the Card Element on the page.
-    card.mount(this.shadowRoot.querySelector('#card-element'));
+    this.card.mount(this.shadowRoot.querySelector('#card-element'));
+    this.monitor(this.card);
 
-    this.monitor(card);
     this.paymentRequest = this.createPayment();
     this.afterPaymentCreated();
   }
 
+  /**
+   *
+   * @param card
+   */
   monitor(card) {
     // Monitor change events on the Card Element to display any errors.
     card.on('change', ({ error }) => {
@@ -325,6 +359,14 @@ export class StripePayments extends LitElement {
     });
   }
 
+  countryChange(e) {
+    e.preventDefault();
+    //selectCountry(event.target.value);
+  }
+
+  /**
+   *
+   */
   createPayment() {
     return Stripe.paymentRequest({
       country: Payment.stripe.country,
@@ -339,45 +381,134 @@ export class StripePayments extends LitElement {
     });
   }
 
+  /**
+   *
+   */
   protected afterPaymentCreated() {
     this.paymentRequest.on('paymentmethod', this.paymentMethodChange);
     this.paymentRequest.on('shippingoptionchange', this.paymentMethodChange);
     this.paymentRequest.on('paymentRequestButton', this.paymentMethodChange);
   }
 
-  protected async paymentMethodChange(e) {
-    // Confirm the PaymentIntent with the payment method returned from the payment request.
-    // const { error } = await stripe.confirmPaymentIntent(
-    //   paymentIntent.client_secret,
-    //   {
-    //     payment_method: event.paymentMethod.id,
-    //     shipping: {
-    //       name: event.shippingAddress.recipient,
-    //       phone: event.shippingAddress.phone,
-    //       address: {
-    //         line1: event.shippingAddress.addressLine[0],
-    //         city: event.shippingAddress.city,
-    //         postal_code: event.shippingAddress.postalCode,
-    //         state: event.shippingAddress.region,
-    //         country: event.shippingAddress.country,
-    //       },
-    //     },
-    //   }
-    // );
-    // if (error) {
-    //   // Report to the browser that the payment failed.
-    //   event.complete('fail');
-    //   handlePayment({ error });
-    // } else {
-    //   // Report to the browser that the confirmation was successful, prompting
-    //   // it to close the browser payment method collection interface.
-    //   event.complete('success');
-    //   // Let Stripe.js handle the rest of the payment flow, including 3D Secure if needed.
-    //   const response = await stripe.handleCardPayment(
-    //     paymentIntent.client_secret
-    //   );
-    //   handlePayment(response);
-    //}
+  /**
+   * Confirm the PaymentIntent with the payment method returned from the payment request.
+   * @param event
+   */
+  protected async paymentMethodChange(event) {
+    const { error } = await Stripe.confirmPaymentIntent(
+      this.paymentIntent.client_secret,
+      {
+        payment_method: event.paymentMethod.id,
+        shipping: {
+          name: event.shippingAddress.recipient,
+          phone: event.shippingAddress.phone,
+          address: {
+            line1: event.shippingAddress.addressLine[0],
+            city: event.shippingAddress.city,
+            postal_code: event.shippingAddress.postalCode,
+            state: event.shippingAddress.region,
+            country: event.shippingAddress.country
+          }
+        }
+      }
+    );
+    if (error) {
+      this.error = error;
+      // Report to the browser that the payment failed.
+      event.complete('fail');
+      this.handlePayment({ error });
+    } else {
+      // Report to the browser that the confirmation was successful, prompting
+      // it to close the browser payment method collection interface.
+      event.complete('success');
+      // Let Stripe.js handle the rest of the payment flow, including 3D Secure if needed.
+      const response = await Stripe.handleCardPayment(
+        this.paymentIntent.client_secret
+      );
+      this.handlePayment(response);
+    }
+  }
+
+  /**
+   * Submited form, time to make payment
+   * @param e
+   */
+  async submit(e) {
+    e.preventDefault();
+    const form = this.form;
+
+    // Retrieve the user information from the form.
+    const payment = form.querySelector('input[name=payment]:checked').value;
+    const name = form.querySelector('input[name=name]').value;
+    const country = form.querySelector('select[name=country] option:checked')
+      .value;
+    const email = form.querySelector('input[name=email]').value;
+    const shipping = {
+      name,
+      address: {
+        line1: form.querySelector('input[name=address]').value,
+        city: form.querySelector('input[name=city]').value,
+        postal_code: form.querySelector('input[name=postal_code]').value,
+        state: form.querySelector('input[name=state]').value,
+        country
+      }
+    };
+    // Disable the Pay button to prevent multiple click events.
+    this.submitButton.setAttribute('disabled', '');
+    this.submitButton.textContent = 'Processing…';
+
+    // Let Stripe.js handle the confirmation of the PaymentIntent with the card Element.
+    const response = await Stripe.handleCardPayment(
+      this.paymentIntent.client_secret,
+      this.card,
+      {
+        payment_method_data: {
+          billing_details: {
+            name
+          }
+        },
+        shipping
+      }
+    );
+    this.handlePayment(response);
+  }
+
+  /**
+   * will handle payment
+   * @param paymentResponse
+   */
+  handlePayment(paymentResponse) {
+    const { paymentIntent, error } = paymentResponse;
+    const confirmationElement = this.shadowRoot.getElementById('confirmation');
+
+    if (error) {
+      this.classList.remove('processing');
+      this.classList.remove('receiver');
+      confirmationElement.querySelector('.error-message').innerText =
+        error.message;
+      this.classList.add('error');
+    } else if (paymentIntent.status === 'succeeded') {
+      // Success! Payment is confirmed. Update the interface to display the confirmation screen.
+      this.classList.remove('processing');
+      this.classList.remove('receiver');
+      // Update the note about receipt and shipping (the payment has been fully confirmed by the bank).
+      confirmationElement.querySelector('.note').innerText =
+        'We just sent your receipt to your email address, and your items will be on their way shortly.';
+      this.classList.add('success');
+    } else if (paymentIntent.status === 'processing') {
+      // Success! Now waiting for payment confirmation. Update the interface to display the confirmation screen.
+      this.classList.remove('processing');
+      // Update the note about receipt and shipping (the payment is not yet confirmed by the bank).
+      confirmationElement.querySelector('.note').innerText =
+        'We’ll send your receipt and ship your items as soon as your payment is confirmed.';
+      this.classList.add('success');
+    } else {
+      // Payment has failed.
+      this.classList.remove('success');
+      this.classList.remove('processing');
+      this.classList.remove('receiver');
+      this.classList.add('error');
+    }
   }
 
   protected async shippingChange(e) {

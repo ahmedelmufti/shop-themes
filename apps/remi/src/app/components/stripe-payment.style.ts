@@ -20,19 +20,6 @@ export const style = css`
     color: #525f7f;
   }
 
-  /* Overall Container */
-
-  #main {
-    width: 100%;
-    height: 100vh;
-    text-align: center;
-    transition: width 0.3s ease-in-out;
-  }
-
-  #main.checkout:not(.success):not(.error) {
-    width: calc(100% - 450px);
-  }
-
   /* Header */
 
   header {
@@ -76,7 +63,7 @@ export const style = css`
     transition: visibility 0s, opacity 0.5s linear 0.5s;
   }
 
-  #main.checkout #checkout {
+  :host(.checkout) #checkout {
     /* visibility: visible; */
     opacity: 1;
   }
@@ -752,41 +739,41 @@ export const style = css`
     list-style: none;
   }
 
-  #main.success:not(.processing) #confirmation .status.processing,
-  #main.success:not(.receiver) #confirmation .status.receiver {
+  :host(.success:not(.processing)) #confirmation .status.processing,
+  :host(.success:not(.receiver)) #confirmation .status.receiver {
     display: none;
   }
 
-  #main.processing #confirmation .status.success,
-  #main.receiver #confirmation .status.success {
+  :host(.processing) #confirmation .status.success,
+  :host(.receiver) #confirmation .status.success {
     display: none;
   }
 
-  #main.error #confirmation .status.success,
-  #main.error #confirmation .status.processing,
-  #main.error #confirmation .status.receiver {
+  :host(.error) #confirmation .status.success,
+  :host(.error) #confirmation .status.processing,
+  :host(.error) #confirmation .status.receiver {
     display: none;
   }
 
-  #main.error #confirmation .status.error {
+  :host(.error) #confirmation .status.error {
     display: flex;
   }
 
-  #main.error #confirmation .error-message {
+  :host(.error) #confirmation .error-message {
     font-family: monospace;
   }
 
   /* Media Queries */
 
   @media only screen and (max-width: 1024px) {
-    #main.checkout:not(.success):not(.error) {
+    :host(.checkout:not(.success):not(.error)) {
       width: calc(100% - 320px);
     }
     #summary {
       width: 320px;
       right: -320px;
     }
-    #main.checkout:not(.success):not(.error) + #summary {
+    :host(.checkout:not(.success):not(.error)) + #summary {
       right: 0;
     }
     #summary .line-item p {
@@ -802,7 +789,7 @@ export const style = css`
   }
 
   @media only screen and (max-width: 800px) {
-    #main.checkout:not(.success):not(.error) {
+    :host(.checkout:not(.success):not(.error)) {
       width: 100%;
     }
     #payment-request {

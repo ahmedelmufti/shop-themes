@@ -46,6 +46,10 @@ export const Shop = new class {
     // but there has to be a user that is logged in
   }
 
+  async createPaymentIntent(data: ICart) {
+    // throw new Error('Method not implemented.');
+  }
+
   /**
    *
    * @param number
