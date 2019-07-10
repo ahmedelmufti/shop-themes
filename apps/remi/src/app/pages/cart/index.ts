@@ -15,9 +15,10 @@ import { useLightDom } from '../../use-lightdom';
 import '@polymer/iron-image';
 import '@material/mwc-button';
 import '@shop-themes/editable-text';
-import '../../components/cart-item';
 
+import '../../components/cart-item';
 import './style.scss';
+
 import { Shop, Cart, ICart, Payment } from '@shop-themes/core';
 import { Observable } from 'rxjs';
 import { filter } from 'rxjs/operators';
@@ -102,7 +103,7 @@ export class CartPage extends useLightDom {
     super();
 
     Payment.bootstrap({
-      token: '',
+      apiKey: environment.payment.apiKey,
       country: environment.payment.country,
       currency: environment.payment.currency,
       shippingOptions: environment.shop.shippingOptions

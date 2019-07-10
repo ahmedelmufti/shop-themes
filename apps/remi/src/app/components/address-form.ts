@@ -110,10 +110,18 @@ export class AddressForm extends useLightDom {
     );
   }
 
+  /**
+   * We might neeed a func to serialize form data
+   * @param e
+   */
   protected submit(e) {
     const form: HTMLFormElement = this.querySelector('#address-form');
     if (form.reportValidity()) {
-      const data = Object.fromEntries(new FormData(form).entries());
+      const formData: any = new FormData(form);
+      const data = {};
+      for (let pair of Array.from(formData.entries())) {
+        data[pair[0]] = pair[1];
+      }
       this.dispatchEvent(new CustomEvent('submit', { detail: data }));
     }
   }

@@ -1,9 +1,6 @@
 import * as firebase from 'firebase/app';
 
 import { collectionData, docData } from 'rxfire/firestore';
-import { ICart } from './cart';
-import { post } from './utils';
-import { Auth } from './auth';
 
 export interface IProductMedia {
   downloadURL: String;
@@ -40,24 +37,6 @@ export const Shop = new class {
    */
   products() {
     return this;
-  }
-
-  /**
-   *
-   * @param data
-   */
-  async createPaymentIntent(data: ICart) {
-    // throw new Error('Method not implemented.');
-    const ref = await firebase
-      .firestore()
-      .collection('checkout')
-      .add({
-        uid: Auth.user.uid,
-        items: data.items,
-        quantity: data.quantity,
-        total: data.total
-      });
-    return await post('http://localhost:3333/api/payment', { $key: ref.id });
   }
 
   /**

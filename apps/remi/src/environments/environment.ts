@@ -52,6 +52,7 @@ export const environment = {
   },
   payment: {
     // API version to set for this app (Stripe otherwise uses your default account version).
+    apiKey: 'pk_test_pGKvBsZKXXUoqZ2l1eMKeuC7',
     apiVersion: '2019-03-14',
     publishableKey: '',
     stripeCountry: 'US',

@@ -1,11 +1,9 @@
-import { css } from 'lit-element';
-
-export const style = css`
-  /**
+/**
  * store.css
  * Stripe Payments Demo. Created by Romain Huet (@romainhuet).
  */
 
+remi-stripe-payments {
   * {
     margin: 0;
     padding: 0;
@@ -865,4 +863,4 @@ export const style = css`
       text-align: center;
     }
   }
-`;
+}

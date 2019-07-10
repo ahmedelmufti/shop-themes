@@ -8,10 +8,10 @@ Code distributed by Google as part of the polymer project is also
 subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
 */
 
-import { LitElement, html, css, property, customElement } from 'lit-element';
-import { style } from './stripe-payment.style';
-import { environment } from '../../environments/environment';
+import { html, css, property, customElement } from 'lit-element';
+import './stripe-payment.scss';
 import { Payment } from '@shop-themes/core';
+import { useLightDom } from '../use-lightdom';
 
 declare global {
   interface Window {
@@ -20,11 +20,11 @@ declare global {
 }
 
 // Create an instance of Stripe and Elements.
-const Stripe = window.Stripe('pk_test_TYooMQauvdEDq54NiTphI7jx');
+const Stripe = window.Stripe(Payment.stripe.apiKey);
 const elements = Stripe.elements();
 
 @customElement('remi-stripe-payments')
-export class StripePayments extends LitElement {
+export class StripePayments extends useLightDom {
   @property({ type: Boolean })
   active = false;
 
@@ -58,10 +58,6 @@ export class StripePayments extends LitElement {
       }
     }
   };
-
-  static get styles() {
-    return [style];
-  }
 
   protected render() {
     return html`
@@ -246,7 +242,7 @@ export class StripePayments extends LitElement {
             <p class="notice">Click the button below to generate a QR code for WeChat.</p>
           </div>
         </section>
-        <button type="submit">Pay</button>
+        <button type="submit">Pay $${this.paymentIntent.amount}</button>
       </form>
       <div id="card-errors" class="element-errors"></div>
       <div id="iban-errors" class="element-errors"></div>
@@ -274,48 +270,6 @@ export class StripePayments extends LitElement {
       </div>
     </div>
   </div>
-
-  <!-- Summary might not be needed -->
-  <!-- <div id="summary">
-    <header>
-      <h1>Order Summary</h1>
-    </header>
-    <div id="order-items"></div>
-    <div id="order-total">
-      <div class="line-item subtotal">
-        <p class="label">Subtotal</p>
-        <p class="price" data-subtotal></p>
-      </div>
-      <div class="line-item shipping">
-        <p class="label">Shipping</p>
-        <p class="price">Free</p>
-      </div>
-      <div class="line-item demo">
-        <div id="demo">
-          <p class="label">Demo in test mode</p>
-          <p class="note">You can copy and paste the following test cards to trigger different scenarios:</p>
-          <table class="note">
-            <tr>
-              <td>Default US card:</td>
-              <td class="card-number">4242<span></span>4242<span></span>4242<span></span>4242</td>
-            </tr>
-            <tr>
-              <td><a href="https://stripe.com/guides/strong-customer-authentication" target="_blank">3D Secure auth</a> required:</td>
-              <td class="card-number">4000<span></span>0000<span></span>0000<span></span>3063</td>
-            </tr>
-            </table>
-          <p class="note">
-            See the <a href="https://stripe.com/docs/testing#cards" target="_blank">docs</a> for a full list of test cards.
-            Non-card payments will redirect to test pages.
-          </p>
-        </div>
-      </div>
-      <div class="line-item total">
-        <p class="label">Total</p>
-        <p class="price" data-total></p>
-      </div>
-    </div>
-  </div> -->
     `;
   }
 
@@ -326,20 +280,18 @@ export class StripePayments extends LitElement {
    */
   protected firstUpdated() {
     // Create references to the main form and its submit button.
-    this.form = this.shadowRoot.querySelector('#payment-form');
-    this.submitButton = this.shadowRoot.querySelector('button[type=submit]');
+    this.form = this.querySelector('#payment-form');
+    this.submitButton = this.querySelector('button[type=submit]');
 
     // Create a Card Element and pass some custom styles to it.
     this.card = elements.create('card', { style: this.stripeStyle });
 
     // Mount the Card Element on the page.
-    this.card.mount(this.shadowRoot.querySelector('#card-element'));
+    this.card.mount(this.querySelector('#card-element'));
     this.monitor(this.card);
 
     this.paymentRequest = this.createPayment();
     this.afterPaymentCreated();
-
-    console.log(this.paymentIntent);
   }
 
   /**
@@ -440,18 +392,19 @@ export class StripePayments extends LitElement {
     const form = this.form;
 
     // Retrieve the user information from the form.
-    const payment = form.querySelector('input[name=payment]:checked').value;
-    const name = form.querySelector('input[name=name]').value;
-    const country = form.querySelector('select[name=country] option:checked')
-      .value;
-    const email = form.querySelector('input[name=email]').value;
+    const payment = form.querySelector('input[name=payment]:checked')['value'];
+    const name = form.querySelector('input[name=name]')['value'];
+    const country = form.querySelector('select[name=country] option:checked')[
+      'value'
+    ];
+    const email = form.querySelector('input[name=email]')['value'];
     const shipping = {
       name,
       address: {
-        line1: form.querySelector('input[name=address]').value,
-        city: form.querySelector('input[name=city]').value,
-        postal_code: form.querySelector('input[name=postal_code]').value,
-        state: form.querySelector('input[name=state]').value,
+        line1: form.querySelector('input[name=address]')['value'],
+        city: form.querySelector('input[name=city]')['value'],
+        postal_code: form.querySelector('input[name=postal_code]')['value'],
+        state: form.querySelector('input[name=state]')['value'],
         country
       }
     };
@@ -481,12 +434,12 @@ export class StripePayments extends LitElement {
    */
   handlePayment(paymentResponse) {
     const { paymentIntent, error } = paymentResponse;
-    const confirmationElement = this.shadowRoot.getElementById('confirmation');
+    const confirmationElement = this.querySelector('#confirmation');
 
     if (error) {
       this.classList.remove('processing');
       this.classList.remove('receiver');
-      confirmationElement.querySelector('.error-message').innerText =
+      confirmationElement.querySelector('.error-message')['innerText'] =
         error.message;
       this.classList.add('error');
     } else if (paymentIntent.status === 'succeeded') {
@@ -494,14 +447,14 @@ export class StripePayments extends LitElement {
       this.classList.remove('processing');
       this.classList.remove('receiver');
       // Update the note about receipt and shipping (the payment has been fully confirmed by the bank).
-      confirmationElement.querySelector('.note').innerText =
+      confirmationElement.querySelector('.note')['innerText'] =
         'We just sent your receipt to your email address, and your items will be on their way shortly.';
       this.classList.add('success');
     } else if (paymentIntent.status === 'processing') {
       // Success! Now waiting for payment confirmation. Update the interface to display the confirmation screen.
       this.classList.remove('processing');
       // Update the note about receipt and shipping (the payment is not yet confirmed by the bank).
-      confirmationElement.querySelector('.note').innerText =
+      confirmationElement.querySelector('.note')['innerText'] =
         'We’ll send your receipt and ship your items as soon as your payment is confirmed.';
       this.classList.add('success');
     } else {
