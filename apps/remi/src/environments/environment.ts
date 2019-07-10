@@ -46,7 +46,10 @@ export const environment = {
     messagingSenderId: '644416860629',
     appId: '1:644416860629:web:b73b23539e9f15d7'
   },
-  shop: { shippingOptions: shippingOptions },
+  shop: {
+    shippingOptions: shippingOptions,
+    apiURL: 'http://localhost:3333/api'
+  },
   payment: {
     // API version to set for this app (Stripe otherwise uses your default account version).
     apiVersion: '2019-03-14',

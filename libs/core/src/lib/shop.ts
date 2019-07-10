@@ -2,6 +2,7 @@ import * as firebase from 'firebase/app';
 
 import { collectionData, docData } from 'rxfire/firestore';
 import { ICart } from './cart';
+import { post } from './utils';
 
 export interface IProductMedia {
   downloadURL: String;
@@ -48,7 +49,7 @@ export const Shop = new class {
 
   async createPaymentIntent(data: ICart) {
     // throw new Error('Method not implemented.');
-    return {};
+    return await post('http://localhost:3333/api/payment', {});
   }
 
   /**
