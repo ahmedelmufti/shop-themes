@@ -327,7 +327,7 @@ export class StripePayments extends useLightDom {
       currency: Payment.stripe.currency,
       total: {
         label: 'Total',
-        amount: 200
+        amount: 300
       },
       requestShipping: true,
       requestPayerEmail: true,
@@ -339,16 +339,15 @@ export class StripePayments extends useLightDom {
    *
    */
   protected afterPaymentCreated() {
-    this.paymentRequest.on('paymentmethod', this.paymentMethodChange);
-    this.paymentRequest.on('shippingoptionchange', this.paymentMethodChange);
-    this.paymentRequest.on('paymentRequestButton', this.paymentMethodChange);
+    this.paymentRequest.on('paymentmethod', this.confirmPayment);
+    // this.paymentRequest.on('shippingoptionchange', this.paymentMethodChange);
   }
 
   /**
    * Confirm the PaymentIntent with the payment method returned from the payment request.
    * @param event
    */
-  protected async paymentMethodChange(event) {
+  protected async confirmPayment(event) {
     const { error } = await Stripe.confirmPaymentIntent(
       this.paymentIntent.client_secret,
       {
