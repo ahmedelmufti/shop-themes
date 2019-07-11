@@ -51,6 +51,9 @@ remi-checkout-overview {
       width: 100%;
     }
   }
+  remi-address-item {
+    cursor: pointer;
+  }
 
   @media (max-width: 460px) {
     .mdc-dialog__container {

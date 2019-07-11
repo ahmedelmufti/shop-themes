@@ -19,7 +19,7 @@ import '@shop-themes/editable-text';
 import '../../components/cart-item';
 import './style.scss';
 
-import { Shop, Cart, ICart, Payment } from '@shop-themes/core';
+import { Shop, Cart, ICart, Payment, Auth, IUser } from '@shop-themes/core';
 import { Observable } from 'rxjs';
 import { filter } from 'rxjs/operators';
 import { environment } from '../../../environments/environment';
@@ -34,6 +34,9 @@ export class CartPage extends useLightDom {
 
   @property({ type: Object })
   data: ICart;
+
+  @property({ type: Object })
+  user: IUser;
 
   get items() {
     return this.data ? this.data.items : [];
@@ -69,7 +72,10 @@ export class CartPage extends useLightDom {
             : this.renderLoaders()}
         </div>
       </section>
-      <remi-checkout-overview id="checkout"></remi-checkout-overview>
+      <remi-checkout-overview
+        id="checkout"
+        .user=${this.user}
+      ></remi-checkout-overview>
     `;
   }
 
@@ -116,11 +122,15 @@ export class CartPage extends useLightDom {
 
   protected firstUpdated() {
     import('../../components/checkout-overview').then(_ => {});
-    import('firebase/firestore').then(_ =>
-      Cart.data$.pipe(filter(cart => cart != null)).subscribe(cart => {
-        this.isLoading = false;
-        this.data = cart;
-      })
-    );
+    import('firebase/firestore').then(_ => this.afterFirestoreIsLoaded());
+  }
+
+  afterFirestoreIsLoaded() {
+    Cart.data$.pipe(filter(cart => cart != null)).subscribe(cart => {
+      this.isLoading = false;
+      this.data = cart;
+    });
+
+    Auth.user$.subscribe(user => (this.user = user));
   }
 }

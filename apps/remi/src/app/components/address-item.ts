@@ -12,19 +12,50 @@ import { LitElement, html, css, property, customElement } from 'lit-element';
 
 @customElement('remi-address-item')
 export class AddressItem extends LitElement {
-  @property({ type: Boolean })
-  active = false;
+  @property({ type: Object })
+  data;
 
   static get styles() {
     return css`
       :host {
+        max-width: 300px;
+        display: block;
+      }
+
+      header {
+        height: 100px;
+        background-image: url(/assets/images/address.png);
+      }
+      .info {
+        padding: 12px;
+      }
+      address {
+        line-height: 1.2;
+        font-size: 0.8rem;
+      }
+      address,
+      p {
+        margin: 0;
+        font-size: 0.9rem;
+        font-weight: 500;
+        color: black;
+      }
+      .phone {
       }
     `;
   }
 
   protected render() {
     return html`
-      <div>I am an address</div>
+      <div>
+        <header></header>
+        <div class="info">
+          <address>
+            ${this.data.address}
+          </address>
+          <p class="phone1">+601153371748</p>
+        </div>
+      </div>
     `;
   }
 }

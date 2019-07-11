@@ -19,7 +19,7 @@ import '../../assets/styles/dialog.scss';
 import './checkout-overview.scss';
 
 import { backIcon } from '../icons';
-import { IAddress, Auth } from '@shop-themes/core';
+import { IAddress, Auth, IUser } from '@shop-themes/core';
 
 enum Pages {
   OVERVIEW = 'overview-page',
@@ -36,6 +36,9 @@ export class CheckoutOverview extends useLightDom {
 
   @property({ type: Boolean })
   isLoading = true;
+
+  @property({ type: Object })
+  user: IUser;
 
   private dialog: MDCDialog;
 
@@ -153,7 +156,14 @@ export class CheckoutOverview extends useLightDom {
                     <!-- Show addresses here list here -->
                     <h2>Shipping Address</h2>
                     <div class="grid">
-                      <remi-address-item></remi-address-item>
+                      ${this.user.addresses.map(
+                        address => html`
+                          <remi-address-item
+                            .data=${this.user}
+                          ></remi-address-item>
+                        `
+                      )}
+
                       <mwc-button
                         @click=${e => this.show(this.pages.ADDRESS_FORM)}
                         >Add</mwc-button
