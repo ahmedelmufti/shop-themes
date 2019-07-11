@@ -89,10 +89,18 @@ export const Cart = new class {
     return await this.update(this.data);
   }
 
+  /**
+   *
+   * @param items
+   */
   private computeQuantity(items) {
     return items.length;
   }
 
+  /**
+   *
+   * @param items
+   */
   private computeTotal(items: Array<ICartItem>): Number {
     let total: number = 0;
 
@@ -102,6 +110,9 @@ export const Cart = new class {
     return total;
   }
 
+  /**
+   *
+   */
   async update(cart: ICart) {
     return firebase
       .firestore()
@@ -110,6 +121,17 @@ export const Cart = new class {
       .update({ cart });
   }
 
+  /**
+   *
+   */
+  clear() {
+    this.guard();
+    this.update(EMPTY_CART);
+  }
+
+  /**
+   *
+   */
   guard() {
     if (!Auth.auth) {
       throw new Error('please login before performing this action');

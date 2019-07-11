@@ -37,6 +37,8 @@ export class StripePayments extends useLightDom {
 
   paymentRequest;
 
+  paymentResponse;
+
   card;
 
   error;
@@ -268,6 +270,11 @@ export class StripePayments extends useLightDom {
         <p>It looks like your order could not be paid at this time. Please try again or select a different payment option.</p>
         <p class="error-message"></p>
       </div>
+
+      <footer class="layout horizontal center-center">
+        <mwc-button @click=${e =>
+          this.complete(this.paymentResponse)}>Continue Shopping</mwc-button>
+      </footer>
     </div>
   </div>
     `;
@@ -314,7 +321,6 @@ export class StripePayments extends useLightDom {
   }
 
   countryChange(e) {
-    e.preventDefault();
     //selectCountry(event.target.value);
   }
 
@@ -432,6 +438,7 @@ export class StripePayments extends useLightDom {
    * @param paymentResponse
    */
   onPayment(paymentResponse) {
+    this.paymentResponse = paymentResponse;
     const { paymentIntent, error } = paymentResponse;
     const confirmationElement = this.querySelector('#confirmation');
 
@@ -465,7 +472,15 @@ export class StripePayments extends useLightDom {
     }
   }
 
-  close(e) {}
+  /**
+   *
+   * @param paymentResponse
+   */
+  complete(paymentResponse) {
+    this.dispatchEvent(
+      new CustomEvent('complete', { detail: paymentResponse, bubbles: true })
+    );
+  }
 
   protected async shippingChange(e) {
     // Update the PaymentIntent to reflect the shipping cost.

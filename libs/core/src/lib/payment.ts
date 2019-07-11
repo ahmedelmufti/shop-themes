@@ -12,6 +12,12 @@ export const Payment = new class {
     shippingOptions: Array<Object>;
   };
 
+  paymentMethods: Array<IPaymentMethod>;
+
+  /**
+   *
+   * @param config
+   */
   bootstrap(config) {
     this.stripe = {
       apiKey: config.apiKey,
@@ -20,7 +26,6 @@ export const Payment = new class {
       shippingOptions: config.shippingOptions
     };
   }
-  paymentMethod: IPaymentMethod;
 
   /**
    *

@@ -28,6 +28,7 @@ import './checkout-overview.scss';
 
 import { backIcon } from '../icons';
 import { IAddress, Auth, IUser } from '@shop-themes/core';
+import { Router } from '@shop-themes/router';
 
 enum Pages {
   OVERVIEW = 'overview-page',
@@ -155,7 +156,9 @@ export class CheckoutOverview extends useLightDom {
                 >
                   ${this.userShowsIntent
                     ? html`
-                        <remi-payment-form></remi-payment-form>
+                        <remi-payment-form
+                          @complete=${this.onCheckoutComplete}
+                        ></remi-payment-form>
                       `
                     : ''}
                 </section>
@@ -179,6 +182,11 @@ export class CheckoutOverview extends useLightDom {
   get canPlaceOrder() {
     return true;
     return this.user && !this.user.isAnonymous;
+  }
+
+  onCheckoutComplete({ detail: paymentResponse }) {
+    this.dialog.close();
+    Router.goTo('/home');
   }
 
   /**
@@ -222,7 +230,7 @@ export class CheckoutOverview extends useLightDom {
   goBack(e) {
     this.page === this.pages.OVERVIEW
       ? this.dialog.close()
-      : (this.page = this.pages.OVERVIEW);
+      : this.show(this.pages.OVERVIEW);
   }
 
   /**

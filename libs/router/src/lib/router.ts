@@ -19,24 +19,24 @@ export interface RouteData {
 }
 class AppRouter {
   /**
-   * 
+   *
    */
   private readonly _data = new BehaviorSubject<RouteData>(null);
 
   /**
-   * 
+   *
    */
   readonly data$ = this._data.asObservable();
 
   /**
-   * 
+   *
    */
   get user(): RouteData {
     return this._data.getValue();
   }
 
   /**
-   * 
+   *
    */
   set data(val: RouteData) {
     this._data.next(val);
@@ -44,6 +44,11 @@ class AppRouter {
 
   constructor() {
     installRouter(this.whenLocationChanges.bind(this));
+  }
+
+  goTo(path) {
+    window.history.pushState({}, null, path);
+    window.dispatchEvent(new CustomEvent('location-changed'));
   }
 
   /**
