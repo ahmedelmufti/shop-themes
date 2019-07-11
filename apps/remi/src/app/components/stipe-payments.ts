@@ -369,7 +369,7 @@ export class StripePayments extends useLightDom {
       this.error = error;
       // Report to the browser that the payment failed.
       event.complete('fail');
-      this.handlePayment({ error });
+      this.onPayment({ error });
     } else {
       // Report to the browser that the confirmation was successful, prompting
       // it to close the browser payment method collection interface.
@@ -378,7 +378,7 @@ export class StripePayments extends useLightDom {
       const response = await Stripe.handleCardPayment(
         this.paymentIntent.client_secret
       );
-      this.handlePayment(response);
+      this.onPayment(response);
     }
   }
 
@@ -424,14 +424,14 @@ export class StripePayments extends useLightDom {
         shipping
       }
     );
-    this.handlePayment(response);
+    this.onPayment(response);
   }
 
   /**
    * will handle payment
    * @param paymentResponse
    */
-  handlePayment(paymentResponse) {
+  onPayment(paymentResponse) {
     const { paymentIntent, error } = paymentResponse;
     const confirmationElement = this.querySelector('#confirmation');
 
@@ -464,6 +464,8 @@ export class StripePayments extends useLightDom {
       this.classList.add('error');
     }
   }
+
+  close(e) {}
 
   protected async shippingChange(e) {
     // Update the PaymentIntent to reflect the shipping cost.

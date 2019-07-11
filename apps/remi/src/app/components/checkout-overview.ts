@@ -8,12 +8,20 @@ Code distributed by Google as part of the polymer project is also
 subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
 */
 
-import { LitElement, html, css, property, customElement } from 'lit-element';
+import {
+  LitElement,
+  html,
+  css,
+  property,
+  customElement,
+  TemplateResult
+} from 'lit-element';
 import { MDCDialog } from '@material/dialog';
 import { MDCTextField } from '@material/textfield';
 
 import { useLightDom } from '../use-lightdom';
 
+import '@polymer/iron-selector/iron-selector.js';
 import '../../assets/styles/textfield.scss';
 import '../../assets/styles/dialog.scss';
 import './checkout-overview.scss';
@@ -60,7 +68,7 @@ export class CheckoutOverview extends useLightDom {
           <div class="mdc-dialog__surface">
             <!-- Title cannot contain leading whitespace due to mdc-typography-baseline-top() -->
             <header class="layout horizontal pad">
-              <mwc-button data-mdc-dialog-action="no">
+              <mwc-button @click=${this.goBack}>
                 ${backIcon}
               </mwc-button>
               <span class="flex"></span>
@@ -87,91 +95,41 @@ export class CheckoutOverview extends useLightDom {
                     </div>
                   </div>
                   <div class="wrapper">
-                    <h2>General Information</h2>
-                    <section class="row">
-                      <div
-                        class="mdc-text-field text-field mdc-text-field--dense mdc-text-field--box mdc-text-field--with-leading-icon"
-                      >
-                        <iron-icon
-                          class="mdc-text-field__icon"
-                          icon="bn-icons:email"
-                        ></iron-icon>
-                        <input
-                          id="name"
-                          name="name"
-                          type="name"
-                          required
-                          value=""
-                          class="mdc-text-field__input"
-                        />
-                        <label class="mdc-floating-label" for="name"
-                          >Your Name</label
-                        >
-                        <div class="mdc-line-ripple"></div>
-                      </div>
-                    </section>
-                    <section class="row">
-                      <div
-                        class="mdc-text-field text-field mdc-text-field--dense mdc-text-field--box mdc-text-field--with-leading-icon"
-                      >
-                        <iron-icon
-                          class="mdc-text-field__icon"
-                          icon="bn-icons:email"
-                        ></iron-icon>
-                        <input
-                          id="email"
-                          name="email"
-                          type="email"
-                          required
-                          value=""
-                          class="mdc-text-field__input"
-                        />
-                        <label class="mdc-floating-label" for="email"
-                          >Email</label
-                        >
-                        <div class="mdc-line-ripple"></div>
-                      </div>
-                      <div
-                        class="mdc-text-field text-field mdc-text-field--dense mdc-text-field--box mdc-text-field--with-leading-icon"
-                      >
-                        <iron-icon
-                          class="mdc-text-field__icon"
-                          icon="bn-icons:email"
-                        ></iron-icon>
-                        <input
-                          id="phone"
-                          name="phone"
-                          type="text"
-                          required
-                          value=""
-                          class="mdc-text-field__input"
-                        />
-                        <label class="mdc-floating-label" for="phone"
-                          >Phone Number</label
-                        >
-                        <div class="mdc-line-ripple"></div>
-                      </div>
-                    </section>
+                    ${this.user.isAnonymous
+                      ? this.renderGeneralInfoForm()
+                      : this.renderProfileSummary()}
 
                     <!-- Show addresses here list here -->
-                    <h2>Shipping Address</h2>
-                    <div class="grid">
-                      ${this.user.addresses.map(
-                        address => html`
-                          <remi-address-item
-                            .data=${this.user}
-                          ></remi-address-item>
-                        `
-                      )}
-
+                    <div class="layout horizontal center-center">
+                      <h2>Shipping Address</h2>
+                      <span class="flex"></span>
                       <mwc-button
+                        raised
                         @click=${e => this.show(this.pages.ADDRESS_FORM)}
-                        >Add</mwc-button
+                        >+</mwc-button
                       >
+                    </div>
+
+                    <div class="grid">
+                      <iron-selector
+                        .items=${this.user.addresses}
+                        .multi=${true}
+                        selected="0"
+                        selected-attribute="selected"
+                      >
+                        ${this.user.addresses.map(
+                          address => html`
+                            <remi-address-item
+                              .data=${address}
+                            ></remi-address-item>
+                          `
+                        )}
+                      </iron-selector>
                     </div>
 
                     <section class="actions layout horizontal center-center">
                       <mwc-button
+                        .disabled=${!this.canPlaceOrder}
                         raised
                         id="submit-button"
                         @click=${e => this.show(this.pages.PAYMENT_FORM)}
@@ -217,9 +175,20 @@ export class CheckoutOverview extends useLightDom {
     }
   }
 
+  @property({ type: Boolean })
+  get canPlaceOrder() {
+    return true;
+    return this.user && !this.user.isAnonymous;
+  }
+
+  /**
+   *
+   */
   protected firstUpdated() {
     import('./lazy-checkout').then(_ => {});
     this.dialog = new MDCDialog(this.querySelector('.mdc-dialog'));
+    this.dialog.scrimClickAction = '';
+
     this.querySelectorAll('.mdc-text-field').forEach(
       item => new MDCTextField(item)
     );
@@ -229,14 +198,106 @@ export class CheckoutOverview extends useLightDom {
     });
   }
 
+  /**
+   *
+   * @param page
+   */
   show(page) {
     this.setAttribute('page', page);
   }
 
+  /**
+   *
+   * @param $event with address
+   */
   async addressAdd({ detail: address }: { detail: IAddress }) {
     Auth.addAdress(address);
     this.show(this.pages.OVERVIEW);
   }
 
-  createCheckout() {}
+  /**
+   *
+   * @param e
+   */
+  goBack(e) {
+    this.page === this.pages.OVERVIEW
+      ? this.dialog.close()
+      : (this.page = this.pages.OVERVIEW);
+  }
+
+  /**
+   *
+   */
+  renderProfileSummary(): TemplateResult {
+    return html`
+      <section></section>
+    `;
+  }
+
+  /**
+   *
+   */
+  renderGeneralInfoForm(): TemplateResult {
+    return html`
+      <h2>General Information</h2>
+      <section class="row">
+        <div
+          class="mdc-text-field text-field mdc-text-field--dense mdc-text-field--box mdc-text-field--with-leading-icon"
+        >
+          <iron-icon
+            class="mdc-text-field__icon"
+            icon="bn-icons:email"
+          ></iron-icon>
+          <input
+            id="name"
+            name="name"
+            type="name"
+            required
+            value=""
+            class="mdc-text-field__input"
+          />
+          <label class="mdc-floating-label" for="name">Your Name</label>
+          <div class="mdc-line-ripple"></div>
+        </div>
+      </section>
+      <section class="row">
+        <div
+          class="mdc-text-field text-field mdc-text-field--dense mdc-text-field--box mdc-text-field--with-leading-icon"
+        >
+          <iron-icon
+            class="mdc-text-field__icon"
+            icon="bn-icons:email"
+          ></iron-icon>
+          <input
+            id="email"
+            name="email"
+            type="email"
+            required
+            value=""
+            class="mdc-text-field__input"
+          />
+          <label class="mdc-floating-label" for="email">Email</label>
+          <div class="mdc-line-ripple"></div>
+        </div>
+        <div
+          class="mdc-text-field text-field mdc-text-field--dense mdc-text-field--box mdc-text-field--with-leading-icon"
+        >
+          <iron-icon
+            class="mdc-text-field__icon"
+            icon="bn-icons:email"
+          ></iron-icon>
+          <input
+            id="phone"
+            name="phone"
+            type="text"
+            required
+            value=""
+            class="mdc-text-field__input"
+          />
+          <label class="mdc-floating-label" for="phone">Phone Number</label>
+          <div class="mdc-line-ripple"></div>
+        </div>
+      </section>
+    `;
+  }
 }

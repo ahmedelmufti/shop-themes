@@ -39,24 +39,6 @@ export class AddressForm extends useLightDom {
             <label class="mdc-floating-label" for="address">Address</label>
             <div class="mdc-line-ripple"></div>
           </div>
-          <div
-            class="mdc-text-field text-field mdc-text-field--dense mdc-text-field--box mdc-text-field--with-leading-icon"
-          >
-            <iron-icon
-              class="mdc-text-field__icon"
-              icon="bn-icons:email"
-            ></iron-icon>
-            <input
-              id="city"
-              name="city"
-              type="text"
-              required
-              value=""
-              class="mdc-text-field__input"
-            />
-            <label class="mdc-floating-label" for="city">City</label>
-            <div class="mdc-line-ripple"></div>
-          </div>
         </section>
         <section class="row">
           <div
@@ -67,14 +49,16 @@ export class AddressForm extends useLightDom {
               icon="bn-icons:email"
             ></iron-icon>
             <input
-              id="state"
-              name="state"
-              type="state"
+              id="building_house"
+              name="building_house"
+              type="text"
               required
               value=""
               class="mdc-text-field__input"
             />
-            <label class="mdc-floating-label" for="state">State/Province</label>
+            <label class="mdc-floating-label" for="building_house"
+              >Building Name/ House Number</label
+            >
             <div class="mdc-line-ripple"></div>
           </div>
           <div
@@ -85,21 +69,23 @@ export class AddressForm extends useLightDom {
               icon="bn-icons:email"
             ></iron-icon>
             <input
-              id="name"
-              name="name"
-              type="text"
+              id="floor_unit"
+              name="floor_unit"
+              type="floor_unit"
               required
               value=""
               class="mdc-text-field__input"
             />
-            <label class="mdc-floating-label" for="name">Zip/Postal Code</label>
+            <label class="mdc-floating-label" for="floor_unit"
+              >Floor/Unit# (Optional)</label
+            >
             <div class="mdc-line-ripple"></div>
           </div>
         </section>
       </form>
 
       <footer>
-        <mwc-button @click=${this.submit}>Save</mwc-button>
+        <mwc-button @click=${this.submit} raised>Save</mwc-button>
       </footer>
     `;
   }

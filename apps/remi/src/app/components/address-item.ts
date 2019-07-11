@@ -53,7 +53,6 @@ export class AddressItem extends LitElement {
           <address>
             ${this.data.address}
           </address>
-          <p class="phone1">+601153371748</p>
         </div>
       </div>
     `;
