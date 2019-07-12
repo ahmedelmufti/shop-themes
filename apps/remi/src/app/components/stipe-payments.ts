@@ -25,22 +25,38 @@ const elements = Stripe.elements();
 
 @customElement('remi-stripe-payments')
 export class StripePayments extends useLightDom {
-  @property({ type: Boolean })
-  active = false;
 
   @property({ type: Object })
   paymentIntent;
 
+  /**
+   * 
+   */
   form: HTMLFormElement;
 
+  /**
+   * 
+   */
   submitButton: HTMLElement;
 
+  /**
+   * 
+   */
   paymentRequest;
 
+  /**
+   * 
+   */
   paymentResponse;
 
+  /**
+   * 
+   */
   card;
 
+  /**
+   * 
+   */
   error;
 
   stripeStyle = {

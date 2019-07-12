@@ -27,7 +27,7 @@ import '../../assets/styles/dialog.scss';
 import './checkout-overview.scss';
 
 import { backIcon } from '../icons';
-import { IAddress, Auth, IUser } from '@shop-themes/core';
+import { IAddress, Auth, IUser, Cart } from '@shop-themes/core';
 import { Router } from '@shop-themes/router';
 
 enum Pages {
@@ -185,8 +185,9 @@ export class CheckoutOverview extends useLightDom {
   }
 
   onCheckoutComplete({ detail: paymentResponse }) {
-    this.dialog.close();
+    Cart.clear();
     Router.goTo('/home');
+    this.dialog.close();
   }
 
   /**
