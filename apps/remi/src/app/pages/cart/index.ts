@@ -53,9 +53,14 @@ export class CartPage extends useLightDom {
           Your Cart
         </div>
         <span class="flex"></span>
-        <mwc-button ?hidden=${this.isEmpty} raised @click=${this.checkout}
-          >Checkout</mwc-button
-        >
+        <div>
+          <span ?hidden=${this.isEmpty}
+            >Total: $${this.getTotal(this.data)}</span
+          >
+          <mwc-button ?hidden=${this.isEmpty} raised @click=${this.checkout}
+            >Checkout</mwc-button
+          >
+        </div>
       </header>
       <section class="page-wrapper content">
         <div class="cart-items">
@@ -118,6 +123,10 @@ export class CartPage extends useLightDom {
 
   removeItem({ detail: item }) {
     Cart.remove(item);
+  }
+
+  protected getTotal(data: ICart) {
+    return data && data.total;
   }
 
   protected firstUpdated() {

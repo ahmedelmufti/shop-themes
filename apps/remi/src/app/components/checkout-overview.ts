@@ -8,14 +8,7 @@ Code distributed by Google as part of the polymer project is also
 subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
 */
 
-import {
-  LitElement,
-  html,
-  css,
-  property,
-  customElement,
-  TemplateResult
-} from 'lit-element';
+import { html, property, customElement, TemplateResult } from 'lit-element';
 import { MDCDialog } from '@material/dialog';
 import { MDCTextField } from '@material/textfield';
 
@@ -96,7 +89,7 @@ export class CheckoutOverview extends useLightDom {
                     </div>
                   </div>
                   <div class="wrapper">
-                    ${this.user.isAnonymous
+                    ${this.user && this.user.isAnonymous
                       ? this.renderGeneralInfoForm()
                       : this.renderProfileSummary()}
 
@@ -112,20 +105,9 @@ export class CheckoutOverview extends useLightDom {
                     </div>
 
                     <div class="grid">
-                      <iron-selector
-                        .items=${this.user.addresses}
-                        .multi=${true}
-                        selected="0"
-                        selected-attribute="selected"
-                      >
-                        ${this.user.addresses.map(
-                          address => html`
-                            <remi-address-item
-                              .data=${address}
-                            ></remi-address-item>
-                          `
-                        )}
-                      </iron-selector>
+                      ${this.user &&
+                        this.user.addresses &&
+                        this.renderAddresses()}
                     </div>
 
                     <section class="actions layout horizontal center-center">
@@ -240,6 +222,23 @@ export class CheckoutOverview extends useLightDom {
   renderProfileSummary(): TemplateResult {
     return html`
       <section></section>
+    `;
+  }
+
+  renderAddresses(): TemplateResult {
+    return html`
+      <iron-selector
+        .items=${this.user.addresses}
+        .multi=${true}
+        selected="0"
+        selected-attribute="selected"
+      >
+        ${this.user.addresses.map(
+          address => html`
+            <remi-address-item .data=${address}></remi-address-item>
+          `
+        )}
+      </iron-selector>
     `;
   }
 
