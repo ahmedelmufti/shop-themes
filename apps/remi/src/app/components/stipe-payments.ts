@@ -25,37 +25,39 @@ const elements = Stripe.elements();
 
 @customElement('remi-stripe-payments')
 export class StripePayments extends useLightDom {
-
   @property({ type: Object })
   paymentIntent;
 
+  @property({ type: Object })
+  data;
+
   /**
-   * 
+   *
    */
   form: HTMLFormElement;
 
   /**
-   * 
+   *
    */
   submitButton: HTMLElement;
 
   /**
-   * 
+   *
    */
   paymentRequest;
 
   /**
-   * 
+   *
    */
   paymentResponse;
 
   /**
-   * 
+   *
    */
   card;
 
   /**
-   * 
+   *
    */
   error;
 
@@ -260,7 +262,7 @@ export class StripePayments extends useLightDom {
             <p class="notice">Click the button below to generate a QR code for WeChat.</p>
           </div>
         </section>
-        <button type="submit">Pay $${this.paymentIntent.amount}</button>
+        <button type="submit">Pay $${this.getAmount()}</button>
       </form>
       <div id="card-errors" class="element-errors"></div>
       <div id="iban-errors" class="element-errors"></div>
@@ -317,6 +319,9 @@ export class StripePayments extends useLightDom {
     this.afterPaymentCreated();
   }
 
+  getAmount(): number {
+    return this.paymentIntent.amount / 100;
+  }
   /**
    *
    * @param card
@@ -349,7 +354,7 @@ export class StripePayments extends useLightDom {
       currency: Payment.stripe.currency,
       total: {
         label: 'Total',
-        amount: 300
+        amount: this.data.total
       },
       requestShipping: true,
       requestPayerEmail: true,

@@ -170,6 +170,7 @@ export class CheckoutOverview extends useLightDom {
     Cart.clear();
     Router.goTo('/home');
     this.dialog.close();
+    location.reload();
   }
 
   /**

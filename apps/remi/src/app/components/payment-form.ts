@@ -23,6 +23,7 @@ export class PaymentForm extends useLightDom {
     return html`
       <div>
         <remi-stripe-payments
+          .data=${Cart.data}
           .paymentIntent=${this.intent}
         ></remi-stripe-payments>
       </div>
