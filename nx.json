@@ -25,6 +25,18 @@
     },
     "core": {
       "tags": []
+    },
+    "howdy": {
+      "tags": []
+    },
+    "howdy-e2e": {
+      "tags": []
+    },
+    "heewal": {
+      "tags": []
+    },
+    "heewal-e2e": {
+      "tags": []
     }
   }
 }

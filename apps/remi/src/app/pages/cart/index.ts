@@ -15,12 +15,14 @@ import { useLightDom } from '../../use-lightdom';
 import '@polymer/iron-image';
 import '@material/mwc-button';
 import '@shop-themes/editable-text';
-import '../../components/cart-item';
 
+import '../../components/cart-item';
 import './style.scss';
-import { Shop, Cart, ICart } from '@shop-themes/core';
+
+import { Shop, Cart, ICart, Payment, Auth, IUser } from '@shop-themes/core';
 import { Observable } from 'rxjs';
 import { filter } from 'rxjs/operators';
+import { environment } from '../../../environments/environment';
 
 @customElement('remi-cart')
 export class CartPage extends useLightDom {
@@ -30,7 +32,11 @@ export class CartPage extends useLightDom {
   @property({ type: Boolean })
   isLoading: Boolean = true;
 
+  @property({ type: Object })
   data: ICart;
+
+  @property({ type: Object })
+  user: IUser;
 
   get items() {
     return this.data ? this.data.items : [];
@@ -39,13 +45,22 @@ export class CartPage extends useLightDom {
   get isEmpty() {
     return this.items.length < 1;
   }
+
   protected render() {
     return html`
       <header class="pad layout horizontal">
+        <div>
+          Your Cart
+        </div>
         <span class="flex"></span>
-        <mwc-button ?hidden=${this.isEmpty} @click=${this.checkout}
-          >Checkout</mwc-button
-        >
+        <div>
+          <span ?hidden=${this.isEmpty}
+            >Total: $${this.getTotal(this.data)}</span
+          >
+          <mwc-button ?hidden=${this.isEmpty} raised @click=${this.checkout}
+            >Checkout</mwc-button
+          >
+        </div>
       </header>
       <section class="page-wrapper content">
         <div class="cart-items">
@@ -62,7 +77,10 @@ export class CartPage extends useLightDom {
             : this.renderLoaders()}
         </div>
       </section>
-      <remi-checkout-form id="checkout"></remi-checkout-form>
+      <remi-checkout-overview
+        id="checkout"
+        .user=${this.user}
+      ></remi-checkout-overview>
     `;
   }
 
@@ -71,6 +89,9 @@ export class CartPage extends useLightDom {
     checkout$.open();
   }
 
+  /**
+   *
+   */
   renderLoaders() {
     return [1, 2].map(
       _ => html`
@@ -91,18 +112,34 @@ export class CartPage extends useLightDom {
 
   constructor() {
     super();
+
+    Payment.bootstrap({
+      apiKey: environment.payment.apiKey,
+      country: environment.shop.country,
+      currency: environment.shop.currency,
+      shippingOptions: environment.shop.shippingOptions
+    });
   }
 
   removeItem({ detail: item }) {
     Cart.remove(item);
   }
-  protected async firstUpdated() {
-    import('../../components/checkout-form').then(_ => {});
-    await import('firebase/firestore');
+
+  protected getTotal(data: ICart) {
+    return data && data.total;
+  }
+
+  protected firstUpdated() {
+    import('../../components/checkout-overview').then(_ => {});
+    import('firebase/firestore').then(_ => this.afterFirestoreIsLoaded());
+  }
+
+  afterFirestoreIsLoaded() {
     Cart.data$.pipe(filter(cart => cart != null)).subscribe(cart => {
       this.isLoading = false;
       this.data = cart;
-      this.requestUpdate();
     });
+
+    Auth.user$.subscribe(user => (this.user = user));
   }
 }

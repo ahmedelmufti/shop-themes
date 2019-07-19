@@ -3,8 +3,9 @@ import * as firebase from 'firebase/app';
 import { collectionData, docData } from 'rxfire/firestore';
 import { BehaviorSubject } from 'rxjs';
 
-import { Auth, User } from './auth';
+import { Auth } from './auth';
 import { IProduct } from './shop';
+import { IUser } from './types';
 
 export interface ICart {
   items: Array<any>;
@@ -36,7 +37,7 @@ export const Cart = new class {
   });
 
   bootstrap() {
-    Auth.user$.subscribe((user: User) => {
+    Auth.user$.subscribe((user: IUser) => {
       if (user) {
         this.data = user.cart;
       } else {
@@ -45,10 +46,8 @@ export const Cart = new class {
     });
   }
 
-  // Expose the observable$ part of the _todos subject (read only stream)
   readonly data$ = this._cart.asObservable();
 
-  // the getter will return the last value emitted in _todos subject
   get data(): ICart {
     return {
       items: this.items,
@@ -90,10 +89,18 @@ export const Cart = new class {
     return await this.update(this.data);
   }
 
+  /**
+   *
+   * @param items
+   */
   private computeQuantity(items) {
     return items.length;
   }
 
+  /**
+   *
+   * @param items
+   */
   private computeTotal(items: Array<ICartItem>): Number {
     let total: number = 0;
 
@@ -103,6 +110,9 @@ export const Cart = new class {
     return total;
   }
 
+  /**
+   *
+   */
   async update(cart: ICart) {
     return firebase
       .firestore()
@@ -111,6 +121,17 @@ export const Cart = new class {
       .update({ cart });
   }
 
+  /**
+   *
+   */
+  clear() {
+    this.guard();
+    this.update(EMPTY_CART);
+  }
+
+  /**
+   *
+   */
   guard() {
     if (!Auth.auth) {
       throw new Error('please login before performing this action');

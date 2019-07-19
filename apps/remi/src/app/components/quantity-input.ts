@@ -75,12 +75,10 @@ export class QuantityInput extends LitElement {
   minus(e) {
     if (this.value - 1 < this.min) return;
     this.value--;
-    this.requestUpdate();
   }
 
   plus(e) {
     if (this.max && this.value + 1 > this.max) return;
     this.value++;
-    this.requestUpdate();
   }
 }

@@ -1,4 +1,4 @@
-remi-checkout-form {
+remi-checkout-overview {
   .mdc-dialog {
     justify-content: flex-end;
 
@@ -30,15 +30,42 @@ remi-checkout-form {
     flex: 1;
   }
 
-  .mdc-button--raised {
-    box-shadow: none;
-  }
-
   .pages > * {
     display: none;
+  }
 
-    &.page--active {
+  .pages > [active] {
+    display: block;
+  }
+
+  h2 {
+    font-size: 0.9rem;
+  }
+  .row {
+    display: flex;
+
+    > * {
+      flex: 1;
+      margin-right: 12px;
+      margin-bottom: 12px;
+      width: 100%;
+    }
+  }
+  remi-address-item {
+    cursor: pointer;
+  }
+
+  @media (max-width: 460px) {
+    .mdc-dialog__container {
+      width: 100vw !important;
+    }
+
+    .row {
       display: block;
+
+      > * {
+        margin-right: 0;
+      }
     }
   }
 }

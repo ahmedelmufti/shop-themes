@@ -4,26 +4,20 @@ import { filter, switchMap, tap } from 'rxjs/operators';
 import { authState, user } from 'rxfire/auth';
 import { collectionData, docData } from 'rxfire/firestore';
 import { ICart } from './cart';
-
-export interface User {
-  uid: String;
-  cart: ICart;
-}
+import { IAddress, IUser } from './types';
 
 export const Auth = new class {
   items: Array<any> = [];
   quantity: Number = 0;
   total: Number = 0;
 
-  private readonly _user = new BehaviorSubject<User>(null);
+  private readonly _user = new BehaviorSubject<IUser>(null);
 
-  // Expose the observable$ part of the _todos subject (read only stream)
   readonly user$ = this._user.asObservable();
 
   public auth: { uid: String };
 
-  // the getter will return the last value emitted in _todos subject
-  get user(): User {
+  get user(): IUser {
     return this._user.getValue();
   }
 
@@ -41,17 +35,30 @@ export const Auth = new class {
           )
         )
       )
-      .subscribe((val: User) => (this.user = val));
+      .subscribe((val: IUser) => (this.user = val));
   }
 
   get authState$() {
     return authState(firebase.auth());
   }
 
-  // assigning a value to this.todos will push it onto the observable
-  // and down to all of its subsribers (ex: this.todos = [])
-  set user(val: User) {
+  set user(val: IUser) {
     this._user.next(val);
+  }
+
+  async addAdress(address: IAddress) {
+    if (!Auth.user) {
+      throw new Error('user is not authenticated');
+    }
+
+    const addresses = Auth.user.addresses || [];
+    addresses.push(address);
+
+    return firebase
+      .firestore()
+      .collection('users')
+      .doc(Auth.user.uid as string)
+      .update({ addresses });
   }
 
   async loginAnonymously() {
