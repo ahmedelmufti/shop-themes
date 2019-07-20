@@ -23,6 +23,7 @@ import {
 } from '@shop-themes/core';
 import { environment } from '../environments/environment';
 import { backIcon, cartIcon } from './icons';
+import { filter } from 'rxjs/operators';
 
 @customElement('remi-app')
 export class App extends useLightDom {
@@ -141,10 +142,10 @@ export class App extends useLightDom {
         Auth.bootstrap();
         Cart.bootstrap();
       });
-    Auth.user$.subscribe((user: IUser) => {
+    Auth.user$.pipe(filter(user => user !== null)).subscribe((user: IUser) => {
       this.user = user;
       if (user) {
-        this.cart = user.cart;
+        this.cart = user.cart || EMPTY_CART;
       }
     });
   }

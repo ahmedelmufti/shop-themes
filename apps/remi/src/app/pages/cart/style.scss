@@ -2,6 +2,9 @@ remi-cart {
   padding-bottom: 4em;
   min-height: 100vh;
 
+  header {
+    background: var(--app-primary-color);
+  }
   .page-wrapper {
     max-width: 856px;
   }
