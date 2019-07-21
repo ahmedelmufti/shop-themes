@@ -57,6 +57,7 @@ export const Cart = new class {
   }
 
   set data(val: ICart) {
+    if (!val) return;
     this.items = val.items;
     this.quantity = val.quantity;
     this.total = val.total;

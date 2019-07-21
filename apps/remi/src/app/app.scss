@@ -36,6 +36,9 @@ body {
 remi-app {
   --app-drawer-width: 256px;
   display: block;
+  mwc-linear-progress {
+    height: 2px;
+  }
 }
 
 app-header {

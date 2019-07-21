@@ -41,11 +41,16 @@ export class App extends useLightDom {
 
   private user: IUser;
 
+  @property({ type: Boolean })
+  private loading: Boolean;
+
   protected render() {
     // Anything that's related to rendering should be done in here.
     return html`
       <!-- Header -->
+
       <app-header condenses reveals effects="waterfall">
+        <mwc-linear-progress ?hidden=${!this.loading}></mwc-linear-progress>
         <app-toolbar class="toolbar-top">
           <mwc-button id="back-btn" @click=${this.goBack}>
             ${backIcon}
@@ -156,7 +161,9 @@ export class App extends useLightDom {
 
   protected async routeChanged(route: RouteData) {
     // load the page
+    this.loading = true;
     await this.load(route.page);
+    this.loading = false;
   }
 
   protected updated(changedProps: PropertyValues) {

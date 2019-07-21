@@ -48,17 +48,18 @@ export class CartPage extends useLightDom {
 
   protected render() {
     return html`
-      <header class="pad layout horizontal">
+      <header class="pad layout horizontal center-center">
         <div>
           Your Cart
         </div>
         <span class="flex"></span>
         <div>
-          <span ?hidden=${this.isEmpty}
-            >Total: $${this.getTotal(this.data)}</span
-          >
-          <mwc-button ?hidden=${this.isEmpty} raised @click=${this.checkout}
-            >Checkout</mwc-button
+          <mwc-button
+            ?hidden=${this.isEmpty}
+            unelevated
+            accent
+            @click=${this.checkout}
+            >Checkout $${this.getTotal(this.data)}</mwc-button
           >
         </div>
       </header>

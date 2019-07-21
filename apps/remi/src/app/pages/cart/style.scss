@@ -4,6 +4,13 @@ remi-cart {
 
   header {
     background: var(--app-primary-color);
+    color: white;
+  }
+
+  mwc-button[unelevated] {
+    --mdc-theme-primary: #ff0057;
+    border-radius: 24px;
+    overflow: hidden;
   }
   .page-wrapper {
     max-width: 856px;
