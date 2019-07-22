@@ -94,7 +94,7 @@ export class ProductDetail extends useLightDom {
                         <remi-color-swatch-input></remi-color-swatch-input>
                     </div>
                     <div class="layout horizontal center">
-                        <quantity-input min="1" max="7" value="{{quantity}}"></quantity-input>
+                        <remi-quantity-input min="1" max="7" value="{{quantity}}"></remi-quantity-input>
                         <div class="flex">
                             <mwc-button class="mdc-button mdc-button--unelevated btn-add-cart" @click=${e =>
                               this.addToCart()}>

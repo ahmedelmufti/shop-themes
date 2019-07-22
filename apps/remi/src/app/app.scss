@@ -1,3 +1,5 @@
+@import './animation';
+
 * {
   box-sizing: border-box;
 }
@@ -52,10 +54,10 @@ app-header {
   z-index: 3;
 }
 
-remi-app[page='cart'] .toolbar-list,
-remi-app[page='product'] .toolbar-list {
-  display: none;
-}
+// remi-app[page='cart'] .toolbar-list,
+// remi-app[page='product'] .toolbar-list {
+//   display: none;
+// }
 
 .toolbar-top {
   background-color: var(--app-header-background-color);
@@ -64,18 +66,18 @@ remi-app[page='product'] .toolbar-list {
   }
 }
 
-remi-app[page='home'],
-remi-app[page='shop'] {
-  #back-btn {
-    display: none;
-  }
+// remi-app[page='home'],
+// remi-app[page='shop'] {
+//   #back-btn {
+//     display: none;
+//   }
 
-  @media (min-width: 460px) {
-    .main-content {
-      padding-top: 118px;
-    }
-  }
-}
+//   @media (min-width: 460px) {
+//     .main-content {
+//       padding-top: 118px;
+//     }
+//   }
+// }
 
 [main-title] {
   font-family: 'Pacifico', cursive;
@@ -121,12 +123,6 @@ remi-app[page='shop'] {
   padding-top: 64px;
   min-height: 100vh;
   background: white;
-}
-.page {
-  display: none;
-}
-.page[active] {
-  display: block;
 }
 
 [cart-btn] {
@@ -264,32 +260,6 @@ svg {
   100% {
     background-position: 468px 0;
   }
-}
-
-.placeholder-shimmer {
-  -webkit-animation-duration: 1s;
-  animation-duration: 1s;
-  -webkit-animation-fill-mode: forwards;
-  animation-fill-mode: forwards;
-  -webkit-animation-iteration-count: infinite;
-  animation-iteration-count: infinite;
-  -webkit-animation-name: placeHolderShimmer;
-  animation-name: placeHolderShimmer;
-  -webkit-animation-timing-function: linear;
-  animation-timing-function: linear;
-  background: #f7f7f7;
-  background: -webkit-gradient(
-    linear,
-    left top,
-    right top,
-    color-stop(8%, #f7f7f7),
-    color-stop(18%, #dee3e5),
-    color-stop(33%, #f7f7f7)
-  );
-  background: linear-gradient(to right, #f7f7f7 8%, #dee3e5 18%, #f7f7f7 33%);
-  background-size: 900px 4px;
-  position: relative;
-  overflow: hidden;
 }
 
 .remi-product-item-placeholder {

@@ -20,8 +20,10 @@ import '../../assets/styles/dialog.scss';
 import './checkout-overview.scss';
 
 import { backIcon } from '../icons';
+import { Observable, BehaviorSubject, timer } from 'rxjs';
 import { IAddress, Auth, IUser, Cart } from '@shop-themes/core';
 import { Router } from '@shop-themes/router';
+import { debounce, filter, tap } from 'rxjs/operators';
 
 enum Pages {
   OVERVIEW = 'overview-page',
@@ -47,6 +49,12 @@ export class CheckoutOverview extends useLightDom {
   private readonly pages = Pages;
 
   private userShowsIntent: Boolean;
+
+  private readonly userForm$ = new BehaviorSubject({});
+
+  constructor() {
+    super();
+  }
 
   protected render() {
     return html`
@@ -188,6 +196,20 @@ export class CheckoutOverview extends useLightDom {
       // Will destroy checkout if created
       this.userShowsIntent = false;
     });
+
+    this.updateUserInfo();
+  }
+
+  protected updateUserInfo() {
+    this.userForm$
+      .pipe(
+        debounce(_ => timer(100)),
+        filter(changes => changes !== {}),
+        tap(console.log)
+      )
+      .subscribe(async changes => {
+        await Auth.update(changes);
+      });
   }
 
   /**
@@ -218,7 +240,7 @@ export class CheckoutOverview extends useLightDom {
   }
 
   /**
-   *
+   * We wont do this right now
    */
   renderProfileSummary(): TemplateResult {
     return html`
@@ -249,64 +271,77 @@ export class CheckoutOverview extends useLightDom {
   renderGeneralInfoForm(): TemplateResult {
     return html`
       <h2>General Information</h2>
-      <section class="row">
-        <div
-          class="mdc-text-field text-field mdc-text-field--dense mdc-text-field--box mdc-text-field--with-leading-icon"
-        >
-          <iron-icon
-            class="mdc-text-field__icon"
-            icon="bn-icons:email"
-          ></iron-icon>
-          <input
-            id="name"
-            name="name"
-            type="name"
-            required
-            value=""
-            class="mdc-text-field__input"
-          />
-          <label class="mdc-floating-label" for="name">Your Name</label>
-          <div class="mdc-line-ripple"></div>
-        </div>
-      </section>
-      <section class="row">
-        <div
-          class="mdc-text-field text-field mdc-text-field--dense mdc-text-field--box mdc-text-field--with-leading-icon"
-        >
-          <iron-icon
-            class="mdc-text-field__icon"
-            icon="bn-icons:email"
-          ></iron-icon>
-          <input
-            id="email"
-            name="email"
-            type="email"
-            required
-            value=""
-            class="mdc-text-field__input"
-          />
-          <label class="mdc-floating-label" for="email">Email</label>
-          <div class="mdc-line-ripple"></div>
-        </div>
-        <div
-          class="mdc-text-field text-field mdc-text-field--dense mdc-text-field--box mdc-text-field--with-leading-icon"
-        >
-          <iron-icon
-            class="mdc-text-field__icon"
-            icon="bn-icons:email"
-          ></iron-icon>
-          <input
-            id="phone"
-            name="phone"
-            type="text"
-            required
-            value=""
-            class="mdc-text-field__input"
-          />
-          <label class="mdc-floating-label" for="phone">Phone Number</label>
-          <div class="mdc-line-ripple"></div>
-        </div>
-      </section>
+      <form id="general-form">
+        <section class="row">
+          <div
+            class="mdc-text-field text-field mdc-text-field--dense mdc-text-field--box mdc-text-field--with-leading-icon"
+          >
+            <iron-icon
+              class="mdc-text-field__icon"
+              icon="bn-icons:email"
+            ></iron-icon>
+            <input
+              id="name"
+              @change=${this.onInputChange}
+              name="name"
+              type="name"
+              required
+              value=""
+              class="mdc-text-field__input"
+            />
+            <label class="mdc-floating-label" for="name">Your Name</label>
+            <div class="mdc-line-ripple"></div>
+          </div>
+        </section>
+        <section class="row">
+          <div
+            class="mdc-text-field text-field mdc-text-field--dense mdc-text-field--box mdc-text-field--with-leading-icon"
+          >
+            <iron-icon
+              class="mdc-text-field__icon"
+              icon="bn-icons:email"
+            ></iron-icon>
+            <input
+              id="email"
+              @change=${this.onInputChange}
+              name="email"
+              type="email"
+              required
+              value=""
+              class="mdc-text-field__input"
+            />
+            <label class="mdc-floating-label" for="email">Email</label>
+            <div class="mdc-line-ripple"></div>
+          </div>
+          <div
+            class="mdc-text-field text-field mdc-text-field--dense mdc-text-field--box mdc-text-field--with-leading-icon"
+          >
+            <iron-icon
+              class="mdc-text-field__icon"
+              icon="bn-icons:email"
+            ></iron-icon>
+            <input
+              id="phone"
+              @change=${this.onInputChange}
+              name="phone"
+              type="text"
+              pattern="\d{10,}"
+              required
+              value=""
+              class="mdc-text-field__input"
+            />
+            <label class="mdc-floating-label" for="phone">Phone Number</label>
+            <div class="mdc-line-ripple"></div>
+          </div>
+        </section>
+      </form>
     `;
+  }
+
+  onInputChange({ target }) {
+    this.userForm$.next({
+      ...this.userForm$.getValue(),
+      [target['name']]: target.value
+    });
   }
 }
