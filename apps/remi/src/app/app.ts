@@ -68,6 +68,7 @@ export class App extends useLightDom {
       <!-- Main content -->
       <main role="main" class="main-content">
         <remi-home class="page" ?active="${this.page === 'home'}"></remi-home>
+        <remi-auth class="page" ?active="${this.page === 'auth'}"></remi-auth>
         <remi-shop class="page" ?active="${this.page === 'shop'}"></remi-shop>
         <remi-cart class="page" ?active="${this.page === 'cart'}"></remi-cart>
         <remi-product-detail
@@ -190,6 +191,9 @@ export class App extends useLightDom {
         break;
       case 'cart':
         await import('./pages/cart/');
+        break;
+      case 'auth':
+        await import('./pages/auth/');
         break;
       default:
         page = 'view404';
