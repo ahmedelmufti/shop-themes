@@ -61,6 +61,41 @@ export const Auth = new class {
       .update({ addresses });
   }
 
+  async update(changes) {
+    if (!this.auth) {
+      throw new Error('user is not logged it for this action');
+    }
+
+    const user = firebase.auth().currentUser;
+
+    if (changes.email) {
+      await user.updateEmail(changes.email);
+    }
+
+    if (changes.phone) {
+      // await user.updatePhoneNumber(changes.phone);
+    }
+
+    if (changes.name) {
+      await user.updateProfile({ displayName: changes.name });
+    }
+
+    await this.updateFromAuth(this.auth);
+  }
+
+  private async updateFromAuth(auth) {
+    return firebase
+      .firestore()
+      .collection('users')
+      .doc(auth.uid)
+      .update({
+        uid: auth.uid,
+        name: auth.displayName,
+        avatar: auth.photoURL,
+        phone: auth.phoneNumber
+      });
+  }
+
   async loginAnonymously() {
     const { user } = await firebase.auth().signInAnonymously();
     return firebase
