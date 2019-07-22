@@ -96,10 +96,10 @@ export class Home extends useLightDom {
           </div>
           <span class="flex"></span>
           <div class="pad">
-            <h1 class="mdc-typography--headline3">
+            <h1 class="mdc-typography--headline3 fade">
               <biness-text>Beauty in real Life</biness-text>
             </h1>
-            <p class="mdc-typography--body2">
+            <p class="mdc-typography--body2 fade">
               <biness-text
                 >Create colorful dimension from cheeks to eyes to
                 templates.</biness-text
@@ -123,6 +123,7 @@ export class Home extends useLightDom {
                 product => html`
                   <a href="/product/${product.$key}" class="feature-item">
                     <remi-product-item
+                      class="fade"
                       featured
                       .data=${product}
                     ></remi-product-item>

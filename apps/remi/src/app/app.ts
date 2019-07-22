@@ -166,6 +166,7 @@ export class App extends useLightDom {
       this.pageChanges.next = this.page;
 
       this.makeTransition(this.pageChanges);
+
       // const pageTitle = this.appTitle + ' - ' + this._page;
       // updateMetadata({
       //   title: pageTitle,
@@ -183,6 +184,8 @@ export class App extends useLightDom {
       await transition($prev, 350);
       $prev.classList.remove('animating', 'leave', 'active');
     }
+
+    window.scrollTo({ top: 0, behavior: 'smooth' });
 
     if ($next) {
       $next.classList.add('animating', 'enter', 'active');
