@@ -120,9 +120,17 @@ remi-app[page='shop'] {
   background: white;
 }
 .page {
+  opacity: 0;
+  transition-property: opacity;
+  transition-duration: 0.35s;
+  transition-delay: 0.4s;
+}
+
+.page:not(.animating) {
   display: none;
 }
-.page[active] {
+.page.active {
+  opacity: 1;
   display: block;
 }
 

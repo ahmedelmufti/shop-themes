@@ -24,6 +24,7 @@ import {
 import { environment } from '../environments/environment';
 import { backIcon, cartIcon } from './icons';
 import { filter } from 'rxjs/operators';
+import { transition } from './transition';
 
 @customElement('remi-app')
 export class App extends useLightDom {
@@ -33,6 +34,8 @@ export class App extends useLightDom {
   @property({ type: String })
   private page;
 
+  private pageChanges = { prev: null, next: null };
+
   @property({ type: Object })
   private cart: ICart = EMPTY_CART;
 
@@ -40,6 +43,8 @@ export class App extends useLightDom {
   private _offline = false;
 
   private user: IUser;
+
+  private $pages;
 
   protected render() {
     // Anything that's related to rendering should be done in here.
@@ -66,19 +71,13 @@ export class App extends useLightDom {
         </nav>
       </app-header>
       <!-- Main content -->
-      <main role="main" class="main-content">
-        <remi-home class="page" ?active="${this.page === 'home'}"></remi-home>
-        <remi-auth class="page" ?active="${this.page === 'auth'}"></remi-auth>
-        <remi-shop class="page" ?active="${this.page === 'shop'}"></remi-shop>
-        <remi-cart class="page" ?active="${this.page === 'cart'}"></remi-cart>
-        <remi-product-detail
-          class="page"
-          ?active="${this.page === 'product'}"
-        ></remi-product-detail>
-        <my-view404
-          class="page"
-          ?active="${this.page === 'view404'}"
-        ></my-view404>
+      <main role="main" class="main-content" id="pages">
+        <remi-home class="page" page="home"></remi-home>
+        <remi-auth class="page" page="auth"></remi-auth>
+        <remi-shop class="page" page="shop"></remi-shop>
+        <remi-cart class="page" page="cart"></remi-cart>
+        <remi-product-detail class="page" ?page="product"></remi-product-detail>
+        <my-view404 class="page" page="view404"></my-view404>
       </main>
       <footer class="app-footer">
         <div class="content layout horizontal center">
@@ -130,6 +129,7 @@ export class App extends useLightDom {
     Router.data$.subscribe((route: RouteData) => this.routeChanged(route));
     import('./lazy').then(module => {});
     this.listenToAuth();
+    this.$pages = this.querySelector('#pages');
     // installOfflineWatcher(offline => store.dispatch(updateOffline(offline)));
     // installMediaQueryWatcher(`(min-width: 460px)`, () =>
     //   // store.dispatch(updateDrawerState(false))
@@ -157,17 +157,39 @@ export class App extends useLightDom {
 
   protected async routeChanged(route: RouteData) {
     // load the page
+    this.pageChanges.prev = this.page;
     await this.load(route.page);
   }
 
   protected updated(changedProps: PropertyValues) {
     if (changedProps.has('page')) {
+      this.pageChanges.next = this.page;
+
+      this.makeTransition(this.pageChanges);
       // const pageTitle = this.appTitle + ' - ' + this._page;
       // updateMetadata({
       //   title: pageTitle,
       //   description: pageTitle
       //   // This object also takes an image property, that points to an img src.
       // });
+    }
+  }
+
+  private async makeTransition({ prev, next }) {
+    const $prev = this.$pages.querySelector(`[page=${prev}]`);
+    const $next = this.$pages.querySelector(`[page=${next}]`);
+    if ($prev) {
+      $prev.classList.add('animating', 'leave');
+      await transition($prev, 350);
+      $prev.classList.remove('active');
+      $prev.classList.remove('animating', 'leave');
+    }
+
+    if ($next) {
+      $next.classList.add('animating', 'enter');
+      $next.classList.add('active');
+      await transition($next, 450);
+      $next.classList.remove('animating', 'enter');
     }
   }
 
