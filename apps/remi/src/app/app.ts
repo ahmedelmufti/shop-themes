@@ -180,13 +180,13 @@ export class App extends useLightDom {
     const $next = this.$pages.querySelector(`[page=${next}]`);
     if ($prev) {
       $prev.classList.add('animating', 'leave');
-      await transition($prev, 450);
+      await transition($prev, 350);
       $prev.classList.remove('animating', 'leave', 'active');
     }
 
     if ($next) {
       $next.classList.add('animating', 'enter', 'active');
-      await transition($next, 450);
+      await transition($next, 350);
       $next.classList.remove('animating', 'enter');
     }
   }

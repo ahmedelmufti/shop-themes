@@ -13,11 +13,6 @@ remi-home {
     height: 60vh;
   }
 
-  &.animating.leave .hero-media > div {
-    transform: translateX(100%);
-    opacity: 0;
-  }
-
   .hero-media > div {
     height: 331px;
     border-radius: 12px;
@@ -26,15 +21,6 @@ remi-home {
     box-shadow: 0px 17px 27px -26px rgba(0, 0, 0, 0.7);
     background-image: url(https://cdn.shopify.com/s/files/1/1385/7027/t/7/assets/slide_2_1024x1024.jpg?14226104591786434212);
     background-size: cover;
-
-    -webkit-transform-origin: 0 0;
-    transform-origin: 0 0;
-    -webkit-animation-delay: 0.08s;
-    animation-delay: 0.08s;
-    -webkit-transition: opacity 0.2s, -webkit-transform 0.2s;
-    transition: opacity 0.2s, -webkit-transform 0.2s;
-    transition: transform 0.2s, opacity 0.2s;
-    transition: transform 0.2s, opacity 0.2s, -webkit-transform 0.2s;
   }
 
   button {

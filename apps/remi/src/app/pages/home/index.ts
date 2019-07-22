@@ -37,7 +37,7 @@ export class Home extends useLightDom {
       <div class="page-wrapper">
         <section class="app-hero pad">
           <div class="content layout horizontal center-center app-hero-content">
-            <div class="hero-content pad flex">
+            <div class="hero-content pad flex fade">
               <h1 class="mdc-typography--headline2">
                 <biness-text>Adu Matte Liquid Lipstick</biness-text>
               </h1>
@@ -57,7 +57,7 @@ export class Home extends useLightDom {
               </div>
             </div>
             <div class="hero-media hidden-on-small pad flex">
-              <div class="some-component"></div>
+              <div class="some-component fade slide-right"></div>
             </div>
           </div>
         </section>
@@ -87,7 +87,7 @@ export class Home extends useLightDom {
         <section
           class="app-section content layout horizontal center highlight-product pad"
         >
-          <div class="media">
+          <div class="media fade slide-left">
             <iron-image
               sizing="cover"
               preload
@@ -143,7 +143,9 @@ export class Home extends useLightDom {
             fade
             src="/assets/images/pexels-photo-457704.jpeg"
           ></iron-image>
-          <div class="layout vertical center-center bottom-banner-info fit">
+          <div
+            class="layout vertical center-center bottom-banner-info fit fade"
+          >
             <div class="title mdc-typography--headline5">
               <small style="font-size:18px">NEW!</small>
               <br />Matte Liquid Lipstick

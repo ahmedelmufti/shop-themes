@@ -1,16 +1,62 @@
 .page {
-  opacity: 0;
-  //visibility: hidden;
+  // opacity: 0;
   transition-property: opacity;
   transition-duration: 0.35s;
   transition-delay: 0.4s;
 }
+
 .page:not(.animating) {
   display: none;
 }
-
-.page[active] {
+.page.active {
   display: block;
-  //visibility: visible;
+}
+
+.slide-left {
+}
+
+.slide-right {
+}
+
+.slide-top {
+}
+
+.fade {
+  opacity: 0;
+  transition: opacity 0.6s;
+}
+
+.page.enter .fade,
+.page.active .fade {
   opacity: 1;
+}
+
+.page.leave .fade {
+  opacity: 0;
+}
+
+.placeholder-shimmer {
+  -webkit-animation-duration: 1s;
+  animation-duration: 1s;
+  -webkit-animation-fill-mode: forwards;
+  animation-fill-mode: forwards;
+  -webkit-animation-iteration-count: infinite;
+  animation-iteration-count: infinite;
+  -webkit-animation-name: placeHolderShimmer;
+  animation-name: placeHolderShimmer;
+  -webkit-animation-timing-function: linear;
+  animation-timing-function: linear;
+  background: #f7f7f7;
+  background: -webkit-gradient(
+    linear,
+    left top,
+    right top,
+    color-stop(8%, #f7f7f7),
+    color-stop(18%, #dee3e5),
+    color-stop(33%, #f7f7f7)
+  );
+  background: linear-gradient(to right, #f7f7f7 8%, #dee3e5 18%, #f7f7f7 33%);
+  background-size: 900px 4px;
+  position: relative;
+  overflow: hidden;
 }
