@@ -76,7 +76,7 @@ export class App extends useLightDom {
         <remi-auth class="page" page="auth"></remi-auth>
         <remi-shop class="page" page="shop"></remi-shop>
         <remi-cart class="page" page="cart"></remi-cart>
-        <remi-product-detail class="page" ?page="product"></remi-product-detail>
+        <remi-product-detail class="page" page="product"></remi-product-detail>
         <my-view404 class="page" page="view404"></my-view404>
       </main>
       <footer class="app-footer">
@@ -180,14 +180,12 @@ export class App extends useLightDom {
     const $next = this.$pages.querySelector(`[page=${next}]`);
     if ($prev) {
       $prev.classList.add('animating', 'leave');
-      await transition($prev, 350);
-      $prev.classList.remove('active');
-      $prev.classList.remove('animating', 'leave');
+      await transition($prev, 450);
+      $prev.classList.remove('animating', 'leave', 'active');
     }
 
     if ($next) {
-      $next.classList.add('animating', 'enter');
-      $next.classList.add('active');
+      $next.classList.add('animating', 'enter', 'active');
       await transition($next, 450);
       $next.classList.remove('animating', 'enter');
     }
