@@ -30,7 +30,28 @@ body {
   -webkit-font-smoothing: antialiased;
   margin: 0;
   height: 100%;
-  background-color: var(--app-light-text-color);
+  background-color: white;
+}
+
+.bg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1;
+  transition-timing-function: cubic-bezier(0.19, 1, 0.22, 1);
+  transition-property: -webkit-transform;
+  transition-property: transform;
+  transform: translate3d(0px, -473px, 0px);
+  transition-duration: 250ms;
+  transition-delay: 300ms;
+  .overlay-primary {
+    background: var(--app-primary-color);
+    height: 680px;
+  }
+  .hero-bottom-wave {
+    margin-top: -6em;
+  }
 }
 
 remi-app {
@@ -47,18 +68,17 @@ app-header {
   left: 0;
   width: 100%;
   text-align: center;
-  background-color: var(--app-header-background-color);
+  background-color: transparent;
   color: var(--app-header-text-color);
   z-index: 3;
 }
 
-// remi-app[page='cart'] .toolbar-list,
-// remi-app[page='product'] .toolbar-list {
-//   display: none;
-// }
+remi-app[page='home'] .bg {
+  transform: translate3d(0px, 0px, 0px);
+}
 
 .toolbar-top {
-  background-color: var(--app-header-background-color);
+  background-color: transparent;
   svg {
     color: white;
   }
@@ -120,7 +140,9 @@ app-header {
 .main-content {
   padding-top: 64px;
   min-height: 100vh;
-  background: white;
+  background: transparent;
+  z-index: 1;
+  position: relative;
 }
 
 [cart-btn] {

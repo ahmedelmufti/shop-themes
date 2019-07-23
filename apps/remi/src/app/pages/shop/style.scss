@@ -18,18 +18,6 @@ remi-shop {
     transition: transform 0.2s, opacity 0.2s;
   }
 
-  &.animating.leave remi-product-item,
-  remi-product-item {
-    opacity: 0;
-    transform: scale(0.5);
-  }
-
-  &.animating.enter remi-product-item,
-  &.active remi-product-item {
-    opacity: 1;
-    transform: scale(1);
-  }
-
   @media only screen and (max-device-width: 480px) and (min-device-width: 320px) {
     remi-product-item {
       height: 370px;
