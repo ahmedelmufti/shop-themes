@@ -49,9 +49,6 @@ export class CartPage extends useLightDom {
   protected render() {
     return html`
       <header class="pad layout horizontal center-center">
-        <div>
-          Your Cart
-        </div>
         <span class="flex"></span>
         <div>
           <mwc-button
