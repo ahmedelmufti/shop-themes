@@ -9,9 +9,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 */
 
 import {
-  LitElement,
   html,
-  css,
   PropertyValues,
   property,
   customElement,
@@ -21,6 +19,7 @@ import { useLightDom } from '../../use-lightdom';
 
 import './style.scss';
 import 'swiper/dist/css/swiper.min.css';
+import '../../components/quantity-input';
 import { Router, RouteData } from '@shop-themes/router';
 import { filter, switchMap, map, tap } from 'rxjs/operators';
 import { Shop, Cart, Auth } from '@shop-themes/core';
@@ -32,6 +31,9 @@ export class ProductDetail extends useLightDom {
 
   @property({ type: Object })
   data = null;
+
+  @property({ type: Number })
+  quantity = 1;
 
   private swiper;
 
@@ -90,9 +92,11 @@ export class ProductDetail extends useLightDom {
                         <remi-color-swatch-input></remi-color-swatch-input>
                     </div>
                     <div class="layout horizontal center">
-                        <remi-quantity-input min="1" max="7" value="{{quantity}}"></remi-quantity-input>
+                        <remi-quantity-input min="1" max="7" value=${
+                          this.quantity
+                        }></remi-quantity-input>
                         <div class="flex">
-                            <mwc-button class="mdc-button mdc-button--unelevated btn-add-cart" @click=${e =>
+                            <mwc-button unelevated class="btn-add-cart" @click=${e =>
                               this.addToCart()}>
                                 Add to Cart
                             </mwc-button>

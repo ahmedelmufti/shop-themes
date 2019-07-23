@@ -70,7 +70,7 @@ export class CheckoutOverview extends useLightDom {
           <div class="mdc-dialog__surface">
             <!-- Title cannot contain leading whitespace due to mdc-typography-baseline-top() -->
             <header class="layout horizontal pad">
-              <mwc-button @click=${this.goBack} raised>
+              <mwc-button @click=${this.goBack}>
                 ${backIcon}
               </mwc-button>
               <span class="flex"></span>

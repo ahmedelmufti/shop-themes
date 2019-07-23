@@ -54,6 +54,7 @@ export class CartPage extends useLightDom {
           <mwc-button
             ?hidden=${this.isEmpty}
             unelevated
+            class="fade slide-right"
             accent
             @click=${this.checkout}
             >Checkout $${this.getTotal(this.data)}</mwc-button
@@ -68,7 +69,7 @@ export class CartPage extends useLightDom {
                   <remi-cart-item
                     @delete=${this.removeItem}
                     .data=${item}
-                    class="cart-items--item"
+                    class="cart-items--item fade"
                   ></remi-cart-item>
                 `
               )
