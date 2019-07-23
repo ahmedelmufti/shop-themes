@@ -51,6 +51,7 @@ export class CheckoutOverview extends useLightDom {
   private userShowsIntent: Boolean;
 
   private readonly userForm$ = new BehaviorSubject({});
+  selectedAddress: IUser;
 
   constructor() {
     super();
@@ -170,12 +171,11 @@ export class CheckoutOverview extends useLightDom {
 
   @property({ type: Boolean })
   get canPlaceOrder() {
-    return true;
-    return this.user && !this.user.isAnonymous;
+    return this.user && this.selectedAddress;
   }
 
-  onCheckoutComplete({ detail: paymentResponse }) {
-    Cart.clear();
+  async onCheckoutComplete({ detail: paymentResponse }) {
+    await Cart.clear();
     Router.goTo('/home');
     this.dialog.close();
     location.reload();
@@ -204,7 +204,7 @@ export class CheckoutOverview extends useLightDom {
     this.userForm$
       .pipe(
         debounce(_ => timer(100)),
-        filter(changes => changes !== {}),
+        filter((changes: any) => changes.email),
         tap(console.log)
       )
       .subscribe(async changes => {
