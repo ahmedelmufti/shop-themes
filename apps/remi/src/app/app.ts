@@ -13,6 +13,8 @@ import '@polymer/app-layout/app-toolbar/app-toolbar.js';
 
 import './app.scss';
 import '../../src/assets/styles/iron-flex.scss';
+import './animation.scss';
+
 import {
   Bootstrap,
   Auth,
