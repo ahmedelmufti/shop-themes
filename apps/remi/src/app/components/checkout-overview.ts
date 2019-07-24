@@ -263,14 +263,15 @@ export class CheckoutOverview extends useLightDom {
    *
    */
   renderAddresses(): TemplateResult {
+    const addresses = this.user.addresses || [];
     return html`
       <iron-selector
         class="addresses"
         @iron-select=${this.onAddressSelect}
-        .items=${this.user.addresses}
+        .items=${addresses}
         selected-attribute="selected"
       >
-        ${this.user.addresses.map(
+        ${addresses.map(
           address => html`
             <remi-address-item .data=${address}></remi-address-item>
           `

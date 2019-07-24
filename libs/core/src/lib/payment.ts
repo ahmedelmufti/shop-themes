@@ -42,7 +42,7 @@ export const Payment = new class {
         quantity: data.quantity,
         total: data.total
       });
-    return await post('http://localhost:3333/api/payment', { $key: ref.id });
+    return await post(`https://api.shop.jobizzness.com/payment`, { $key: ref.id });
   }
 
   create(checkout) {}
