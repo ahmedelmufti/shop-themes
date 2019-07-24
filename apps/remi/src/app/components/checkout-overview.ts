@@ -19,7 +19,7 @@ import '../../assets/styles/textfield.scss';
 import '../../assets/styles/dialog.scss';
 import './checkout-overview.scss';
 
-import { backIcon } from '../icons';
+import { backIcon, plusIcon } from '../icons';
 import { Observable, BehaviorSubject, timer } from 'rxjs';
 import { IAddress, Auth, IUser, Cart } from '@shop-themes/core';
 import { Router } from '@shop-themes/router';
@@ -51,7 +51,8 @@ export class CheckoutOverview extends useLightDom {
   private userShowsIntent: Boolean;
 
   private readonly userForm$ = new BehaviorSubject({});
-  selectedAddress: IUser;
+
+  private selectedAddress;
 
   constructor() {
     super();
@@ -106,17 +107,19 @@ export class CheckoutOverview extends useLightDom {
                     <div class="layout horizontal center-center">
                       <h2>Shipping Address</h2>
                       <span class="flex"></span>
-                      <mwc-button
-                        raised
-                        @click=${e => this.show(this.pages.ADDRESS_FORM)}
-                        >+</mwc-button
-                      >
                     </div>
 
-                    <div class="grid">
+                    <div class="addresses">
                       ${this.user &&
                         this.user.addresses &&
                         this.renderAddresses()}
+                      <div
+                        class="add-address-btn layout vertical center-center"
+                        @click=${e => this.show(this.pages.ADDRESS_FORM)}
+                      >
+                        <span class="icon">${plusIcon}</span>
+                        Add Address
+                      </div>
                     </div>
 
                     <section class="actions layout horizontal center-center">
@@ -124,7 +127,7 @@ export class CheckoutOverview extends useLightDom {
                         .disabled=${!this.canPlaceOrder}
                         raised
                         id="submit-button"
-                        @click=${e => this.show(this.pages.PAYMENT_FORM)}
+                        @click=${e => this.placeOrder(e)}
                       >
                         Place Order
                       </mwc-button>
@@ -164,9 +167,6 @@ export class CheckoutOverview extends useLightDom {
 
   open() {
     this.dialog.open();
-    if (!this.userShowsIntent) {
-      this.userShowsIntent = true;
-    }
   }
 
   @property({ type: Boolean })
@@ -195,11 +195,15 @@ export class CheckoutOverview extends useLightDom {
     this.dialog.listen('MDCDialog:closing', () => {
       // Will destroy checkout if created
       this.userShowsIntent = false;
+      this.requestUpdate();
     });
 
     this.updateUserInfo();
   }
 
+  /**
+   *
+   */
   protected updateUserInfo() {
     this.userForm$
       .pipe(
@@ -240,6 +244,15 @@ export class CheckoutOverview extends useLightDom {
   }
 
   /**
+   *
+   * @param e
+   */
+  placeOrder(e) {
+    this.userShowsIntent = this.userShowsIntent || true;
+    this.show(this.pages.PAYMENT_FORM);
+  }
+
+  /**
    * We wont do this right now
    */
   renderProfileSummary(): TemplateResult {
@@ -248,12 +261,23 @@ export class CheckoutOverview extends useLightDom {
     `;
   }
 
+  /**
+   *
+   * @param $event
+   */
+  onAddressSelect({ detail }) {
+    this.selectedAddress = detail.item.data;
+    this.requestUpdate();
+  }
+
+  /**
+   *
+   */
   renderAddresses(): TemplateResult {
     return html`
       <iron-selector
+        @iron-select=${this.onAddressSelect}
         .items=${this.user.addresses}
-        .multi=${true}
-        selected="0"
         selected-attribute="selected"
       >
         ${this.user.addresses.map(
@@ -338,6 +362,10 @@ export class CheckoutOverview extends useLightDom {
     `;
   }
 
+  /**
+   *
+   * @param $event
+   */
   onInputChange({ target }) {
     this.userForm$.next({
       ...this.userForm$.getValue(),

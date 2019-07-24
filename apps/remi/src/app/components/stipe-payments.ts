@@ -523,4 +523,9 @@ export class StripePayments extends useLightDom {
     // );
     // submitButton.innerText = `Pay ${amount}`;
   }
+
+  disconnectedCallback() {
+    super.disconnectedCallback();
+    this.card.destroy();
+  }
 }

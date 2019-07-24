@@ -22,20 +22,39 @@ export class PaymentForm extends useLightDom {
   protected render() {
     return html`
       <div>
-        <remi-stripe-payments
-          .data=${Cart.data}
-          .paymentIntent=${this.intent}
-        ></remi-stripe-payments>
+        ${this.intent &&
+          html`
+            <remi-stripe-payments
+              .data=${Cart.data}
+              .paymentIntent=${this.intent}
+            ></remi-stripe-payments>
+          `}
       </div>
     `;
   }
 
   protected async firstUpdated() {
-    this.intent = await Payment.createIntent(Cart.data);
-    this.requestUpdate();
+    if (document.getElementById('stripe-script')) {
+      return this.createIntent();
+    }
+
     const node = document.createElement('script');
-    node.onload = async e => await import('./stipe-payments');
+    node.id = 'stripe-script';
+    node.onload = async e => {
+      await import('./stipe-payments'); // This components assumes stripe is already loaded
+      await this.createIntent();
+    };
     node.src = 'https://js.stripe.com/v3/';
     document.body.appendChild(node);
+  }
+
+  async createIntent() {
+    this.intent = await Payment.createIntent(Cart.data);
+    this.requestUpdate();
+  }
+
+  disconnectedCallback() {
+    super.disconnectedCallback();
+    console.log('we are destroying this checkout request.');
   }
 }

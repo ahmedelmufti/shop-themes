@@ -51,6 +51,21 @@ remi-checkout-overview {
       width: 100%;
     }
   }
+
+  .addresses {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-gap: 1em;
+
+    .add-address-btn {
+      cursor: pointer;
+      padding: 8px;
+      background-color: #eee;
+      height: 99px;
+      border: 2px dashed;
+    }
+  }
+
   remi-address-item {
     cursor: pointer;
   }
