@@ -22,13 +22,20 @@ export class PaymentForm extends useLightDom {
   protected render() {
     return html`
       <div>
-        ${this.intent &&
-          html`
-            <remi-stripe-payments
-              .data=${Cart.data}
-              .paymentIntent=${this.intent}
-            ></remi-stripe-payments>
-          `}
+        ${this.intent
+          ? html`
+              <remi-stripe-payments
+                .data=${Cart.data}
+                .paymentIntent=${this.intent}
+              ></remi-stripe-payments>
+            `
+          : html`
+              <div class="layout vertical center-center fullbleed">
+                <spinner></spinner>
+                <h1>Hold tight</h1>
+                <p>Let's place your order</p>
+              </div>
+            `}
       </div>
     `;
   }

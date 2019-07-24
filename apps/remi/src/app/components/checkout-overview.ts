@@ -103,24 +103,13 @@ export class CheckoutOverview extends useLightDom {
                       ? this.renderGeneralInfoForm()
                       : this.renderProfileSummary()}
 
-                    <!-- Show addresses here list here -->
                     <div class="layout horizontal center-center">
                       <h2>Shipping Address</h2>
                       <span class="flex"></span>
                     </div>
 
-                    <div class="addresses">
-                      ${this.user &&
-                        this.user.addresses &&
-                        this.renderAddresses()}
-                      <div
-                        class="add-address-btn layout vertical center-center"
-                        @click=${e => this.show(this.pages.ADDRESS_FORM)}
-                      >
-                        <span class="icon">${plusIcon}</span>
-                        Add Address
-                      </div>
-                    </div>
+                    <!-- Show addresses here list here -->
+                    ${this.user && this.renderAddresses()}
 
                     <section class="actions layout horizontal center-center">
                       <mwc-button
@@ -276,6 +265,7 @@ export class CheckoutOverview extends useLightDom {
   renderAddresses(): TemplateResult {
     return html`
       <iron-selector
+        class="addresses"
         @iron-select=${this.onAddressSelect}
         .items=${this.user.addresses}
         selected-attribute="selected"
@@ -285,6 +275,13 @@ export class CheckoutOverview extends useLightDom {
             <remi-address-item .data=${address}></remi-address-item>
           `
         )}
+        <div
+          class="add-address-btn layout vertical center-center"
+          @click=${e => this.show(this.pages.ADDRESS_FORM)}
+        >
+          <span class="icon">${plusIcon}</span>
+          Add Address
+        </div>
       </iron-selector>
     `;
   }

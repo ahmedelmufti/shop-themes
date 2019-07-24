@@ -42,12 +42,12 @@ body {
   transition-timing-function: cubic-bezier(0.19, 1, 0.22, 1);
   transition-property: -webkit-transform;
   transition-property: transform;
-  transform: translate3d(0px, -473px, 0px);
+  transform: translate3d(0px, -67%, 0px);
   transition-duration: 350ms;
   transition-delay: 300ms;
   .overlay-primary {
     background: var(--app-primary-color);
-    height: 680px;
+    height: 100vh;
   }
   .hero-bottom-wave {
     margin-top: -6em;
@@ -248,8 +248,9 @@ button.btn-responsive {
     display: block !important;
   }
   .bg {
+    transform: translate3d(0px, -80%, 0px);
     .overlay-primary {
-      height: 560px;
+      height: 80vh;
     }
     .hero-bottom-wave {
       margin-top: -1em;
