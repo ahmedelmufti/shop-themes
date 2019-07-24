@@ -89,14 +89,11 @@ remi-product-detail {
   .only-small {
     display: none;
   }
-  header {
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    z-index: 9;
-    color: white;
-    padding: 12px 16px;
+
+  mwc-button[unelevated] {
+    --mdc-theme-primary: #ff0057;
+    border-radius: 24px;
+    overflow: hidden;
   }
 
   .loader {
@@ -115,7 +112,7 @@ remi-product-detail {
       overflow: hidden;
       border-top-right-radius: 24px;
       border-top-left-radius: 24px;
-      margin-top: -24px !important;
+      margin-top: 0px !important;
     }
   }
 

@@ -12,6 +12,12 @@ remi-shop {
     padding: 16px 0;
   }
 
+  remi-product-item {
+    transform-origin: 0 0;
+    animation-delay: 0.12s;
+    transition: transform 0.2s, opacity 0.2s;
+  }
+
   @media only screen and (max-device-width: 480px) and (min-device-width: 320px) {
     remi-product-item {
       height: 370px;

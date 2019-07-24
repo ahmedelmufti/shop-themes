@@ -19,9 +19,11 @@ import '../../assets/styles/textfield.scss';
 import '../../assets/styles/dialog.scss';
 import './checkout-overview.scss';
 
-import { backIcon } from '../icons';
+import { backIcon, plusIcon } from '../icons';
+import { Observable, BehaviorSubject, timer } from 'rxjs';
 import { IAddress, Auth, IUser, Cart } from '@shop-themes/core';
 import { Router } from '@shop-themes/router';
+import { debounce, filter, tap } from 'rxjs/operators';
 
 enum Pages {
   OVERVIEW = 'overview-page',
@@ -47,6 +49,14 @@ export class CheckoutOverview extends useLightDom {
   private readonly pages = Pages;
 
   private userShowsIntent: Boolean;
+
+  private readonly userForm$ = new BehaviorSubject({});
+
+  private selectedAddress;
+
+  constructor() {
+    super();
+  }
 
   protected render() {
     return html`
@@ -93,29 +103,20 @@ export class CheckoutOverview extends useLightDom {
                       ? this.renderGeneralInfoForm()
                       : this.renderProfileSummary()}
 
-                    <!-- Show addresses here list here -->
                     <div class="layout horizontal center-center">
                       <h2>Shipping Address</h2>
                       <span class="flex"></span>
-                      <mwc-button
-                        raised
-                        @click=${e => this.show(this.pages.ADDRESS_FORM)}
-                        >+</mwc-button
-                      >
                     </div>
 
-                    <div class="grid">
-                      ${this.user &&
-                        this.user.addresses &&
-                        this.renderAddresses()}
-                    </div>
+                    <!-- Show addresses here list here -->
+                    ${this.user && this.renderAddresses()}
 
                     <section class="actions layout horizontal center-center">
                       <mwc-button
                         .disabled=${!this.canPlaceOrder}
                         raised
                         id="submit-button"
-                        @click=${e => this.show(this.pages.PAYMENT_FORM)}
+                        @click=${e => this.placeOrder(e)}
                       >
                         Place Order
                       </mwc-button>
@@ -155,19 +156,15 @@ export class CheckoutOverview extends useLightDom {
 
   open() {
     this.dialog.open();
-    if (!this.userShowsIntent) {
-      this.userShowsIntent = true;
-    }
   }
 
   @property({ type: Boolean })
   get canPlaceOrder() {
-    return true;
-    return this.user && !this.user.isAnonymous;
+    return this.user && this.selectedAddress;
   }
 
-  onCheckoutComplete({ detail: paymentResponse }) {
-    Cart.clear();
+  async onCheckoutComplete({ detail: paymentResponse }) {
+    await Cart.clear();
     Router.goTo('/home');
     this.dialog.close();
     location.reload();
@@ -187,7 +184,25 @@ export class CheckoutOverview extends useLightDom {
     this.dialog.listen('MDCDialog:closing', () => {
       // Will destroy checkout if created
       this.userShowsIntent = false;
+      this.requestUpdate();
     });
+
+    this.updateUserInfo();
+  }
+
+  /**
+   *
+   */
+  protected updateUserInfo() {
+    this.userForm$
+      .pipe(
+        debounce(_ => timer(100)),
+        filter((changes: any) => changes.email),
+        tap(console.log)
+      )
+      .subscribe(async changes => {
+        await Auth.update(changes);
+      });
   }
 
   /**
@@ -219,6 +234,15 @@ export class CheckoutOverview extends useLightDom {
 
   /**
    *
+   * @param e
+   */
+  placeOrder(e) {
+    this.userShowsIntent = this.userShowsIntent || true;
+    this.show(this.pages.PAYMENT_FORM);
+  }
+
+  /**
+   * We wont do this right now
    */
   renderProfileSummary(): TemplateResult {
     return html`
@@ -226,12 +250,24 @@ export class CheckoutOverview extends useLightDom {
     `;
   }
 
+  /**
+   *
+   * @param $event
+   */
+  onAddressSelect({ detail }) {
+    this.selectedAddress = detail.item.data;
+    this.requestUpdate();
+  }
+
+  /**
+   *
+   */
   renderAddresses(): TemplateResult {
     return html`
       <iron-selector
+        class="addresses"
+        @iron-select=${this.onAddressSelect}
         .items=${this.user.addresses}
-        .multi=${true}
-        selected="0"
         selected-attribute="selected"
       >
         ${this.user.addresses.map(
@@ -239,6 +275,13 @@ export class CheckoutOverview extends useLightDom {
             <remi-address-item .data=${address}></remi-address-item>
           `
         )}
+        <div
+          class="add-address-btn layout vertical center-center"
+          @click=${e => this.show(this.pages.ADDRESS_FORM)}
+        >
+          <span class="icon">${plusIcon}</span>
+          Add Address
+        </div>
       </iron-selector>
     `;
   }
@@ -249,64 +292,81 @@ export class CheckoutOverview extends useLightDom {
   renderGeneralInfoForm(): TemplateResult {
     return html`
       <h2>General Information</h2>
-      <section class="row">
-        <div
-          class="mdc-text-field text-field mdc-text-field--dense mdc-text-field--box mdc-text-field--with-leading-icon"
-        >
-          <iron-icon
-            class="mdc-text-field__icon"
-            icon="bn-icons:email"
-          ></iron-icon>
-          <input
-            id="name"
-            name="name"
-            type="name"
-            required
-            value=""
-            class="mdc-text-field__input"
-          />
-          <label class="mdc-floating-label" for="name">Your Name</label>
-          <div class="mdc-line-ripple"></div>
-        </div>
-      </section>
-      <section class="row">
-        <div
-          class="mdc-text-field text-field mdc-text-field--dense mdc-text-field--box mdc-text-field--with-leading-icon"
-        >
-          <iron-icon
-            class="mdc-text-field__icon"
-            icon="bn-icons:email"
-          ></iron-icon>
-          <input
-            id="email"
-            name="email"
-            type="email"
-            required
-            value=""
-            class="mdc-text-field__input"
-          />
-          <label class="mdc-floating-label" for="email">Email</label>
-          <div class="mdc-line-ripple"></div>
-        </div>
-        <div
-          class="mdc-text-field text-field mdc-text-field--dense mdc-text-field--box mdc-text-field--with-leading-icon"
-        >
-          <iron-icon
-            class="mdc-text-field__icon"
-            icon="bn-icons:email"
-          ></iron-icon>
-          <input
-            id="phone"
-            name="phone"
-            type="text"
-            required
-            value=""
-            class="mdc-text-field__input"
-          />
-          <label class="mdc-floating-label" for="phone">Phone Number</label>
-          <div class="mdc-line-ripple"></div>
-        </div>
-      </section>
+      <form id="general-form">
+        <section class="row">
+          <div
+            class="mdc-text-field text-field mdc-text-field--dense mdc-text-field--box mdc-text-field--with-leading-icon"
+          >
+            <iron-icon
+              class="mdc-text-field__icon"
+              icon="bn-icons:email"
+            ></iron-icon>
+            <input
+              id="name"
+              @change=${this.onInputChange}
+              name="name"
+              type="name"
+              required
+              value=""
+              class="mdc-text-field__input"
+            />
+            <label class="mdc-floating-label" for="name">Your Name</label>
+            <div class="mdc-line-ripple"></div>
+          </div>
+        </section>
+        <section class="row">
+          <div
+            class="mdc-text-field text-field mdc-text-field--dense mdc-text-field--box mdc-text-field--with-leading-icon"
+          >
+            <iron-icon
+              class="mdc-text-field__icon"
+              icon="bn-icons:email"
+            ></iron-icon>
+            <input
+              id="email"
+              @change=${this.onInputChange}
+              name="email"
+              type="email"
+              required
+              value=""
+              class="mdc-text-field__input"
+            />
+            <label class="mdc-floating-label" for="email">Email</label>
+            <div class="mdc-line-ripple"></div>
+          </div>
+          <div
+            class="mdc-text-field text-field mdc-text-field--dense mdc-text-field--box mdc-text-field--with-leading-icon"
+          >
+            <iron-icon
+              class="mdc-text-field__icon"
+              icon="bn-icons:email"
+            ></iron-icon>
+            <input
+              id="phone"
+              @change=${this.onInputChange}
+              name="phone"
+              type="text"
+              pattern="\d{10,}"
+              required
+              value=""
+              class="mdc-text-field__input"
+            />
+            <label class="mdc-floating-label" for="phone">Phone Number</label>
+            <div class="mdc-line-ripple"></div>
+          </div>
+        </section>
+      </form>
     `;
+  }
+
+  /**
+   *
+   * @param $event
+   */
+  onInputChange({ target }) {
+    this.userForm$.next({
+      ...this.userForm$.getValue(),
+      [target['name']]: target.value
+    });
   }
 }

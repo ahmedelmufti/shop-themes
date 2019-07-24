@@ -30,12 +30,36 @@ body {
   -webkit-font-smoothing: antialiased;
   margin: 0;
   height: 100%;
-  background-color: var(--app-light-text-color);
+  background-color: white;
+}
+
+.bg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 0;
+  transition-timing-function: cubic-bezier(0.19, 1, 0.22, 1);
+  transition-property: -webkit-transform;
+  transition-property: transform;
+  transform: translate3d(0px, -67%, 0px);
+  transition-duration: 350ms;
+  transition-delay: 300ms;
+  .overlay-primary {
+    background: var(--app-primary-color);
+    height: 100vh;
+  }
+  .hero-bottom-wave {
+    margin-top: -6em;
+  }
 }
 
 remi-app {
   --app-drawer-width: 256px;
   display: block;
+  mwc-linear-progress {
+    height: 2px;
+  }
 }
 
 app-header {
@@ -44,18 +68,17 @@ app-header {
   left: 0;
   width: 100%;
   text-align: center;
-  background-color: var(--app-header-background-color);
+  background-color: transparent;
   color: var(--app-header-text-color);
-  z-index: 3;
+  z-index: 1;
 }
 
-remi-app[page='cart'] .toolbar-list,
-remi-app[page='product'] .toolbar-list {
-  display: none;
+remi-app[page='home'] .bg {
+  transform: translate3d(0px, 0px, 0px);
 }
 
 .toolbar-top {
-  background-color: var(--app-header-background-color);
+  background-color: transparent;
   svg {
     color: white;
   }
@@ -64,15 +87,17 @@ remi-app[page='product'] .toolbar-list {
 remi-app[page='home'],
 remi-app[page='shop'] {
   #back-btn {
-    display: none;
-  }
-
-  @media (min-width: 460px) {
-    .main-content {
-      padding-top: 118px;
-    }
+    visibility: hidden;
+    pointer-events: none;
   }
 }
+
+// @media (min-width: 460px) {
+//   .main-content {
+//     padding-top: 118px;
+//   }
+// }
+//}
 
 [main-title] {
   font-family: 'Pacifico', cursive;
@@ -117,13 +142,8 @@ remi-app[page='shop'] {
 .main-content {
   padding-top: 64px;
   min-height: 100vh;
-  background: white;
-}
-.page {
-  display: none;
-}
-.page[active] {
-  display: block;
+  background: transparent;
+  position: relative;
 }
 
 [cart-btn] {
@@ -165,7 +185,7 @@ changes to a wide layout. */
   }
 
   .main-content {
-    padding-top: 60px;
+    padding-top: 115px;
   }
 
   /* The drawer button isn't shown in the wide layout, so we don't
@@ -227,6 +247,15 @@ button.btn-responsive {
   .app-footer > div {
     display: block !important;
   }
+  .bg {
+    transform: translate3d(0px, -80%, 0px);
+    .overlay-primary {
+      height: 80vh;
+    }
+    .hero-bottom-wave {
+      margin-top: -1em;
+    }
+  }
 }
 
 body.fullbleed {
@@ -261,32 +290,6 @@ svg {
   100% {
     background-position: 468px 0;
   }
-}
-
-.placeholder-shimmer {
-  -webkit-animation-duration: 1s;
-  animation-duration: 1s;
-  -webkit-animation-fill-mode: forwards;
-  animation-fill-mode: forwards;
-  -webkit-animation-iteration-count: infinite;
-  animation-iteration-count: infinite;
-  -webkit-animation-name: placeHolderShimmer;
-  animation-name: placeHolderShimmer;
-  -webkit-animation-timing-function: linear;
-  animation-timing-function: linear;
-  background: #f7f7f7;
-  background: -webkit-gradient(
-    linear,
-    left top,
-    right top,
-    color-stop(8%, #f7f7f7),
-    color-stop(18%, #dee3e5),
-    color-stop(33%, #f7f7f7)
-  );
-  background: linear-gradient(to right, #f7f7f7 8%, #dee3e5 18%, #f7f7f7 33%);
-  background-size: 900px 4px;
-  position: relative;
-  overflow: hidden;
 }
 
 .remi-product-item-placeholder {

@@ -2,6 +2,16 @@ remi-cart {
   padding-bottom: 4em;
   min-height: 100vh;
 
+  > header {
+    margin-top: 2em;
+    color: white;
+  }
+
+  mwc-button[unelevated] {
+    --mdc-theme-primary: #ff0057;
+    border-radius: 24px;
+    overflow: hidden;
+  }
   .page-wrapper {
     max-width: 856px;
   }

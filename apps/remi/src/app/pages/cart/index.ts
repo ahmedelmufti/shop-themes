@@ -48,17 +48,16 @@ export class CartPage extends useLightDom {
 
   protected render() {
     return html`
-      <header class="pad layout horizontal">
-        <div>
-          Your Cart
-        </div>
+      <header class="pad layout horizontal center-center">
         <span class="flex"></span>
         <div>
-          <span ?hidden=${this.isEmpty}
-            >Total: $${this.getTotal(this.data)}</span
-          >
-          <mwc-button ?hidden=${this.isEmpty} raised @click=${this.checkout}
-            >Checkout</mwc-button
+          <mwc-button
+            ?hidden=${this.isEmpty}
+            unelevated
+            class="fade slide-right"
+            accent
+            @click=${this.checkout}
+            >Checkout $${this.getTotal(this.data)}</mwc-button
           >
         </div>
       </header>
@@ -70,7 +69,7 @@ export class CartPage extends useLightDom {
                   <remi-cart-item
                     @delete=${this.removeItem}
                     .data=${item}
-                    class="cart-items--item"
+                    class="cart-items--item fade"
                   ></remi-cart-item>
                 `
               )

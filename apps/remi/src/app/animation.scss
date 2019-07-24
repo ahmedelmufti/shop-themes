@@ -1,0 +1,111 @@
+.page {
+  // opacity: 0;
+  transition-property: opacity;
+  transition-duration: 0.35s;
+}
+
+.page:not(.animating) {
+  display: none;
+}
+.page.active {
+  display: block;
+}
+
+.slide-left,
+.slide-right,
+.fade {
+  transition: 0.3s;
+}
+
+.page.leave .slide-left {
+  transform: translate3d(-60px, 0, 0);
+}
+
+.page.leave .slide-right {
+  transform: translate3d(60px, 0, 0);
+}
+
+.slide-top {
+}
+
+.fade {
+  opacity: 0;
+}
+
+.page.enter .fade,
+.page.active .fade {
+  transition-delay: 0.2s;
+  opacity: 1;
+}
+
+.page.leave .fade {
+  opacity: 0;
+}
+
+/*
+ * Spinner four
+ */
+spinner {
+  display: block;
+  width: 6em;
+  height: 6em;
+  border-radius: 6em;
+  border: 2px solid transparent;
+  border-color: var(--app-primary-color) var(--app-primary-color)
+    rgba(250, 146, 196, 0.24) rgba(0, 0, 0, 0.29);
+  -webkit-animation: spinning 600ms linear infinite;
+  -moz-animation: spinning 600ms linear infinite;
+  -ms-animation: spinning 600ms linear infinite;
+  -o-animation: spinning 600ms linear infinite;
+  animation: spinning 600ms linear infinite;
+}
+
+.placeholder-shimmer {
+  -webkit-animation-duration: 1s;
+  animation-duration: 1s;
+  -webkit-animation-fill-mode: forwards;
+  animation-fill-mode: forwards;
+  -webkit-animation-iteration-count: infinite;
+  animation-iteration-count: infinite;
+  -webkit-animation-name: placeHolderShimmer;
+  animation-name: placeHolderShimmer;
+  -webkit-animation-timing-function: linear;
+  animation-timing-function: linear;
+  background: #f7f7f7;
+  background: -webkit-gradient(
+    linear,
+    left top,
+    right top,
+    color-stop(8%, #f7f7f7),
+    color-stop(18%, #dee3e5),
+    color-stop(33%, #f7f7f7)
+  );
+  background: linear-gradient(to right, #f7f7f7 8%, #dee3e5 18%, #f7f7f7 33%);
+  background-size: 900px 4px;
+  position: relative;
+  overflow: hidden;
+}
+
+/*
+ * Spinnertwo animation
+ */
+@-webkit-keyframes spinning {
+  0% {
+    -webkit-transform: rotate(0deg);
+    transform: rotate(0deg);
+  }
+  100% {
+    -webkit-transform: rotate(360deg);
+    transform: rotate(360deg);
+  }
+}
+@keyframes spinning {
+  0% {
+    -webkit-transform: rotate(0deg);
+    transform: rotate(0deg);
+  }
+  100% {
+    -webkit-transform: rotate(360deg);
+    transform: rotate(360deg);
+  }
+}

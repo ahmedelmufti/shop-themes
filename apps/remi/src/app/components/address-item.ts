@@ -18,8 +18,13 @@ export class AddressItem extends LitElement {
   static get styles() {
     return css`
       :host {
+        padding: 1em;
         max-width: 300px;
         display: block;
+      }
+
+      :host([selected]) {
+        background: #f5f5f5;
       }
 
       header {

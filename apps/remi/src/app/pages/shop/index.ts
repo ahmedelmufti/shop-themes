@@ -43,7 +43,7 @@ export class ShopPage extends useLightDom {
           <div class="feature-grid">
             ${this.latest.map(
               product => html`
-                <a href="/product/${product.$key}" class="feature-item">
+                <a href="/product/${product.$key}" class="feature-item fade">
                   <remi-product-item
                     featured
                     .data=${product}
