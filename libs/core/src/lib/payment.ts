@@ -11,7 +11,7 @@ export const Payment = new class {
     currency: string;
     shippingOptions: Array<Object>;
   };
-  apiUrl;
+  apiUrl = 'https://api.shop.jobizzness.com/api';
   paymentMethods: Array<IPaymentMethod>;
 
   /**
@@ -19,13 +19,12 @@ export const Payment = new class {
    * @param config
    */
   bootstrap(config) {
-    (this.apiUrl = config.apiUrl),
-      (this.stripe = {
-        apiKey: config.apiKey,
-        country: config.country,
-        currency: config.currency,
-        shippingOptions: config.shippingOptions
-      });
+    this.stripe = {
+      apiKey: config.apiKey,
+      country: config.country,
+      currency: config.currency,
+      shippingOptions: config.shippingOptions
+    };
   }
 
   /**

@@ -50,7 +50,7 @@ export const environment = {
     shippingOptions: shippingOptions,
     apiURL: 'localhost:3333/api',
     country: 'US',
-    currency: 'usd'
+    currency: 'USD'
   },
   payment: {
     // API version to set for this app (Stripe otherwise uses your default account version).
