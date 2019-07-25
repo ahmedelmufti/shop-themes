@@ -25,24 +25,20 @@ class CartModal extends mixinBehaviors([IronOverlayBehaviorImpl], useLightDom) {
   render() {
     return html`
       <div class="layout-horizontal">
-        <div class="label">Added to cart</div>
+        <h1 class="label">Success! You've added this item to your cart.</h1>
       </div>
-      <div class="layout-horizontal">
-        <shop-button class="modal-button">
-          <a href="/cart" on-click="close" id="viewCartAnchor">View Cart</a>
-        </shop-button>
-        <shop-button class="modal-button">
-          <a href="/checkout" on-click="close">Checkout</a>
-        </shop-button>
+      <div class="actions">
+        <a href="/cart">
+          <mwc-button class="mdc-button checkout" @click=${this.close}>
+            Checkout
+          </mwc-button>
+        </a>
+        <span>
+          <mwc-button class="mdc-button close" @click=${this.close}>
+            Continue
+          </mwc-button>
+        </span>
       </div>
-
-      <paper-icon-button
-        icon="close"
-        id="closeBtn"
-        aria-label="Close dialog"
-        on-click="close"
-      >
-      </paper-icon-button>
     `;
   }
 
@@ -62,6 +58,8 @@ class CartModal extends mixinBehaviors([IronOverlayBehaviorImpl], useLightDom) {
     this.addEventListener('transitionend', e => this._transitionEnd(e));
     this.addEventListener('iron-overlay-canceled', e => this._onCancel(e));
     this.addEventListener('opened-changed', () => {});
+
+    document.addEventListener('add-cart', e => this.open());
   }
 
   _renderOpened() {

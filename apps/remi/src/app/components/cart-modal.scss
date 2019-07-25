@@ -1,9 +1,10 @@
 remi-cart-modal {
   display: block;
   position: fixed;
-  background-color: #fff;
+  background-color: white;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
-  width: 320px;
+  width: 100%;
+  max-width: 700px;
   padding: 12px;
   visibility: hidden;
   will-change: transform;
@@ -28,20 +29,22 @@ remi-cart-modal {
   }
 
   .label {
-    flex: 1;
-    line-height: 24px;
-    margin: 8px;
+    font-size: 1rem;
+    color: var(--app-primary-color);
+    font-weight: 500;
   }
-
-  .modal-button {
-    flex: 1;
-    margin: 16px 8px;
+  .actions {
+    display: flex;
   }
-
-  .modal-button > a {
-    box-sizing: border-box;
-    width: 100%;
-    padding: 8px 24px;
+  a {
+    text-decoration: none;
+  }
+  .actions > * {
+    margin: 1em;
+  }
+  .checkout {
+    --mdc-theme-primary: #ffffff;
+    background-color: #ff0057 !important;
   }
 
   #closeBtn {

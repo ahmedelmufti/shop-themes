@@ -211,7 +211,10 @@ export class ProductDetail extends useLightDom {
       await Auth.loginAnonymously();
     }
     try {
-      Cart.add({
+      this.dispatchEvent(
+        new CustomEvent('add-cart', { detail: this.data, bubbles: true })
+      );
+      await Cart.add({
         $key: this.data.$key,
         product: this.data,
         quantity: 1,
