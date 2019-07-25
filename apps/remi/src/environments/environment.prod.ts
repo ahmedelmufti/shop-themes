@@ -6,16 +6,16 @@
 // Make sure to check the docs: https://stripe.com/docs/sources
 const paymentMethods = [
   // 'ach_credit_transfer', // usd (ACH Credit Transfer payments must be in U.S. Dollars)
-  'alipay', // aud, cad, eur, gbp, hkd, jpy, nzd, sgd, or usd.
-  'bancontact', // eur (Bancontact must always use Euros)
-  'card', // many (https://stripe.com/docs/currencies#presentment-currencies)
-  'eps', // eur (EPS must always use Euros)
-  'ideal', // eur (iDEAL must always use Euros)
-  'giropay', // eur (Giropay must always use Euros)
-  'multibanco', // eur (Multibanco must always use Euros)
+  //'alipay', // aud, cad, eur, gbp, hkd, jpy, nzd, sgd, or usd.
+  //'bancontact', // eur (Bancontact must always use Euros)
+  'card' // many (https://stripe.com/docs/currencies#presentment-currencies)
+  // 'eps', // eur (EPS must always use Euros)
+  // 'ideal', // eur (iDEAL must always use Euros)
+  // 'giropay', // eur (Giropay must always use Euros)
+  // 'multibanco', // eur (Multibanco must always use Euros)
   // 'sepa_debit', // Restricted. See docs for activation details: https://stripe.com/docs/sources/sepa-debit
-  'sofort', // eur (SOFORT must always use Euros)
-  'wechat' // aud, cad, eur, gbp, hkd, jpy, sgd, or usd.
+  // 'sofort', // eur (SOFORT must always use Euros)
+  // 'wechat' // aud, cad, eur, gbp, hkd, jpy, sgd, or usd.
 ];
 
 // Shipping options for the Payment Request API.
@@ -36,7 +36,7 @@ const shippingOptions = [
 
 // Environment
 export const environment = {
-  production: true,
+  production: false,
   firebaseConfig: {
     apiKey: 'AIzaSyCo-dZOVaM_ZzNgbTNxptrPnSB086hZMgo',
     authDomain: 'reminiscebyro-b534f.firebaseapp.com',
@@ -48,7 +48,7 @@ export const environment = {
   },
   shop: {
     shippingOptions: shippingOptions,
-    apiURL: 'http://localhost:3333/api',
+    apiURL: 'https://api.shop.jobizzness.com/api',
     country: 'US',
     currency: 'USD'
   },

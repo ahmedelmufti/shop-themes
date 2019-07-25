@@ -11,7 +11,7 @@ export const Payment = new class {
     currency: string;
     shippingOptions: Array<Object>;
   };
-
+  apiUrl = 'https://api.shop.jobizzness.com/api';
   paymentMethods: Array<IPaymentMethod>;
 
   /**
@@ -42,7 +42,7 @@ export const Payment = new class {
         quantity: data.quantity,
         total: data.total
       });
-    return await post('http://localhost:3333/api/payment', { $key: ref.id });
+    return await post(`${this.apiUrl}/payment`, { $key: ref.id });
   }
 
   create(checkout) {}

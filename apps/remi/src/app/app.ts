@@ -146,6 +146,8 @@ export class App extends useLightDom {
           </div>
         </div>
       </footer>
+
+      <remi-cart-modal></remi-cart-modal>
     `;
   }
 
