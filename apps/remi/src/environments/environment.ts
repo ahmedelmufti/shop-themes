@@ -48,7 +48,7 @@ export const environment = {
   },
   shop: {
     shippingOptions: shippingOptions,
-    apiURL: 'https://api.shop.jobizzness.com/api',
+    apiURL: 'localhost:3333/api',
     country: 'US',
     currency: 'usd'
   },

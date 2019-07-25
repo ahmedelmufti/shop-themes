@@ -113,6 +113,7 @@ export class CartPage extends useLightDom {
     super();
 
     Payment.bootstrap({
+      apiUrl: environment.shop.apiURL,
       apiKey: environment.payment.apiKey,
       country: environment.shop.country,
       currency: environment.shop.currency,
