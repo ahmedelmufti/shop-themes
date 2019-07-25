@@ -190,6 +190,8 @@ export class ProductDetail extends useLightDom {
    *
    */
   protected async firstUpdated() {
+    this.loadSwiper();
+
     import('firebase/firestore').then(module => {
       Router.data$
         .pipe(
@@ -199,11 +201,9 @@ export class ProductDetail extends useLightDom {
         )
         .subscribe(val => {
           this.data = val;
-          this.requestSwiperUpdate();
+          requestAnimationFrame(_ => this.requestSwiperUpdate());
         });
     });
-
-    this.loadSwiper();
   }
 
   public async addToCart() {
