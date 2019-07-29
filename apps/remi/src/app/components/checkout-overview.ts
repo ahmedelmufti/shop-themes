@@ -48,6 +48,7 @@ export class CheckoutOverview extends useLightDom {
   private readonly userForm$ = new BehaviorSubject({});
   private dialog: MDCDialog;
   private userShowsIntent: Boolean;
+  @property({ type: Object })
   private shippingAddress;
 
   constructor() {
@@ -136,7 +137,7 @@ export class CheckoutOverview extends useLightDom {
                   ${this.userShowsIntent
                     ? html`
                         <remi-payment-form
-                          shippingAddress=${this.shippingAddress}
+                          .shippingAddress=${this.shippingAddress}
                           @complete=${this.onCheckoutComplete}
                         ></remi-payment-form>
                       `

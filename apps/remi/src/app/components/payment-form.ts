@@ -60,7 +60,7 @@ export class PaymentForm extends useLightDom {
 
   async createIntent() {
     this.intent = await Payment.createIntent(Cart.data, {
-      shippintAddress: this.shippingAddress
+      shippingAddress: this.shippingAddress
     });
     this.requestUpdate();
   }
