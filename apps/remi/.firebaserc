@@ -1,5 +1,14 @@
 {
   "projects": {
     "default": "reminiscebyro-b534f"
+  },
+  "targets": {
+    "reminiscebyro-b534f": {
+      "hosting": {
+        "remi": [
+          "reminiscebyro-b534f"
+        ]
+      }
+    }
   }
 }

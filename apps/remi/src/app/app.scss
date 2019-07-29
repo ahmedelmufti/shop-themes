@@ -42,7 +42,7 @@ body {
   transition-timing-function: cubic-bezier(0.19, 1, 0.22, 1);
   transition-property: -webkit-transform;
   transition-property: transform;
-  transform: translate3d(0px, -67%, 0px);
+  transform: translate3d(0px, -70%, 0px);
   transition-duration: 350ms;
   transition-delay: 300ms;
   .overlay-primary {
@@ -59,6 +59,7 @@ remi-app {
   display: block;
   mwc-linear-progress {
     height: 2px;
+    overflow: hidden;
   }
 }
 
@@ -140,7 +141,7 @@ remi-app[page='shop'] {
 }
 
 .main-content {
-  padding-top: 64px;
+  padding-top: 16%;
   min-height: 100vh;
   background: transparent;
   position: relative;
@@ -185,7 +186,7 @@ changes to a wide layout. */
   }
 
   .main-content {
-    padding-top: 115px;
+    padding-top: 10%;
   }
 
   /* The drawer button isn't shown in the wide layout, so we don't
