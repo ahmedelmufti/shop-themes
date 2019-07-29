@@ -37,6 +37,7 @@ export const Payment = new class {
       .firestore()
       .collection('checkout')
       .add({
+        customer: Auth.user,
         shippingAddress: options.shippingAddress,
         uid: Auth.user.uid,
         items: data.items,
