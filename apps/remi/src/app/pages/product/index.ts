@@ -92,9 +92,9 @@ export class ProductDetail extends useLightDom {
                         <remi-color-swatch-input></remi-color-swatch-input>
                     </div>
                     <div class="layout horizontal center">
-                        <remi-quantity-input min="1" max="7" value=${
-                          this.quantity
-                        }></remi-quantity-input>
+                        <remi-quantity-input min="1" max="7" @change=${
+                          this.quantityChange
+                        } value=${this.quantity}></remi-quantity-input>
                         <div class="flex">
                             <mwc-button unelevated class="btn-add-cart" @click=${e =>
                               this.addToCart()}>
@@ -167,6 +167,13 @@ export class ProductDetail extends useLightDom {
     `;
   }
 
+  /**
+   *
+   */
+  quantityChange(e) {
+    this.quantity = e.detail;
+  }
+
   getFeatures(): Array<String> {
     return this.data && this.data.features
       ? this.data.features.split('\n')
@@ -215,9 +222,10 @@ export class ProductDetail extends useLightDom {
         new CustomEvent('add-cart', { detail: this.data, bubbles: true })
       );
       await Cart.add({
+        variant$key: null,
         $key: this.data.$key,
         product: this.data,
-        quantity: 1,
+        quantity: this.quantity,
         price: this.data.price.value
       });
     } catch (error) {}
@@ -249,19 +257,19 @@ export class ProductDetail extends useLightDom {
   /**
    *
    */
-  loadSwiper() {
+  async loadSwiper() {
     if (!this.product) return;
-    import('swiper').then(({ default: Swiper }) => {
-      this.swiper = new Swiper(this.querySelector('.swiper-container'), {
-        slidesPerView: 1,
-        loop: false,
-        navigation: {
-          nextEl: '.swiper-button-next',
-          prevEl: '.swiper-button-prev'
-        }
-      });
-
-      this.updateComplete.then(_ => this.swiper.update());
+    const { default: Swiper } = await import('swiper');
+    this.swiper = new Swiper(this.querySelector('.swiper-container'), {
+      slidesPerView: 1,
+      loop: false,
+      navigation: {
+        nextEl: '.swiper-button-next',
+        prevEl: '.swiper-button-prev'
+      }
     });
+
+    await this.updateComplete;
+    this.swiper.update();
   }
 }

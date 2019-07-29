@@ -31,12 +31,13 @@ export const Payment = new class {
    *
    * @param data
    */
-  async createIntent(data: ICart) {
+  async createIntent(data: ICart, options) {
     // throw new Error('Method not implemented.');
     const ref = await firebase
       .firestore()
       .collection('checkout')
       .add({
+        shippingAddress: options.shippingAddress,
         uid: Auth.user.uid,
         items: data.items,
         quantity: data.quantity,
@@ -44,6 +45,4 @@ export const Payment = new class {
       });
     return await post(`${this.apiUrl}/payment`, { $key: ref.id });
   }
-
-  create(checkout) {}
 }();

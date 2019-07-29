@@ -17,6 +17,9 @@ export class PaymentForm extends useLightDom {
   @property({ type: Boolean })
   active = false;
 
+  @property({ type: Object })
+  shippingAddress;
+
   private intent = null;
 
   protected render() {
@@ -56,7 +59,9 @@ export class PaymentForm extends useLightDom {
   }
 
   async createIntent() {
-    this.intent = await Payment.createIntent(Cart.data);
+    this.intent = await Payment.createIntent(Cart.data, {
+      shippintAddress: this.shippingAddress
+    });
     this.requestUpdate();
   }
 

@@ -36,20 +36,18 @@ export class App extends useLightDom {
   @property({ type: String })
   private page;
 
-  private pageChanges = { prev: null, next: null };
-
   @property({ type: Object })
   private cart: ICart = EMPTY_CART;
 
   @property({ type: Boolean })
   private _offline = false;
 
-  private user: IUser;
-
   @property({ type: Boolean })
   private loading: Boolean;
 
   private $pages;
+  private pageChanges = { prev: null, next: null };
+  private user: IUser;
 
   protected render() {
     // Anything that's related to rendering should be done in here.
@@ -225,7 +223,7 @@ export class App extends useLightDom {
 
     if ($next) {
       $next.classList.add('animating', 'enter', 'active');
-      await transition($next, 350);
+      await transition($next, 450);
       $next.classList.remove('animating', 'enter');
     }
   }

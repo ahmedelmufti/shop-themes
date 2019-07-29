@@ -44,15 +44,11 @@ export class CheckoutOverview extends useLightDom {
   @property({ type: Object })
   user: IUser;
 
-  private dialog: MDCDialog;
-
   private readonly pages = Pages;
-
-  private userShowsIntent: Boolean;
-
   private readonly userForm$ = new BehaviorSubject({});
-
-  private selectedAddress;
+  private dialog: MDCDialog;
+  private userShowsIntent: Boolean;
+  private shippingAddress;
 
   constructor() {
     super();
@@ -140,6 +136,7 @@ export class CheckoutOverview extends useLightDom {
                   ${this.userShowsIntent
                     ? html`
                         <remi-payment-form
+                          shippingAddress=${this.shippingAddress}
                           @complete=${this.onCheckoutComplete}
                         ></remi-payment-form>
                       `
@@ -160,7 +157,7 @@ export class CheckoutOverview extends useLightDom {
 
   @property({ type: Boolean })
   get canPlaceOrder() {
-    return this.user && this.selectedAddress;
+    return this.user && this.shippingAddress;
   }
 
   async onCheckoutComplete({ detail: paymentResponse }) {
@@ -255,7 +252,7 @@ export class CheckoutOverview extends useLightDom {
    * @param $event
    */
   onAddressSelect({ detail }) {
-    this.selectedAddress = detail.item.data;
+    this.shippingAddress = detail.item.data;
     this.requestUpdate();
   }
 

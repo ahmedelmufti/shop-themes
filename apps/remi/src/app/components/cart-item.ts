@@ -167,7 +167,9 @@ export class CartItem extends LitElement {
           <!-- Quantity -->
           <div class="row quantity-wrapper">
             <span class="quantity-label">Quantity:</span
-            ><remi-quantity-input></remi-quantity-input>
+            ><remi-quantity-input
+              value=${this.data.quantity}
+            ></remi-quantity-input>
             <span class="flex"></span>
           </div>
 

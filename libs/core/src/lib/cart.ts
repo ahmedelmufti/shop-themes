@@ -18,6 +18,7 @@ export interface ICartItem {
   price: Number;
   product: IProduct;
   $key: String;
+  variant$key?: String;
 }
 
 export const EMPTY_CART = {
@@ -36,6 +37,8 @@ export const Cart = new class {
     total: this.total
   });
 
+  readonly data$ = this._cart.asObservable();
+
   bootstrap() {
     Auth.user$.subscribe((user: IUser) => {
       if (user) {
@@ -45,8 +48,6 @@ export const Cart = new class {
       }
     });
   }
-
-  readonly data$ = this._cart.asObservable();
 
   get data(): ICart {
     return {

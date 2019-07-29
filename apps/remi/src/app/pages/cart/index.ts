@@ -135,7 +135,7 @@ export class CartPage extends useLightDom {
   }
 
   afterFirestoreIsLoaded() {
-    Cart.data$.pipe(filter(cart => cart != null)).subscribe(cart => {
+    Cart.data$.pipe(filter(cart => <any>cart)).subscribe(cart => {
       this.isLoading = false;
       this.data = cart;
     });
