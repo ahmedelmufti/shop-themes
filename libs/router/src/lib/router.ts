@@ -48,7 +48,7 @@ class AppRouter {
 
   goTo(path) {
     window.history.pushState({}, null, path);
-    window.dispatchEvent(new CustomEvent('location-changed'));
+    this.whenLocationChanges(window.location.href);
   }
 
   /**

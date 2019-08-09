@@ -1,0 +1,11 @@
+{
+  "name": "shop-core",
+  "version": "0.0.1",
+  "description": "to be said",
+  "main": "jest.config.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC"
+}

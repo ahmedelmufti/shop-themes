@@ -126,9 +126,9 @@ export const Cart = new class {
   /**
    *
    */
-  clear() {
+  async clear() {
     this.guard();
-    this.update(EMPTY_CART);
+    await this.update(EMPTY_CART);
   }
 
   /**

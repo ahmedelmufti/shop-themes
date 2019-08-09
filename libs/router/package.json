@@ -1,0 +1,24 @@
+{
+  "name": "@jobizzness/router",
+  "version": "0.0.4",
+  "description": "A small router that uses pwa helpers",
+  "main": "src/index.ts",
+  "typings": "index.d.ts",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependences": {
+    "rxjs": "^6.5.2",
+    "pwa-helpers": "^0.9.1"
+  },
+  "author": "jobizzness",
+  "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jobizzness/shop-themes.git"
+  },
+  "bugs": {
+    "url": "https://github.com/jobizzness/shop-themes/issues"
+  },
+  "homepage": "https://github.com/jobizzness/shop-themes#readme"
+}

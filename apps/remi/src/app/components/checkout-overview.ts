@@ -165,7 +165,7 @@ export class CheckoutOverview extends useLightDom {
     await Cart.clear();
     Router.goTo('/home');
     this.dialog.close();
-    location.reload();
+    //location.reload();
   }
 
   /**
